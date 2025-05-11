@@ -1,6 +1,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const DashboardHeader = () => {
   const { toast } = useToast();
@@ -17,6 +18,9 @@ const DashboardHeader = () => {
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">Welcome back, Sipho</p>
+        <Link to="/investments" className="text-finance-blue text-sm">
+          View Investments
+        </Link>
       </div>
       <button 
         onClick={handleNotificationClick}
