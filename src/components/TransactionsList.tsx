@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface Transaction {
   id: string;
   merchant: string;
-  merchantIcon: string;
+  merchantIcon: React.ReactNode; // Changed from string to React.ReactNode
   date: string;
   amount: number;
   type: 'income' | 'expense';
