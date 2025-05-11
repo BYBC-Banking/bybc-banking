@@ -22,7 +22,7 @@ const WalletSection = ({ banks }: WalletProps) => {
         <button className="text-finance-blue text-sm font-medium">View All</button>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap pb-4" orientation="horizontal">
+      <ScrollArea className="w-full whitespace-nowrap pb-4">
         <div className="flex gap-3 pb-2 px-0.5">
           {banks.map((bank) => (
             <WalletCard key={bank.accountNumber} bank={bank} />
