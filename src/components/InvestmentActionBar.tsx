@@ -1,5 +1,5 @@
 
-import { ShoppingCart, Bell, BookmarkCheck, News, ArrowUp } from "lucide-react";
+import { ShoppingCart, Bell, BookmarkCheck, FileText, ArrowUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const InvestmentActionBar = () => {
@@ -16,7 +16,7 @@ const InvestmentActionBar = () => {
     { id: "buy", label: "Buy", icon: <ShoppingCart className="h-5 w-5" />, color: "bg-finance-green text-white" },
     { id: "sell", label: "Sell", icon: <ArrowUp className="h-5 w-5 rotate-180" />, color: "bg-finance-blue text-white" },
     { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-white" },
-    { id: "news", label: "News", icon: <News className="h-5 w-5" />, color: "bg-white" },
+    { id: "news", label: "News", icon: <FileText className="h-5 w-5" />, color: "bg-white" },
     { id: "alert", label: "Set Alert", icon: <Bell className="h-5 w-5" />, color: "bg-white" }
   ];
   
