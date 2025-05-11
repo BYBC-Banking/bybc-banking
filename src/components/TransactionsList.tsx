@@ -1,11 +1,10 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface Transaction {
   id: string;
   merchant: string;
-  merchantIcon: React.ReactNode; // Changed from string to React.ReactNode
+  merchantIcon: React.ReactNode;
   date: string;
   amount: number;
   type: 'income' | 'expense';
@@ -18,32 +17,19 @@ interface TransactionsListProps {
 
 const TransactionsList = ({ transactions }: TransactionsListProps) => {
   return (
-    <div className="mb-4">
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-semibold">Recent Transactions</h2>
-        <button className="text-finance-blue text-sm font-medium">See All</button>
-      </div>
-      
-      <Card className="border shadow-sm">
-        <CardHeader className="px-4 py-3">
-          <CardTitle className="text-base">Transaction History</CardTitle>
-          <CardDescription>Your recent financial activity</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0 py-1">
-          {transactions.map((transaction) => (
-            <TransactionItem key={transaction.id} transaction={transaction} />
-          ))}
-        </CardContent>
-      </Card>
+    <div className="divide-y divide-gray-100">
+      {transactions.map((transaction) => (
+        <TransactionItem key={transaction.id} transaction={transaction} />
+      ))}
     </div>
   );
 };
 
 const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
   return (
-    <div className="flex items-center justify-between py-3 px-4 border-b last:border-0 hover:bg-muted/30 transition-colors">
+    <div className="flex items-center justify-between py-3 px-4 hover:bg-muted/30 transition-colors">
       <div className="flex items-center">
-        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mr-3">
+        <div className="w-10 h-10 min-w-[40px] rounded-full bg-muted flex items-center justify-center mr-3">
           {transaction.merchantIcon}
         </div>
         <div>

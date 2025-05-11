@@ -1,5 +1,5 @@
 
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Bell } from "lucide-react";
 
 const DashboardHeader = () => {
@@ -13,14 +13,14 @@ const DashboardHeader = () => {
   };
   
   return (
-    <header className="flex items-center justify-between mb-4">
+    <header className="flex items-center justify-between mb-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">Welcome back, Sipho</p>
       </div>
       <button 
         onClick={handleNotificationClick}
-        className="w-10 h-10 rounded-full bg-white border flex items-center justify-center"
+        className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white border flex items-center justify-center shadow-sm hover:bg-muted/50 transition-colors"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5" />

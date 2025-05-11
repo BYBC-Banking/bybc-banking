@@ -1,5 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface WalletProps {
@@ -22,41 +22,43 @@ const WalletSection = ({ banks }: WalletProps) => {
         <button className="text-finance-blue text-sm font-medium">View All</button>
       </div>
       
-      <div className="overflow-x-auto pb-2">
-        <div className="flex gap-3">
+      <ScrollArea className="w-full whitespace-nowrap pb-4" orientation="horizontal">
+        <div className="flex gap-3 pb-2 px-0.5">
           {banks.map((bank) => (
             <WalletCard key={bank.accountNumber} bank={bank} />
           ))}
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
 
 const WalletCard = ({ bank }: { bank: Bank }) => {
   return (
-    <Card className={cn(
-      "wallet-card bg-white shadow-md rounded-xl",
-      bank.color === "blue" && "border-t-4 border-t-finance-blue",
-      bank.color === "green" && "border-t-4 border-t-finance-green"
-    )}>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-            {bank.icon}
-          </div>
-          <span className="font-medium text-sm">{bank.name}</span>
+    <div 
+      className={cn(
+        "wallet-card min-w-[220px] h-[130px] rounded-xl shadow-sm p-4 cursor-pointer hover:scale-[1.02] transition-transform",
+        bank.color === "blue" && "bg-gradient-to-br from-finance-blue to-finance-blue-light text-white",
+        bank.color === "green" && "bg-gradient-to-br from-finance-green to-finance-green-light text-white"
+      )}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
+          {bank.icon}
         </div>
-        
-        <div className="text-xs text-muted-foreground mb-1">
+        <span className="text-white/90 text-sm">{bank.name}</span>
+      </div>
+      
+      <div className="mt-4">
+        <div className="text-xs opacity-80 mb-1">
           •••• {bank.accountNumber.slice(-4)}
         </div>
         
-        <div className="font-bold">
+        <div className="font-bold text-xl">
           R{bank.balance.toLocaleString()}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
