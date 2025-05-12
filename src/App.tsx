@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Investments from "./pages/Investments";
 import Education from "./pages/Education";
+import NonprofitLedger from "./pages/NonprofitLedger";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MoyaButton from "./components/MoyaButton";
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/investments" element={<Investments />} />
           <Route path="/education" element={<Education />} />
+          <Route path="/nonprofit" element={<NonprofitLedger />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
