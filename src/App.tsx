@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Investments from "./pages/Investments";
 import Education from "./pages/Education";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import MoyaButton from "./components/MoyaButton";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <MoyaButton />
       </TooltipProvider>
     </BrowserRouter>
   </QueryClientProvider>
