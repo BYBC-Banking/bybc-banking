@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Send, Mic, MicOff } from "lucide-react";
 import MoyaMessage, { Message, MessageType, MessageContent } from "@/components/MoyaMessage";
+import MoyaAvatar from "@/components/MoyaAvatar";
 import { cn } from "@/lib/utils";
 
 interface MoyaChatProps {
