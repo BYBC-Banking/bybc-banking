@@ -2,15 +2,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import MoyaAvatar from "@/components/MoyaAvatar";
-import MoyaChat from "@/components/MoyaChat";
+import NalaAvatar from "@/components/NalaAvatar";
+import NalaChat from "@/components/NalaChat";
 import { cn } from "@/lib/utils";
 
-interface MoyaButtonProps {
+interface NalaButtonProps {
   className?: string;
 }
 
-const MoyaButton = ({ className }: MoyaButtonProps) => {
+const NalaButton = ({ className }: NalaButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   
@@ -38,7 +38,7 @@ const MoyaButton = ({ className }: MoyaButtonProps) => {
             {isOpen ? (
               <MessageCircle className="h-6 w-6" />
             ) : (
-              <MoyaAvatar size="sm" />
+              <NalaAvatar size="sm" />
             )}
           </Button>
           
@@ -53,16 +53,16 @@ const MoyaButton = ({ className }: MoyaButtonProps) => {
           {/* Tooltip */}
           {isHovered && !isOpen && (
             <div className="absolute bottom-full mb-2 right-0 bg-[#1A1F2C] text-white text-sm py-1 px-3 rounded-md shadow-md whitespace-nowrap">
-              Chat with Moya
+              Chat with Nala
             </div>
           )}
         </div>
       </div>
       
       {/* Chat interface */}
-      <MoyaChat isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <NalaChat isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };
 
-export default MoyaButton;
+export default NalaButton;

@@ -1,0 +1,21 @@
+
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- South African-inspired geometric pattern background -->
+  <circle cx="50" cy="50" r="50" fill="#1A1F2C" />
+  <path d="M50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90Z" fill="#9b87f5" />
+  
+  <!-- Triangular pattern inspired by South African designs -->
+  <path d="M85 50C85 69.33 69.33 85 50 85C30.67 85 15 69.33 15 50C15 30.67 30.67 15 50 15C69.33 15 85 30.67 85 50Z" fill="#7E69AB" />
+  
+  <!-- Circular patterning -->
+  <circle cx="50" cy="50" r="28" fill="#1A1F2C" />
+  
+  <!-- "N" logo for Nala -->
+  <path d="M39 38L39 62L43 62L58 44L58 62L62 62L62 38L58 38L43 56L43 38L39 38Z" fill="white" />
+  
+  <!-- Decorative diamond accent -->
+  <path d="M50 15L55 25H45L50 15Z" fill="#1EAEDB" />
+  <path d="M50 85L45 75H55L50 85Z" fill="#1EAEDB" />
+  <path d="M15 50L25 45V55L15 50Z" fill="#1EAEDB" />
+  <path d="M85 50L75 55V45L85 50Z" fill="#1EAEDB" />
+</svg>

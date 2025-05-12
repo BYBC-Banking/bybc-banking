@@ -10,7 +10,7 @@ import Investments from "./pages/Investments";
 import Education from "./pages/Education";
 import NonprofitLedger from "./pages/NonprofitLedger";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import MoyaButton from "./components/MoyaButton";
+import NalaButton from "./components/NalaButton";
 import NavBar from "./components/NavBar";
 
 const queryClient = new QueryClient();
@@ -31,7 +31,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <MoyaButton />
+        <NalaButton />
       </TooltipProvider>
     </BrowserRouter>
   </QueryClientProvider>
