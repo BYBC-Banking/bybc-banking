@@ -44,40 +44,40 @@ const Education = () => {
     {
       id: "r1",
       title: "Understanding Market Volatility",
-      type: "Articles",
-      difficulty: "Intermediate",
+      type: "Articles" as ContentType,
+      difficulty: "Intermediate" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?finance",
       duration: "5 min read"
     },
     {
       id: "r2",
       title: "Compound Interest Explained",
-      type: "Videos",
-      difficulty: "Beginner",
+      type: "Videos" as ContentType,
+      difficulty: "Beginner" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?money",
       duration: "3:45"
     },
     {
       id: "r3",
       title: "Test Your Investment Knowledge",
-      type: "Quizzes",
-      difficulty: "Intermediate",
+      type: "Quizzes" as ContentType,
+      difficulty: "Intermediate" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?invest",
       duration: "10 questions"
     },
     {
       id: "r4",
       title: "Retirement Calculator",
-      type: "Tools",
-      difficulty: "Advanced",
+      type: "Tools" as ContentType,
+      difficulty: "Advanced" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?calculator",
       duration: "Interactive"
     },
     {
       id: "r5",
       title: "Introduction to ETFs",
-      type: "Articles",
-      difficulty: "Beginner",
+      type: "Articles" as ContentType,
+      difficulty: "Beginner" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?stocks",
       duration: "7 min read"
     }
