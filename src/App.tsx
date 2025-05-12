@@ -11,6 +11,7 @@ import Education from "./pages/Education";
 import NonprofitLedger from "./pages/NonprofitLedger";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MoyaButton from "./components/MoyaButton";
+import NavBar from "./components/NavBar";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <NavBar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
