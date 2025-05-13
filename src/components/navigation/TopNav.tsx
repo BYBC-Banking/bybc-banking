@@ -15,8 +15,6 @@ export default function TopNav() {
   return (
     <div className="sticky top-0 left-0 right-0 z-40 bg-[#1A1F2C] border-b border-white/10">
       <div className="flex justify-between items-center h-14 px-4">
-        <Link to="/" className="text-white font-semibold text-lg">FinApp</Link>
-        
         <Sheet>
           <SheetTrigger asChild>
             <button 
@@ -27,8 +25,8 @@ export default function TopNav() {
             </button>
           </SheetTrigger>
           <SheetContent
-            side="right"
-            className="bg-[#222222] border-l border-white/10 p-0"
+            side="left"
+            className="bg-[#222222] border-r border-white/10 p-0"
           >
             <div className="pt-6">
               <div className="px-6 pb-4 border-b border-white/10">
@@ -52,6 +50,8 @@ export default function TopNav() {
             </div>
           </SheetContent>
         </Sheet>
+        
+        <Link to="/" className="text-white font-semibold text-lg">FinApp</Link>
       </div>
     </div>
   );

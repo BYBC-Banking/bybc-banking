@@ -1,5 +1,6 @@
 
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface Transaction {
   id: string;
@@ -13,20 +14,31 @@ interface Transaction {
 
 interface TransactionsListProps {
   transactions: Transaction[];
+  redirectToTransactionsPage?: boolean;
 }
 
-const TransactionsList = ({ transactions }: TransactionsListProps) => {
+const TransactionsList = ({ transactions, redirectToTransactionsPage = true }: TransactionsListProps) => {
   return (
     <div className="divide-y divide-gray-100">
       {transactions.map((transaction) => (
-        <TransactionItem key={transaction.id} transaction={transaction} />
+        <TransactionItem 
+          key={transaction.id} 
+          transaction={transaction} 
+          redirectToTransactionsPage={redirectToTransactionsPage}
+        />
       ))}
     </div>
   );
 };
 
-const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
-  return (
+const TransactionItem = ({ 
+  transaction, 
+  redirectToTransactionsPage 
+}: { 
+  transaction: Transaction;
+  redirectToTransactionsPage: boolean;
+}) => {
+  const content = (
     <div className="flex items-center justify-between py-3 px-4 hover:bg-muted/30 transition-colors">
       <div className="flex items-center">
         <div className="w-10 h-10 min-w-[40px] rounded-full bg-muted flex items-center justify-center mr-3">
@@ -45,6 +57,14 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
         {transaction.type === 'income' ? '+' : '-'} R{Math.abs(transaction.amount).toLocaleString()}
       </div>
     </div>
+  );
+
+  return redirectToTransactionsPage ? (
+    <Link to="/transactions" className="block">
+      {content}
+    </Link>
+  ) : (
+    content
   );
 };
 

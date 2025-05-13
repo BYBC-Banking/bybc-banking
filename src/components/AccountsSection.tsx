@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface Account {
   id: string;
@@ -23,7 +24,7 @@ const AccountsSection = ({ accounts, onAccountSelect, selectedAccountId }: Accou
     <div className="mb-6">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-semibold">Your Accounts</h2>
-        <button className="text-finance-blue text-sm font-medium">View All</button>
+        <Link to="/accounts" className="text-finance-blue text-sm font-medium">View All</Link>
       </div>
       
       <ScrollArea className="w-full whitespace-nowrap pb-4">

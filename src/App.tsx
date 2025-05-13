@@ -15,6 +15,8 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import Legal from "./pages/Legal";
 import Language from "./pages/Language";
+import Accounts from "./pages/Accounts";
+import Transactions from "./pages/Transactions";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/NavBar";
 import MobileNavigation from "./components/navigation/MobileNavigation";
@@ -45,6 +47,8 @@ const AppContent = () => {
             <Route path="/help" element={<Help />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="/language" element={<Language />} />
+            <Route path="/accounts" element={<Accounts />} />
+            <Route path="/transactions" element={<Transactions />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
