@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; 
 import { CreditCard, File, ShoppingCart } from "lucide-react";
 import DashboardHeader from "@/components/DashboardHeader";
 import AccountBalance from "@/components/AccountBalance";
@@ -8,6 +9,8 @@ import TransactionsList from "@/components/TransactionsList";
 import AccountsSection from "@/components/AccountsSection";
 
 const Index = () => {
+  const location = useLocation();
+  
   // Mock data for bybc-banking accounts
   const accounts = [
     {
@@ -161,8 +164,19 @@ const Index = () => {
     }
   ];
 
+  // Extract account ID from URL if present
+  const params = new URLSearchParams(location.search);
+  const accountIdFromUrl = params.get('account');
+  
   // State for selected account
   const [selectedAccountId, setSelectedAccountId] = useState(accounts[0].id);
+  
+  // Update selected account when URL changes
+  useEffect(() => {
+    if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
+      setSelectedAccountId(accountIdFromUrl);
+    }
+  }, [accountIdFromUrl]);
   
   // Find selected account
   const selectedAccount = accounts.find(account => account.id === selectedAccountId) || accounts[0];

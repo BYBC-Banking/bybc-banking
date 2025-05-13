@@ -1,6 +1,6 @@
 
-import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 interface Transaction {
   id: string;
@@ -12,59 +12,51 @@ interface Transaction {
   category: string;
 }
 
-interface TransactionsListProps {
+interface Props {
   transactions: Transaction[];
   redirectToTransactionsPage?: boolean;
 }
 
-const TransactionsList = ({ transactions, redirectToTransactionsPage = true }: TransactionsListProps) => {
+const TransactionsList = ({ transactions, redirectToTransactionsPage = true }: Props) => {
+  const navigate = useNavigate();
+  
+  const handleTransactionClick = () => {
+    if (redirectToTransactionsPage) {
+      navigate('/transactions');
+    }
+  };
+  
   return (
     <div className="divide-y divide-gray-100">
       {transactions.map((transaction) => (
-        <TransactionItem 
+        <div 
           key={transaction.id} 
-          transaction={transaction} 
-          redirectToTransactionsPage={redirectToTransactionsPage}
-        />
+          className="flex items-center justify-between py-3 px-3 cursor-pointer hover:bg-slate-50 rounded-lg transition-colors"
+          onClick={handleTransactionClick}
+        >
+          <div className="flex items-center">
+            <div className="bg-slate-100 rounded-full p-2 mr-3">
+              {transaction.merchantIcon}
+            </div>
+            <div>
+              <div className="font-medium">{transaction.merchant}</div>
+              <div className="text-xs text-muted-foreground">{transaction.date}</div>
+            </div>
+          </div>
+          <div className={`text-right font-medium ${
+            transaction.type === 'income' ? 'text-finance-green' : 'text-finance-expense'
+          }`}>
+            {transaction.type === 'income' ? '+' : '-'}R{transaction.amount.toFixed(2)}
+          </div>
+        </div>
       ))}
-    </div>
-  );
-};
-
-const TransactionItem = ({ 
-  transaction, 
-  redirectToTransactionsPage 
-}: { 
-  transaction: Transaction;
-  redirectToTransactionsPage: boolean;
-}) => {
-  const content = (
-    <div className="flex items-center justify-between py-3 px-4 hover:bg-muted/30 transition-colors">
-      <div className="flex items-center">
-        <div className="w-10 h-10 min-w-[40px] rounded-full bg-muted flex items-center justify-center mr-3">
-          {transaction.merchantIcon}
-        </div>
-        <div>
-          <div className="font-medium">{transaction.merchant}</div>
-          <div className="text-xs text-muted-foreground">{transaction.date} • {transaction.category}</div>
-        </div>
-      </div>
       
-      <div className={cn(
-        "font-semibold",
-        transaction.type === 'income' ? "text-finance-income" : "text-finance-expense"
-      )}>
-        {transaction.type === 'income' ? '+' : '-'} R{Math.abs(transaction.amount).toLocaleString()}
-      </div>
+      {transactions.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          No transactions yet
+        </div>  
+      )}
     </div>
-  );
-
-  return redirectToTransactionsPage ? (
-    <Link to="/transactions" className="block">
-      {content}
-    </Link>
-  ) : (
-    content
   );
 };
 

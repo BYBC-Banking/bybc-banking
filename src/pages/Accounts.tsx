@@ -1,10 +1,11 @@
 
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import AccountsSection from "@/components/AccountsSection";
+import { Link, useNavigate } from "react-router-dom";
 
 const Accounts = () => {
+  const navigate = useNavigate();
+  
   // Mock data for accounts (using the same data structure as in Index.tsx)
   const accounts = [
     {
@@ -48,13 +49,10 @@ const Accounts = () => {
       color: "teal",
     }
   ];
-
-  // State for selected account
-  const [selectedAccountId, setSelectedAccountId] = useState(accounts[0].id);
   
-  // Handle account selection
-  const handleAccountSelect = (account: any) => {
-    setSelectedAccountId(account.id);
+  // Handle account selection - navigate to home with selected account ID
+  const handleAccountSelect = (accountId: string) => {
+    navigate(`/?account=${accountId}`);
   };
 
   return (
@@ -73,8 +71,8 @@ const Accounts = () => {
           {accounts.map((account) => (
             <div
               key={account.id}
-              className="bg-white rounded-xl shadow-sm border p-4"
-              onClick={() => handleAccountSelect(account)}
+              className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+              onClick={() => handleAccountSelect(account.id)}
             >
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
