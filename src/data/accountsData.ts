@@ -1,6 +1,6 @@
 
-import { CreditCard, File, ShoppingCart } from "lucide-react";
 import React from "react";
+import { CreditCard, File, ShoppingCart } from "lucide-react";
 
 export interface Transaction {
   id: string;
@@ -22,6 +22,11 @@ export interface Account {
   transactions: Transaction[];
 }
 
+// Create merchant icons as functions to avoid JSX syntax issues in data file
+const createShoppingCartIcon = () => <ShoppingCart className="h-5 w-5" />;
+const createFileIcon = () => <File className="h-5 w-5" />;
+const createCreditCardIcon = () => <CreditCard className="h-5 w-5" />;
+
 // Mock data for bybc-banking accounts
 export const accounts: Account[] = [
   {
@@ -35,7 +40,7 @@ export const accounts: Account[] = [
       {
         id: "tx1",
         merchant: "Woolworths",
-        merchantIcon: <ShoppingCart className="h-5 w-5" />,
+        merchantIcon: createShoppingCartIcon(),
         date: "Today, 14:30",
         amount: 45.75,
         type: "expense",
@@ -44,7 +49,7 @@ export const accounts: Account[] = [
       {
         id: "tx2",
         merchant: "Salary",
-        merchantIcon: <File className="h-5 w-5" />,
+        merchantIcon: createFileIcon(),
         date: "Today, 08:15",
         amount: 3200.00,
         type: "income",
@@ -53,7 +58,7 @@ export const accounts: Account[] = [
       {
         id: "tx3",
         merchant: "Takealot",
-        merchantIcon: <ShoppingCart className="h-5 w-5" />,
+        merchantIcon: createShoppingCartIcon(),
         date: "Yesterday, 19:45",
         amount: 129.99,
         type: "expense",
@@ -72,7 +77,7 @@ export const accounts: Account[] = [
       {
         id: "tx4",
         merchant: "Interest",
-        merchantIcon: <File className="h-5 w-5" />,
+        merchantIcon: createFileIcon(),
         date: "Mar 01, 00:01",
         amount: 125.45,
         type: "income",
@@ -81,7 +86,7 @@ export const accounts: Account[] = [
       {
         id: "tx5",
         merchant: "Transfer to Spending",
-        merchantIcon: <CreditCard className="h-5 w-5" />,
+        merchantIcon: createCreditCardIcon(),
         date: "Feb 15, 10:22",
         amount: 500.00,
         type: "expense",
@@ -100,7 +105,7 @@ export const accounts: Account[] = [
       {
         id: "tx6",
         merchant: "Client Payment",
-        merchantIcon: <File className="h-5 w-5" />,
+        merchantIcon: createFileIcon(),
         date: "Yesterday, 16:05",
         amount: 12500.00,
         type: "income",
@@ -109,7 +114,7 @@ export const accounts: Account[] = [
       {
         id: "tx7",
         merchant: "Office Supplies",
-        merchantIcon: <ShoppingCart className="h-5 w-5" />,
+        merchantIcon: createShoppingCartIcon(),
         date: "Mar 02, 13:15",
         amount: 890.50,
         type: "expense",
@@ -128,7 +133,7 @@ export const accounts: Account[] = [
       {
         id: "tx8",
         merchant: "Donation",
-        merchantIcon: <File className="h-5 w-5" />,
+        merchantIcon: createFileIcon(),
         date: "Mar 03, 09:45",
         amount: 5000.00,
         type: "income",
@@ -137,7 +142,7 @@ export const accounts: Account[] = [
       {
         id: "tx9",
         merchant: "Community Event",
-        merchantIcon: <CreditCard className="h-5 w-5" />,
+        merchantIcon: createCreditCardIcon(),
         date: "Mar 01, 14:20",
         amount: 1250.75,
         type: "expense",
@@ -156,7 +161,7 @@ export const accounts: Account[] = [
       {
         id: "tx10",
         merchant: "BTC Purchase",
-        merchantIcon: <ShoppingCart className="h-5 w-5" />,
+        merchantIcon: createShoppingCartIcon(),
         date: "Mar 04, 11:30",
         amount: 500.00,
         type: "expense",
@@ -165,7 +170,7 @@ export const accounts: Account[] = [
       {
         id: "tx11",
         merchant: "ETH Sale",
-        merchantIcon: <File className="h-5 w-5" />,
+        merchantIcon: createFileIcon(),
         date: "Mar 01, 15:45",
         amount: 750.25,
         type: "income",
