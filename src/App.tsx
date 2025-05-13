@@ -9,30 +9,55 @@ import NotFound from "./pages/NotFound";
 import Investments from "./pages/Investments";
 import Education from "./pages/Education";
 import NonprofitLedger from "./pages/NonprofitLedger";
+import Advisor from "./pages/Advisor";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Help from "./pages/Help";
+import Legal from "./pages/Legal";
+import Language from "./pages/Language";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NalaButton from "./components/NalaButton";
 import NavBar from "./components/NavBar";
+import MobileNavigation from "./components/navigation/MobileNavigation";
+import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const isMobile = useIsMobile();
+  
+  return (
+    <>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {!isMobile && <NavBar />}
+        <MobileNavigation />
+        <div className={isMobile ? "pb-16" : ""}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/investments" element={<Investments />} />
+            <Route path="/education" element={<Education />} />
+            <Route path="/nonprofit" element={<NonprofitLedger />} />
+            <Route path="/advisor" element={<Advisor />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/legal" element={<Legal />} />
+            <Route path="/language" element={<Language />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </TooltipProvider>
+    </>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/investments" element={<Investments />} />
-          <Route path="/education" element={<Education />} />
-          <Route path="/nonprofit" element={<NonprofitLedger />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <NalaButton />
-      </TooltipProvider>
+      <AppContent />
     </BrowserRouter>
   </QueryClientProvider>
 );
