@@ -1,12 +1,16 @@
 
-import React from 'react';
-import { ArrowLeft, User, Lock, Bell, Globe, Shield, CreditCard, Smartphone, ExternalLink, HelpCircle, LogOut } from "lucide-react";
+import React, { useEffect } from 'react';
+import { ArrowLeft, User, Lock, Bell, Globe, Shield, CreditCard, Smartphone, ExternalLink, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Settings() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <div className="container mx-auto max-w-md py-8 px-4">
       <header className="flex items-center gap-4 mb-6">
@@ -145,13 +149,6 @@ export default function Settings() {
             </div>
             <ArrowLeft className="h-4 w-4 rotate-180" />
           </Link>
-          
-          <Separator />
-          
-          <button className="w-full flex items-center py-2 text-red-500">
-            <LogOut className="h-5 w-5 mr-3" />
-            <span>Log Out</span>
-          </button>
         </div>
       </div>
     </div>

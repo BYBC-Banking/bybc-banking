@@ -9,6 +9,9 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Investments from "./pages/Investments";
 import Education from "./pages/Education";
+import Topics from "./pages/Topics";
+import FinancialNews from "./pages/FinancialNews";
+import Watchlist from "./pages/Watchlist";
 import NonprofitLedger from "./pages/NonprofitLedger";
 import Advisor from "./pages/Advisor";
 import Profile from "./pages/Profile";
@@ -35,6 +38,11 @@ const queryClient = new QueryClient();
 const AppContent = () => {
   const isMobile = useIsMobile();
   
+  React.useEffect(() => {
+    // Scroll to top on route changes
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <>
       <TooltipProvider>
@@ -48,6 +56,9 @@ const AppContent = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/investments" element={<Investments />} />
             <Route path="/education" element={<Education />} />
+            <Route path="/topics" element={<Topics />} />
+            <Route path="/financial-news" element={<FinancialNews />} />
+            <Route path="/watchlist" element={<Watchlist />} />
             <Route path="/nonprofit" element={<NonprofitLedger />} />
             <Route path="/advisor" element={<Advisor />} />
             <Route path="/profile" element={<Profile />} />

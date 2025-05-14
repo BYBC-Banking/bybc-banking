@@ -1,15 +1,41 @@
 
 import { ShoppingCart, Bell, BookmarkCheck, FileText, ArrowUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const InvestmentActionBar = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const handleActionClick = (action: string) => {
-    toast({
-      title: action,
-      description: `${action} action selected`,
-    });
+    switch (action) {
+      case "Buy":
+        navigate("/buy");
+        break;
+      case "Sell":
+        toast({
+          title: "Sell",
+          description: "Sell action selected",
+        });
+        break;
+      case "Watchlist":
+        navigate("/watchlist");
+        break;
+      case "News":
+        navigate("/financial-news");
+        break;
+      case "Set Alert":
+        toast({
+          title: "Alert",
+          description: "Alert action selected",
+        });
+        break;
+      default:
+        toast({
+          title: action,
+          description: `${action} action selected`,
+        });
+    }
   };
   
   const actions = [

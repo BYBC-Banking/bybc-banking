@@ -1,14 +1,10 @@
 
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselNext, 
-  CarouselPrevious 
-} from "@/components/ui/carousel";
-import { useToast } from "@/hooks/use-toast";
-import { BookOpen } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
+import { Book } from "lucide-react";
 import { ContentType, DifficultyLevel } from "@/pages/Education";
 
 interface Recommendation {
@@ -25,75 +21,58 @@ interface RecommendationsCarouselProps {
 }
 
 const RecommendationsCarousel = ({ recommendations }: RecommendationsCarouselProps) => {
-  const { toast } = useToast();
-  
-  const handleItemClick = (recommendation: Recommendation) => {
-    toast({
-      title: recommendation.title,
-      description: `Opening ${recommendation.type.toLowerCase()} content`,
-    });
-  };
-  
-  if (recommendations.length === 0) {
-    return (
-      <div className="p-6 text-center border rounded-xl bg-white">
-        <p className="text-gray-500">No recommendations match your filters</p>
-        <p className="text-sm text-gray-400">Try adjusting your selections</p>
-      </div>
-    );
-  }
-  
   return (
-    <Carousel className="w-full mb-8">
-      <CarouselContent>
-        {recommendations.map((item) => (
-          <CarouselItem key={item.id} className="basis-[85%] md:basis-1/2 lg:basis-1/3">
-            <Card 
-              className="overflow-hidden border hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => handleItemClick(item)}
-            >
-              <div className="relative h-36">
+    <div>
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-sm font-medium">Browse by Category</h3>
+        <Link to="/topics">
+          <Button variant="ghost" size="sm">
+            <Book className="h-4 w-4 mr-2" />
+            <span>All Topics</span>
+          </Button>
+        </Link>
+      </div>
+      
+      <div className="overflow-x-auto pb-4">
+        <div className="flex gap-3 min-w-max">
+          {recommendations.map((item) => (
+            <Card key={item.id} className="w-64 flex-shrink-0">
+              <AspectRatio ratio={16/9}>
                 <img 
                   src={item.imageUrl} 
                   alt={item.title} 
-                  className="w-full h-full object-cover"
+                  className="object-cover w-full h-full rounded-t-md"
                 />
-                <div className="absolute top-2 right-2">
-                  <span className={`inline-block text-xs font-semibold px-2 py-1 rounded-full ${
-                    item.type === 'Articles' ? 'bg-blue-100 text-blue-700' : 
-                    item.type === 'Videos' ? 'bg-red-100 text-red-700' :
-                    item.type === 'Quizzes' ? 'bg-purple-100 text-purple-700' :
-                    'bg-green-100 text-green-700'
-                  }`}>
+              </AspectRatio>
+              <CardContent className="p-3">
+                <div className="flex gap-2 mb-2">
+                  <Badge variant="outline" className="bg-slate-100 text-xs">
                     {item.type}
-                  </span>
-                </div>
-                <div className="absolute bottom-2 left-2">
-                  <span className={`inline-block text-xs font-semibold px-2 py-1 rounded-full ${
-                    item.difficulty === 'Beginner' ? 'bg-green-100 text-green-700' : 
-                    item.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
+                  </Badge>
+                  <Badge variant="outline" 
+                    className={`
+                      text-xs
+                      ${item.difficulty === "Beginner" ? "border-green-500 text-green-700" : ""}
+                      ${item.difficulty === "Intermediate" ? "border-amber-500 text-amber-700" : ""}
+                      ${item.difficulty === "Advanced" ? "border-red-500 text-red-700" : ""}
+                    `}
+                  >
                     {item.difficulty}
-                  </span>
+                  </Badge>
                 </div>
-              </div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold line-clamp-2 mb-1">{item.title}</h3>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-xs text-gray-500">
-                    <BookOpen className="h-3 w-3 mr-1" />
-                    {item.duration}
-                  </div>
+                <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-xs text-muted-foreground">{item.duration}</span>
+                  <Link to={`/education/${item.id}`} className="text-xs text-finance-blue">
+                    Learn more
+                  </Link>
                 </div>
               </CardContent>
             </Card>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-0" />
-      <CarouselNext className="right-0" />
-    </Carousel>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

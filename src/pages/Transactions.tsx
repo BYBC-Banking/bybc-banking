@@ -1,11 +1,17 @@
 
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Filter, ShoppingCart, CreditCard, File } from "lucide-react";
+import { Link } from "react-router-dom";
 import TransactionsList from "@/components/TransactionsList";
-import { File, ShoppingCart, CreditCard } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const Transactions = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Sample transaction data (similar structure to what's in Index.tsx)
   const allTransactions = [
     {
@@ -73,21 +79,104 @@ const Transactions = () => {
     }
   ];
 
+  // Filter transactions based on the selected tab
+  const incomeTransactions = allTransactions.filter(tx => tx.type === "income");
+  const expenseTransactions = allTransactions.filter(tx => tx.type === "expense");
+  
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [filteredTransactions, setFilteredTransactions] = useState(allTransactions);
+  
+  useEffect(() => {
+    switch (activeTab) {
+      case "money-in":
+        setFilteredTransactions(incomeTransactions);
+        break;
+      case "money-out":
+        setFilteredTransactions(expenseTransactions);
+        break;
+      default:
+        setFilteredTransactions(allTransactions);
+    }
+  }, [activeTab]);
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
-        <header className="flex items-center gap-4 mb-6">
-          <Link to="/" className="p-2">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <h1 className="text-2xl font-bold">Transactions</h1>
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="p-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <h1 className="text-2xl font-bold">Transactions</h1>
+          </div>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="rounded-full">
+                <Filter className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Filter Transactions</SheetTitle>
+              </SheetHeader>
+              <div className="py-4">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Date Range</h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button variant="outline" size="sm">Today</Button>
+                      <Button variant="outline" size="sm">This Week</Button>
+                      <Button variant="outline" size="sm">This Month</Button>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Categories</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button variant="outline" size="sm">Groceries</Button>
+                      <Button variant="outline" size="sm">Shopping</Button>
+                      <Button variant="outline" size="sm">Salary</Button>
+                      <Button variant="outline" size="sm">Transfer</Button>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <Button className="w-full">Apply Filters</Button>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </header>
         
-        {/* Transactions List */}
-        <div className="bg-white rounded-xl shadow-sm border p-1 mb-6">
-          <TransactionsList transactions={allTransactions} redirectToTransactionsPage={false} />
-        </div>
+        {/* Tabs for Money In/Out */}
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="money-in">Money In</TabsTrigger>
+            <TabsTrigger value="money-out">Money Out</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="mt-4">
+            <div className="bg-white rounded-xl shadow-sm border p-1">
+              <TransactionsList transactions={filteredTransactions} redirectToTransactionsPage={false} />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="money-in" className="mt-4">
+            <div className="bg-white rounded-xl shadow-sm border p-1">
+              <TransactionsList transactions={filteredTransactions} redirectToTransactionsPage={false} />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="money-out" className="mt-4">
+            <div className="bg-white rounded-xl shadow-sm border p-1">
+              <TransactionsList transactions={filteredTransactions} redirectToTransactionsPage={false} />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
