@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -51,8 +50,15 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
   const params = new URLSearchParams(location.search);
   const accountIdFromUrl = params.get('account');
   
-  // State for selected account
-  const [selectedAccountId, setSelectedAccountId] = useState(accounts[0].id);
+  // State for selected account - default to first account
+  const [selectedAccountId, setSelectedAccountId] = useState<string>(() => {
+    // If account ID is in URL and exists in accounts list, use it
+    if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
+      return accountIdFromUrl;
+    }
+    // Otherwise use the first account
+    return accounts[0]?.id || "";
+  });
   
   // Update selected account when URL changes
   useEffect(() => {
@@ -61,7 +67,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     }
   }, [accountIdFromUrl, accounts]);
   
-  // Find selected account
+  // Find selected account, with fallback to first account
   const selectedAccount = accounts.find(account => account.id === selectedAccountId) || accounts[0];
   
   return (

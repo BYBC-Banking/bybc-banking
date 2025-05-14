@@ -2,53 +2,10 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { accounts } from "@/data/accountsData";
 
 const Accounts = () => {
   const navigate = useNavigate();
-  
-  // Mock data for accounts (using the same data structure as in Index.tsx)
-  const accounts = [
-    {
-      id: "1",
-      name: "BYBC Spending",
-      type: "Spending",
-      accountNumber: "1234567890",
-      balance: 2450.75,
-      color: "blue",
-    },
-    {
-      id: "2",
-      name: "BYBC Savings",
-      type: "Savings",
-      accountNumber: "0987654321",
-      balance: 15750.00,
-      color: "green",
-    },
-    {
-      id: "3",
-      name: "BYBC Business",
-      type: "Business",
-      accountNumber: "5678901234",
-      balance: 42500.00,
-      color: "purple",
-    },
-    {
-      id: "4",
-      name: "BYBC Nonprofit",
-      type: "Nonprofit",
-      accountNumber: "9876543210",
-      balance: 78950.25,
-      color: "orange",
-    },
-    {
-      id: "5",
-      name: "BYBC Investments",
-      type: "Investments",
-      accountNumber: "1357924680",
-      balance: 3450.50,
-      color: "teal",
-    }
-  ];
   
   // Handle account selection - navigate to home with selected account ID
   const handleAccountSelect = (accountId: string) => {
