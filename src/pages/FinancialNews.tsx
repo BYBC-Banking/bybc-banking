@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
 
 // Mock news data
 const newsArticles = [
