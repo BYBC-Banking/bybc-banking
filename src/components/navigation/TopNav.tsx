@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Menu, LogOut } from "lucide-react";
+import { Bell, Menu, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -30,6 +30,10 @@ export default function TopNav() {
       description: "You have been successfully logged out",
     });
     // In a real app, you would handle actual logout logic here
+  };
+  
+  const handleNotificationClick = () => {
+    // Navigate to notifications page
   };
 
   return (
@@ -82,8 +86,18 @@ export default function TopNav() {
           </SheetContent>
         </Sheet>
         
-        <Link to="/" className="text-white font-semibold text-lg">FinApp</Link>
+        <Link to="/" className="flex items-center">
+          <img 
+            src="/lovable-uploads/9b582461-f327-43f4-991f-e50e68817084.png" 
+            alt="BYBC Banking" 
+            className="h-9 w-9"
+          />
+        </Link>
+        
+        <Link to="/notifications" className="p-2 rounded-md hover:bg-white/10 transition-colors">
+          <Bell className="h-6 w-6 text-white" />
+        </Link>
       </div>
     </div>
   );
-}
+};

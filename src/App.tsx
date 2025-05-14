@@ -27,6 +27,7 @@ import Send from "./pages/Send";
 import Receive from "./pages/Receive";
 import Transfer from "./pages/Transfer";
 import Inbox from "./pages/Inbox";
+import CreateAccount from "./pages/CreateAccount";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/NavBar";
 import MobileNavigation from "./components/navigation/MobileNavigation";
@@ -74,6 +75,7 @@ const AppContent = () => {
             <Route path="/receive" element={<Receive />} />
             <Route path="/transfer" element={<Transfer />} />
             <Route path="/inbox" element={<Inbox />} />
+            <Route path="/create-account" element={<CreateAccount />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

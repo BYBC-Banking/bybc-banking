@@ -1,7 +1,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
-import { ArrowRight, Inbox, QrCode, ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard } from "lucide-react";
+import { ArrowRight, Inbox, QrCode, ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie } from "lucide-react";
 import { useHomePage } from "@/context/HomePageContext";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -52,24 +52,29 @@ const QuickActions = () => {
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ],
       "Savings": [
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
-        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/inbox" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ],
       "Business": [
         { id: "scan", label: "Scan", icon: <ScanLine className="h-5 w-5" />, color: "bg-purple-500", path: "/", onClick: handleScan },
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ],
       "Nonprofit": [
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ],
       "Investments": [
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
-        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/inbox" },
+        { id: "chart", label: "Analytics", icon: <ChartPie className="h-5 w-5" />, color: "bg-blue-600", path: "/investments" },
+        { id: "trending", label: "Markets", icon: <TrendingUp className="h-5 w-5" />, color: "bg-green-600", path: "/financial-news" },
+        { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-purple-600", path: "/watchlist" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ]
     };
     
@@ -77,7 +82,12 @@ const QuickActions = () => {
     const accountType = selectedAccount.type || "Spending";
     const specificActions = accountSpecificActions[accountType as keyof typeof accountSpecificActions] || accountSpecificActions.Spending;
     
-    // Combine common actions with account-specific ones
+    // For investment accounts, don't include common send/receive actions
+    if (accountType === "Investments") {
+      return specificActions;
+    }
+    
+    // Combine common actions with account-specific ones for other account types
     return [...commonActions, ...specificActions];
   };
   

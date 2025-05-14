@@ -27,8 +27,9 @@ const AccountsSection = ({ accounts, onAccountSelect, selectedAccountId }: Accou
         <Link to="/accounts" className="text-finance-blue text-sm font-medium">View All</Link>
       </div>
       
-      <ScrollArea className="w-full whitespace-nowrap pb-4">
-        <div className="flex gap-3 pb-2 px-0.5">
+      {/* Wrap the accounts in a ScrollArea for horizontal scrolling */}
+      <ScrollArea className="w-full" orientation="horizontal">
+        <div className="flex gap-3 pb-2 px-0.5 min-w-max">
           {accounts.map((account) => (
             <AccountCard 
               key={account.id}

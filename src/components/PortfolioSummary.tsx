@@ -2,6 +2,7 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { useMemo } from "react";
 
 interface PortfolioSummaryProps {
   data: {
@@ -19,17 +20,68 @@ const PortfolioSummary = ({
   selectedTimeframe, 
   onTimeframeChange 
 }: PortfolioSummaryProps) => {
-  // Mock chart data - would be dynamically loaded in a real app
-  const chartData = [
-    { name: "Jan", value: 45000 },
-    { name: "Feb", value: 47000 },
-    { name: "Mar", value: 46500 },
-    { name: "Apr", value: 48500 },
-    { name: "May", value: 50000 },
-    { name: "Jun", value: 49500 },
-    { name: "Jul", value: 51000 },
-    { name: "Aug", value: 52475.32 }
-  ];
+  // Mock chart data that changes based on the selected timeframe
+  const chartData = useMemo(() => {
+    switch (selectedTimeframe) {
+      case "1D":
+        return [
+          { name: "9AM", value: 51000 },
+          { name: "11AM", value: 52000 },
+          { name: "1PM", value: 51500 },
+          { name: "3PM", value: 52475.32 }
+        ];
+      case "1W":
+        return [
+          { name: "Mon", value: 50000 },
+          { name: "Tue", value: 50500 },
+          { name: "Wed", value: 51200 },
+          { name: "Thu", value: 51800 },
+          { name: "Fri", value: 52475.32 }
+        ];
+      case "1M":
+        return [
+          { name: "Week 1", value: 48000 },
+          { name: "Week 2", value: 49500 },
+          { name: "Week 3", value: 51000 },
+          { name: "Week 4", value: 52475.32 }
+        ];
+      case "3M":
+        return [
+          { name: "Jan", value: 45000 },
+          { name: "Feb", value: 47000 },
+          { name: "Mar", value: 52475.32 }
+        ];
+      case "1Y":
+        return [
+          { name: "Jan", value: 45000 },
+          { name: "Feb", value: 47000 },
+          { name: "Mar", value: 46500 },
+          { name: "Apr", value: 48500 },
+          { name: "May", value: 50000 },
+          { name: "Jun", value: 49500 },
+          { name: "Jul", value: 51000 },
+          { name: "Aug", value: 52475.32 }
+        ];
+      case "ALL":
+        return [
+          { name: "2021", value: 30000 },
+          { name: "2022", value: 38000 },
+          { name: "2023", value: 45000 },
+          { name: "2024", value: 52475.32 }
+        ];
+      default:
+        return [
+          { name: "Jan", value: 45000 },
+          { name: "Feb", value: 47000 },
+          { name: "Mar", value: 46500 },
+          { name: "Apr", value: 48500 },
+          { name: "May", value: 50000 },
+          { name: "Jun", value: 49500 },
+          { name: "Jul", value: 51000 },
+          { name: "Aug", value: 52475.32 }
+        ];
+    }
+  }, [selectedTimeframe]);
   
   const timeframes = ["1D", "1W", "1M", "3M", "1Y", "ALL"] as const;
   

@@ -6,6 +6,9 @@ import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
 import TransactionSection from "@/components/home/TransactionSection";
 import AccountsSection from "@/components/AccountsSection";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { PlusCircle } from "lucide-react";
 
 const Index = () => {
   return (
@@ -27,6 +30,16 @@ const Index = () => {
             
             {/* Accounts Section - Now using context */}
             <AccountsSectionWithContext />
+            
+            {/* Create Account Button */}
+            <div className="flex justify-center mt-8 animate-fade-in" style={{animationDelay: "300ms"}}>
+              <Link to="/create-account">
+                <Button className="flex items-center gap-2">
+                  <PlusCircle className="h-5 w-5" />
+                  Create New Account
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
