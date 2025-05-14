@@ -49,27 +49,27 @@ const QuickActions = () => {
     const accountSpecificActions = {
       "Spending": [
         { id: "scan", label: "Scan", icon: <ScanLine className="h-5 w-5" />, color: "bg-purple-500", path: "/", onClick: handleScan },
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/send" },
+        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
       ],
       "Savings": [
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/send" },
-        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
+        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/inbox" },
       ],
       "Business": [
         { id: "scan", label: "Scan", icon: <ScanLine className="h-5 w-5" />, color: "bg-purple-500", path: "/", onClick: handleScan },
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/send" },
+        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
       ],
       "Nonprofit": [
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/send" },
+        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
       ],
       "Investments": [
-        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/send" },
-        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
+        { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
+        { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-indigo-500", path: "/inbox" },
       ]
     };
     

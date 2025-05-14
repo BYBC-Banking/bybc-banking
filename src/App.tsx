@@ -22,6 +22,8 @@ import Notifications from "./pages/Notifications";
 import Buy from "./pages/Buy";
 import Send from "./pages/Send";
 import Receive from "./pages/Receive";
+import Transfer from "./pages/Transfer";
+import Inbox from "./pages/Inbox";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/NavBar";
 import MobileNavigation from "./components/navigation/MobileNavigation";
@@ -59,6 +61,8 @@ const AppContent = () => {
             <Route path="/buy" element={<Buy />} />
             <Route path="/send" element={<Send />} />
             <Route path="/receive" element={<Receive />} />
+            <Route path="/transfer" element={<Transfer />} />
+            <Route path="/inbox" element={<Inbox />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
