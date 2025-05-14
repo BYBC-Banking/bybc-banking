@@ -42,8 +42,8 @@ const Accounts = () => {
     },
     {
       id: "5",
-      name: "BYBC Crypto",
-      type: "Crypto",
+      name: "BYBC Investments",
+      type: "Investments",
       accountNumber: "1357924680",
       balance: 3450.50,
       color: "teal",

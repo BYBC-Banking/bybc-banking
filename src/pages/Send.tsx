@@ -97,11 +97,6 @@ const Send = () => {
                       </div>
                     </div>
                   </div>
-                  {beneficiary.recentAmount && (
-                    <div className="text-sm font-medium">
-                      R{beneficiary.recentAmount.toFixed(2)}
-                    </div>
-                  )}
                 </div>
               </div>
             ))

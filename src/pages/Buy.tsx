@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { ArrowLeft, ShoppingCart, Signal, Zap } from "lucide-react";
+import { ArrowLeft, Signal, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { CreditCard } from "lucide-react";
 
 type BuyOption = {
   id: string;
@@ -25,7 +26,7 @@ const Buy = () => {
     {
       id: "data",
       name: "Data",
-      icon: <ShoppingCart className="h-5 w-5" />,
+      icon: <CreditCard className="h-5 w-5" />,
       description: "Buy data bundles for your mobile device"
     },
     {
@@ -38,8 +39,8 @@ const Buy = () => {
   
   const handleOptionClick = (option: BuyOption) => {
     toast({
-      title: `Buy ${option.name}`,
-      description: `You selected to buy ${option.name}`,
+      title: `Top Up ${option.name}`,
+      description: `You selected to top up ${option.name}`,
     });
   };
 
@@ -51,7 +52,7 @@ const Buy = () => {
           <Link to="/" className="p-2">
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <h1 className="text-2xl font-bold">Buy</h1>
+          <h1 className="text-2xl font-bold">Top Up</h1>
         </header>
         
         {/* Buy Options */}
