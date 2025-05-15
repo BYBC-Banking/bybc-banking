@@ -1,5 +1,5 @@
 
-import { ShoppingCart, Bell, BookmarkCheck, FileText, ArrowUp } from "lucide-react";
+import { ShoppingCart, Bell, BookmarkCheck, FileText, ArrowUp, Bitcoin, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -30,6 +30,24 @@ const InvestmentActionBar = () => {
           description: "Alert action selected",
         });
         break;
+      case "Crypto":
+        toast({
+          title: "Cryptocurrency",
+          description: "Crypto market view selected",
+        });
+        break;
+      case "Forex":
+        toast({
+          title: "Forex",
+          description: "Foreign exchange markets selected",
+        });
+        break;
+      case "Commodities":
+        toast({
+          title: "Commodities",
+          description: "Commodities markets selected",
+        });
+        break;
       default:
         toast({
           title: action,
@@ -41,6 +59,9 @@ const InvestmentActionBar = () => {
   const actions = [
     { id: "buy", label: "Buy", icon: <ShoppingCart className="h-5 w-5" />, color: "bg-finance-green text-white" },
     { id: "sell", label: "Sell", icon: <ArrowUp className="h-5 w-5 rotate-180" />, color: "bg-finance-blue text-white" },
+    { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-white" },
+    { id: "forex", label: "Forex", icon: <TrendingUp className="h-5 w-5" />, color: "bg-white" },
+    { id: "commodities", label: "Commodities", icon: <TrendingUp className="h-5 w-5" />, color: "bg-white" },
     { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-white" },
     { id: "news", label: "News", icon: <FileText className="h-5 w-5" />, color: "bg-white" },
     { id: "alert", label: "Set Alert", icon: <Bell className="h-5 w-5" />, color: "bg-white" }

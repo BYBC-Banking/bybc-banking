@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Fingerprint, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -42,9 +42,14 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validation.identifier && validation.password) {
-      // In a real app, this would handle authentication
-      console.log("Login attempt with:", formData);
-      navigate("/"); // Navigate to dashboard on successful login
+      // Check for admin credentials
+      if (formData.identifier === "bybc.banking@gmail.com" && formData.password === "adminbybc") {
+        console.log("Login successful with admin credentials");
+        navigate("/dashboard"); // Navigate to dashboard on successful login
+      } else {
+        console.log("Login attempt with:", formData);
+        navigate("/dashboard"); // For demo purposes, navigate anyway
+      }
     }
   };
 
@@ -175,13 +180,20 @@ const Login = () => {
               <span>Login with Biometrics</span>
             </Button>
             
-            <div className="text-center">
+            <div className="text-center space-y-2">
               <a 
                 href="#forgot-password" 
-                className="text-sm text-finance-blue hover:underline transition-all"
+                className="text-sm text-finance-blue hover:underline transition-all block"
               >
                 Forgot Password?
               </a>
+              
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <Link to="/register" className="text-finance-blue hover:underline font-medium">
+                  Register
+                </Link>
+              </p>
             </div>
           </div>
         </form>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -28,6 +28,7 @@ import Receive from "./pages/Receive";
 import Transfer from "./pages/Transfer";
 import Inbox from "./pages/Inbox";
 import CreateAccount from "./pages/CreateAccount";
+import Register from "./pages/Register";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/NavBar";
 import MobileNavigation from "./components/navigation/MobileNavigation";
@@ -53,8 +54,10 @@ const AppContent = () => {
         <MobileNavigation />
         <div className={isMobile ? "pb-16" : ""}>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/dashboard" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/investments" element={<Investments />} />
             <Route path="/education" element={<Education />} />
             <Route path="/topics" element={<Topics />} />

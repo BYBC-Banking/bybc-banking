@@ -1,13 +1,132 @@
 
 import React from 'react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Check } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Language() {
+  const [selectedLanguage, setSelectedLanguage] = React.useState("en-US");
+  const { toast } = useToast();
+  
+  const languages = [
+    { id: "en-US", name: "English (US)", flag: "🇺🇸" },
+    { id: "en-GB", name: "English (UK)", flag: "🇬🇧" },
+    { id: "fr-FR", name: "Français", flag: "🇫🇷" },
+    { id: "es-ES", name: "Español", flag: "🇪🇸" },
+    { id: "de-DE", name: "Deutsch", flag: "🇩🇪" },
+    { id: "zh-CN", name: "中文 (简体)", flag: "🇨🇳" },
+    { id: "ja-JP", name: "日本語", flag: "🇯🇵" },
+    { id: "ar-SA", name: "العربية", flag: "🇸🇦" },
+    { id: "pt-BR", name: "Português (Brasil)", flag: "🇧🇷" },
+    { id: "ru-RU", name: "Русский", flag: "🇷🇺" },
+    { id: "hi-IN", name: "हिन्दी", flag: "🇮🇳" },
+    { id: "sw-KE", name: "Kiswahili", flag: "🇰🇪" },
+    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" },
+    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
+    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" }
+  ];
+  
+  const saveLanguage = () => {
+    toast({
+      title: "Language updated",
+      description: `Your language preference has been set to ${
+        languages.find(lang => lang.id === selectedLanguage)?.name
+      }`,
+    });
+  };
+  
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">Language Settings</h1>
-      <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <p className="text-gray-600">Change the app language preferences.</p>
+    <div className="container mx-auto py-8 px-4 max-w-3xl">
+      <div className="flex items-center mb-6">
+        <Link to="/dashboard" className="mr-3">
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <h1 className="text-2xl font-bold">Language Settings</h1>
       </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Select Your Preferred Language</CardTitle>
+          <CardDescription>
+            Choose the language you want to use throughout the application. 
+            This will affect all text, notifications, and communications.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup 
+            value={selectedLanguage}
+            onValueChange={setSelectedLanguage}
+            className="grid gap-2"
+          >
+            {languages.map((language) => (
+              <div key={language.id} className="flex items-center space-x-2 border rounded-md p-3 cursor-pointer hover:bg-muted transition-colors">
+                <RadioGroupItem value={language.id} id={language.id} />
+                <Label 
+                  htmlFor={language.id} 
+                  className="flex items-center justify-between w-full cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <span className="text-xl mr-3">{language.flag}</span>
+                    <span>{language.name}</span>
+                  </div>
+                  {selectedLanguage === language.id && (
+                    <Check className="h-4 w-4 text-primary" />
+                  )}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+          
+          <div className="flex justify-end mt-6">
+            <Button onClick={saveLanguage}>
+              Save Preferences
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Region & Format Settings</CardTitle>
+          <CardDescription>
+            Configure how dates, times, currencies, and numbers are displayed
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="date-format">Date Format</Label>
+              <select 
+                id="date-format"
+                className="w-full mt-1 p-2 border rounded-md"
+                defaultValue="dd/mm/yyyy"
+              >
+                <option value="dd/mm/yyyy">DD/MM/YYYY (e.g., 31/12/2023)</option>
+                <option value="mm/dd/yyyy">MM/DD/YYYY (e.g., 12/31/2023)</option>
+                <option value="yyyy-mm-dd">YYYY-MM-DD (e.g., 2023-12-31)</option>
+              </select>
+            </div>
+            
+            <div>
+              <Label htmlFor="currency">Currency Display</Label>
+              <select 
+                id="currency"
+                className="w-full mt-1 p-2 border rounded-md"
+                defaultValue="ZAR"
+              >
+                <option value="ZAR">South African Rand (R)</option>
+                <option value="USD">US Dollar ($)</option>
+                <option value="EUR">Euro (€)</option>
+                <option value="GBP">British Pound (£)</option>
+              </select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

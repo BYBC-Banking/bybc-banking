@@ -17,7 +17,7 @@ const EducationHeader = ({ name }: EducationHeaderProps) => {
           Continue your financial learning journey
         </p>
       </div>
-      <Link to="/" className="h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
+      <Link to="/topics" className="h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
         <BookOpen className="h-5 w-5" />
       </Link>
     </div>
