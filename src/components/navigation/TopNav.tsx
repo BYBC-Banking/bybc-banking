@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, Menu, LogOut, LogIn } from "lucide-react";
+import { Bell, Menu, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -59,33 +59,27 @@ export default function TopNav() {
                 <h2 className="text-lg font-medium text-white">Menu</h2>
               </div>
               
-              <nav className="mt-4">
-                {menuItems.map(item => (
-                  <Link 
-                    key={item.href} 
-                    to={item.href} 
-                    onClick={handleMenuItemClick} 
-                    className={cn("flex items-center py-3 px-6", "text-gray-200 hover:bg-white/5 transition-colors")}
-                  >
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+              <nav className="mt-4 flex flex-col h-full">
+                <div>
+                  {menuItems.map(item => (
+                    <Link 
+                      key={item.href} 
+                      to={item.href} 
+                      onClick={handleMenuItemClick} 
+                      className={cn("flex items-center py-3 px-6", "text-gray-200 hover:bg-white/5 transition-colors")}
+                    >
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
                 
-                <Separator className="my-2 bg-white/10" />
-                
-                <Link 
-                  to="/login" 
-                  onClick={handleMenuItemClick} 
-                  className={cn("flex items-center py-3 px-6", "text-gray-200 hover:bg-white/5 transition-colors")}
-                >
-                  <LogIn className="h-5 w-5 mr-3" />
-                  <span>Login</span>
-                </Link>
-                
-                <button onClick={handleLogout} className="flex items-center py-3 px-6 w-full text-left text-red-400 hover:bg-white/5 transition-colors">
-                  <LogOut className="h-5 w-5 mr-3" />
-                  <span>Log Out</span>
-                </button>
+                <div className="mt-auto pb-4">
+                  <Separator className="my-2 bg-white/10" />
+                  <button onClick={handleLogout} className="flex items-center py-3 px-6 w-full text-left text-red-400 hover:bg-white/5 transition-colors">
+                    <LogOut className="h-5 w-5 mr-3" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
               </nav>
             </div>
           </SheetContent>

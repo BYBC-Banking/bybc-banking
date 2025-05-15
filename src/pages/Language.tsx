@@ -88,45 +88,6 @@ export default function Language() {
           </div>
         </CardContent>
       </Card>
-      
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Region & Format Settings</CardTitle>
-          <CardDescription>
-            Configure how dates, times, currencies, and numbers are displayed
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="date-format">Date Format</Label>
-              <select 
-                id="date-format"
-                className="w-full mt-1 p-2 border rounded-md"
-                defaultValue="dd/mm/yyyy"
-              >
-                <option value="dd/mm/yyyy">DD/MM/YYYY (e.g., 31/12/2023)</option>
-                <option value="mm/dd/yyyy">MM/DD/YYYY (e.g., 12/31/2023)</option>
-                <option value="yyyy-mm-dd">YYYY-MM-DD (e.g., 2023-12-31)</option>
-              </select>
-            </div>
-            
-            <div>
-              <Label htmlFor="currency">Currency Display</Label>
-              <select 
-                id="currency"
-                className="w-full mt-1 p-2 border rounded-md"
-                defaultValue="ZAR"
-              >
-                <option value="ZAR">South African Rand (R)</option>
-                <option value="USD">US Dollar ($)</option>
-                <option value="EUR">Euro (€)</option>
-                <option value="GBP">British Pound (£)</option>
-              </select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

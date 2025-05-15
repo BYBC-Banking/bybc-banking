@@ -1,9 +1,19 @@
 
 import { useState } from "react";
-import { ArrowLeft, Plus, User } from "lucide-react";
+import { ArrowLeft, Plus, User, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type Beneficiary = {
   id: string;
@@ -15,6 +25,12 @@ type Beneficiary = {
 
 const Send = () => {
   const { toast } = useToast();
+  const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false);
+  const [newBeneficiary, setNewBeneficiary] = useState({
+    name: "",
+    accountNumber: "",
+    bankName: ""
+  });
   
   // Mock beneficiaries data
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([
@@ -41,16 +57,47 @@ const Send = () => {
   ]);
   
   const handleAddBeneficiary = () => {
-    toast({
-      title: "Add Beneficiary",
-      description: "This would open the add beneficiary form",
-    });
+    setIsAddBeneficiaryOpen(true);
   };
   
   const handleBeneficiarySelect = (beneficiary: Beneficiary) => {
     toast({
       title: "Send Money",
       description: `Selected to send money to ${beneficiary.name}`,
+    });
+  };
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewBeneficiary(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleSubmitBeneficiary = () => {
+    if (!newBeneficiary.name || !newBeneficiary.accountNumber || !newBeneficiary.bankName) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all fields",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const newId = (beneficiaries.length + 1).toString();
+    const beneficiaryToAdd = {
+      id: newId,
+      ...newBeneficiary
+    };
+    
+    setBeneficiaries([...beneficiaries, beneficiaryToAdd]);
+    setIsAddBeneficiaryOpen(false);
+    setNewBeneficiary({ name: "", accountNumber: "", bankName: "" });
+    
+    toast({
+      title: "Beneficiary Added",
+      description: `${newBeneficiary.name} has been added to your beneficiaries`
     });
   };
 
@@ -106,6 +153,66 @@ const Send = () => {
             </div>
           )}
         </div>
+        
+        {/* Add Beneficiary Dialog */}
+        <Dialog open={isAddBeneficiaryOpen} onOpenChange={setIsAddBeneficiaryOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Beneficiary</DialogTitle>
+              <DialogDescription>
+                Enter the beneficiary's details below to add them to your list.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input 
+                  id="name" 
+                  name="name" 
+                  placeholder="Enter beneficiary's full name" 
+                  value={newBeneficiary.name}
+                  onChange={handleInputChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="accountNumber">Account Number</Label>
+                <Input 
+                  id="accountNumber" 
+                  name="accountNumber" 
+                  placeholder="Enter account number" 
+                  value={newBeneficiary.accountNumber}
+                  onChange={handleInputChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="bankName">Bank Name</Label>
+                <Input 
+                  id="bankName" 
+                  name="bankName" 
+                  placeholder="Enter bank name" 
+                  value={newBeneficiary.bankName}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            
+            <DialogFooter className="sm:justify-end">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsAddBeneficiaryOpen(false)}
+                className="mr-2"
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleSubmitBeneficiary}>
+                Add Beneficiary
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

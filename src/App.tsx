@@ -3,7 +3,7 @@ import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -37,22 +37,30 @@ import { useIsMobile } from "./hooks/use-mobile";
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
 
-const AppContent = () => {
+const AppRoutes = () => {
   const isMobile = useIsMobile();
+  const location = useLocation();
+  
+  // Determine if we should show navigation based on the current route
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   
   React.useEffect(() => {
     // Scroll to top on route changes
     window.scrollTo(0, 0);
-  }, []);
+  }, [location]);
   
   return (
     <>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {!isMobile && <NavBar />}
-        <MobileNavigation />
-        <div className={isMobile ? "pb-16" : ""}>
+        {!isAuthPage && (
+          <>
+            {!isMobile && <NavBar />}
+            <MobileNavigation />
+          </>
+        )}
+        <div className={isMobile && !isAuthPage ? "pb-16" : ""}>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/dashboard" element={<Index />} />
@@ -92,7 +100,7 @@ const App = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppContent />
+        <AppRoutes />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
