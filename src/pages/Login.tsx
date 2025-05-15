@@ -61,11 +61,11 @@ const Login = () => {
   const isFormValid = validation.identifier && validation.password;
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-finance-blue-light to-finance-green-light flex flex-col justify-center px-4 py-12">
-      <div className="max-w-md w-full mx-auto bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 space-y-6 animate-fade-in">
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#F2FCE2] to-[#D3E4FD] flex flex-col justify-center px-4 py-12">
+      <div className="max-w-md w-full mx-auto bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8 space-y-6 animate-fade-in">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-finance-blue">Welcome Back</h1>
-          <p className="text-muted-foreground">Continue your financial journey</p>
+          <h1 className="text-2xl font-bold text-[#1A365D]">Welcome Back</h1>
+          <p className="text-[#8E9196]">Continue your financial journey</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -158,8 +158,8 @@ const Login = () => {
               type="submit"
               disabled={!isFormValid}
               className={cn(
-                "transition-all duration-200 hover:scale-[1.02]",
-                isFormValid ? "bg-finance-blue hover:bg-finance-blue-light" : "opacity-70"
+                "bg-[#1EAEDB] hover:bg-[#0FA0CE] transition-all shadow-md duration-200 hover:scale-[1.02]",
+                isFormValid ? "" : "opacity-70"
               )}
             >
               Log In
@@ -174,23 +174,23 @@ const Login = () => {
               type="button"
               variant="outline"
               onClick={handleBiometricAuth}
-              className="flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 hover:bg-gray-50 border-[#1EAEDB] text-[#1EAEDB] transition-colors"
             >
-              <Fingerprint className="text-finance-blue" size={18} />
+              <Fingerprint className="text-[#1EAEDB]" size={18} />
               <span>Login with Biometrics</span>
             </Button>
             
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-2 pt-2">
               <a 
                 href="#forgot-password" 
-                className="text-sm text-finance-blue hover:underline transition-all block"
+                className="text-sm text-[#999] hover:underline transition-all block"
               >
                 Forgot Password?
               </a>
               
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <Link to="/register" className="text-finance-blue hover:underline font-medium">
+                <Link to="/register" className="text-[#1A1F2C] font-medium hover:underline">
                   Register
                 </Link>
               </p>
