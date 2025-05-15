@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   {
     icon: Home,
     label: "Home",
-    href: "/",
+    href: "/dashboard", // Updated from "/" to "/dashboard"
   },
   {
     icon: TrendingUp,
