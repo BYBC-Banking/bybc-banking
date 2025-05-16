@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,9 +33,31 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NavBar from "./components/NavBar";
 import MobileNavigation from "./components/navigation/MobileNavigation";
 import { useIsMobile } from "./hooks/use-mobile";
+import AccountOnboarding from "./pages/AccountOnboarding";
+import CryptoPage from "./pages/CryptoPage";
+import StocksPage from "./pages/StocksPage";
 
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
+
+// Helper function to check if user is logged in
+const isLoggedIn = () => {
+  // Check local storage for login state
+  return localStorage.getItem('isLoggedIn') === 'true';
+};
+
+const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
+  
+  // If not logged in and not on login or register page, redirect to login
+  if (!isLoggedIn() && 
+      location.pathname !== '/login' && 
+      location.pathname !== '/register') {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
 
 const AppRoutes = () => {
   const isMobile = useIsMobile();
@@ -44,10 +66,24 @@ const AppRoutes = () => {
   // Determine if we should show navigation based on the current route
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   
-  React.useEffect(() => {
+  // Check initial login status (for first load)
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
+  
+  useEffect(() => {
+    // If this is the first visit and no login status exists, set default
+    if (localStorage.getItem('isLoggedIn') === null) {
+      // Default to not logged in for first visit
+      localStorage.setItem('isLoggedIn', 'false');
+    }
+    setInitialCheckDone(true);
+    
     // Scroll to top on route changes
     window.scrollTo(0, 0);
   }, [location]);
+  
+  if (!initialCheckDone) {
+    return null; // Don't render until initial check is done
+  }
   
   return (
     <>
@@ -62,31 +98,137 @@ const AppRoutes = () => {
         )}
         <div className={isMobile && !isAuthPage ? "pb-16" : ""}>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/dashboard" element={<Index />} />
+            <Route path="/" element={<Navigate to={isLoggedIn() ? "/dashboard" : "/login"} replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/investments" element={<Investments />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/topics" element={<Topics />} />
-            <Route path="/financial-news" element={<FinancialNews />} />
-            <Route path="/watchlist" element={<Watchlist />} />
-            <Route path="/nonprofit" element={<NonprofitLedger />} />
-            <Route path="/advisor" element={<Advisor />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/language" element={<Language />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/buy" element={<Buy />} />
-            <Route path="/send" element={<Send />} />
-            <Route path="/receive" element={<Receive />} />
-            <Route path="/transfer" element={<Transfer />} />
-            <Route path="/inbox" element={<Inbox />} />
-            <Route path="/create-account" element={<CreateAccount />} />
+            
+            {/* Protected routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/investments" element={
+              <ProtectedRoute>
+                <Investments />
+              </ProtectedRoute>
+            } />
+            <Route path="/education" element={
+              <ProtectedRoute>
+                <Education />
+              </ProtectedRoute>
+            } />
+            <Route path="/topics" element={
+              <ProtectedRoute>
+                <Topics />
+              </ProtectedRoute>
+            } />
+            <Route path="/financial-news" element={
+              <ProtectedRoute>
+                <FinancialNews />
+              </ProtectedRoute>
+            } />
+            <Route path="/watchlist" element={
+              <ProtectedRoute>
+                <Watchlist />
+              </ProtectedRoute>
+            } />
+            <Route path="/nonprofit" element={
+              <ProtectedRoute>
+                <NonprofitLedger />
+              </ProtectedRoute>
+            } />
+            <Route path="/advisor" element={
+              <ProtectedRoute>
+                <Advisor />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <Help />
+              </ProtectedRoute>
+            } />
+            <Route path="/legal" element={
+              <ProtectedRoute>
+                <Legal />
+              </ProtectedRoute>
+            } />
+            <Route path="/language" element={
+              <ProtectedRoute>
+                <Language />
+              </ProtectedRoute>
+            } />
+            <Route path="/accounts" element={
+              <ProtectedRoute>
+                <Accounts />
+              </ProtectedRoute>
+            } />
+            <Route path="/transactions" element={
+              <ProtectedRoute>
+                <Transactions />
+              </ProtectedRoute>
+            } />
+            <Route path="/notifications" element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            } />
+            <Route path="/buy" element={
+              <ProtectedRoute>
+                <Buy />
+              </ProtectedRoute>
+            } />
+            <Route path="/send" element={
+              <ProtectedRoute>
+                <Send />
+              </ProtectedRoute>
+            } />
+            <Route path="/receive" element={
+              <ProtectedRoute>
+                <Receive />
+              </ProtectedRoute>
+            } />
+            <Route path="/transfer" element={
+              <ProtectedRoute>
+                <Transfer />
+              </ProtectedRoute>
+            } />
+            <Route path="/inbox" element={
+              <ProtectedRoute>
+                <Inbox />
+              </ProtectedRoute>
+            } />
+            <Route path="/create-account" element={
+              <ProtectedRoute>
+                <CreateAccount />
+              </ProtectedRoute>
+            } />
+            <Route path="/account-onboarding/:accountType" element={
+              <ProtectedRoute>
+                <AccountOnboarding />
+              </ProtectedRoute>
+            } />
+            <Route path="/crypto" element={
+              <ProtectedRoute>
+                <CryptoPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/stocks" element={
+              <ProtectedRoute>
+                <StocksPage />
+              </ProtectedRoute>
+            } />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

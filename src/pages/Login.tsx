@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     identifier: "",
@@ -45,9 +47,28 @@ const Login = () => {
       // Check for admin credentials
       if (formData.identifier === "bybc.banking@gmail.com" && formData.password === "adminbybc") {
         console.log("Login successful with admin credentials");
+        
+        // Set login state
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Show success toast
+        toast({
+          title: "Login successful",
+          description: "Welcome to BYBC Banking",
+        });
+        
         navigate("/dashboard"); // Navigate to dashboard on successful login
       } else {
         console.log("Login attempt with:", formData);
+        
+        // For demo purposes, accept any valid format credentials
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        toast({
+          title: "Login successful",
+          description: "Welcome to BYBC Banking",
+        });
+        
         navigate("/dashboard"); // For demo purposes, navigate anyway
       }
     }
@@ -56,6 +77,16 @@ const Login = () => {
   const handleBiometricAuth = () => {
     // This would integrate with device biometric APIs in a real app
     console.log("Biometric authentication requested");
+    
+    // For demo purposes, simulate successful biometric auth
+    localStorage.setItem('isLoggedIn', 'true');
+    
+    toast({
+      title: "Biometric authentication successful",
+      description: "Welcome to BYBC Banking",
+    });
+    
+    navigate("/dashboard");
   };
 
   const isFormValid = validation.identifier && validation.password;

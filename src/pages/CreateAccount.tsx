@@ -67,7 +67,8 @@ const CreateAccount = () => {
           title: "Login Successful",
           description: "Welcome back to BYBC Banking",
         });
-        navigate("/");
+        localStorage.setItem('isLoggedIn', 'true');
+        navigate("/dashboard");
       } else {
         toast({
           title: "Login Failed",
@@ -76,12 +77,8 @@ const CreateAccount = () => {
         });
       }
     } else {
-      // Handle new account creation
-      toast({
-        title: "Account Created",
-        description: `Your new ${accountTypes.find(type => type.id === accountType)?.name} has been created`,
-      });
-      navigate("/");
+      // Redirect to the appropriate onboarding page for the selected account type
+      navigate(`/account-onboarding/${accountType}`);
     }
   };
   
