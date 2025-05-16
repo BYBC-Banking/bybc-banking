@@ -1,78 +1,83 @@
 
-import { ShoppingCart, Bell, BookmarkCheck, FileText, ArrowUp, Bitcoin, TrendingUp } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { TrendingUp, RefreshCw, ArrowUpDown, LineChart, Bitcoin, BarChart3 } from 'lucide-react';
 
-const InvestmentActionBar = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  
-  const handleActionClick = (action: string) => {
-    switch (action) {
-      case "Buy":
-        navigate("/buy");
-        break;
-      case "Sell":
-        toast({
-          title: "Sell",
-          description: "Sell action selected",
-        });
-        break;
-      case "Watchlist":
-        navigate("/watchlist");
-        break;
-      case "News":
-        navigate("/financial-news");
-        break;
-      case "Set Alert":
-        toast({
-          title: "Alert",
-          description: "Alert action selected",
-        });
-        break;
-      case "Crypto":
-        navigate("/crypto");
-        break;
-      case "Stocks":
-        navigate("/stocks");
-        break;
-      default:
-        toast({
-          title: action,
-          description: `${action} action selected`,
-        });
-    }
-  };
-  
-  const actions = [
-    { id: "buy", label: "Buy", icon: <ShoppingCart className="h-5 w-5" />, color: "bg-finance-green text-white" },
-    { id: "sell", label: "Sell", icon: <ArrowUp className="h-5 w-5 rotate-180" />, color: "bg-finance-blue text-white" },
-    { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-amber-500 text-white" },
-    { id: "stocks", label: "Stocks", icon: <TrendingUp className="h-5 w-5" />, color: "bg-teal-500 text-white" },
-    { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-white" },
-    { id: "news", label: "News", icon: <FileText className="h-5 w-5" />, color: "bg-white" },
-    { id: "alert", label: "Set Alert", icon: <Bell className="h-5 w-5" />, color: "bg-white" }
-  ];
-  
+interface InvestmentActionBarProps {
+  onBuyClick?: () => void;
+  onSellClick?: () => void;
+}
+
+const InvestmentActionBar = ({ onBuyClick, onSellClick }: InvestmentActionBarProps) => {
   return (
-    <div className="animate-fade-in mb-6" style={{ animationDelay: "100ms" }}>
-      <div className="overflow-x-auto pb-2">
-        <div className="flex gap-2 min-w-max">
-          {actions.map((action) => (
-            <button
-              key={action.id}
-              onClick={() => handleActionClick(action.label)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-sm border min-w-[44px] min-h-[44px] ${
-                action.color
-              } ${
-                action.color === "bg-white" ? "hover:bg-slate-50" : "hover:opacity-90"
-              } transition-colors`}
-            >
-              {action.icon}
-              <span className="text-sm font-medium">{action.label}</span>
-            </button>
-          ))}
-        </div>
+    <div className="my-6">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-lg font-semibold">Quick Actions</h2>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-3">
+        {onBuyClick && (
+          <button 
+            onClick={onBuyClick}
+            className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+          >
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-2">
+              <TrendingUp className="h-5 w-5 text-green-600" strokeWidth={2.5} />
+            </div>
+            <span className="text-sm">Buy</span>
+          </button>
+        )}
+        
+        {onSellClick && (
+          <button 
+            onClick={onSellClick}
+            className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+          >
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mb-2">
+              <ArrowUpDown className="h-5 w-5 text-red-600" strokeWidth={2.5} />
+            </div>
+            <span className="text-sm">Sell</span>
+          </button>
+        )}
+        
+        <Link 
+          to="/crypto"
+          className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-2">
+            <Bitcoin className="h-5 w-5 text-amber-600" strokeWidth={2.5} />
+          </div>
+          <span className="text-sm">Crypto</span>
+        </Link>
+
+        <Link 
+          to="/stocks" 
+          className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+            <BarChart3 className="h-5 w-5 text-blue-600" strokeWidth={2.5} />
+          </div>
+          <span className="text-sm">Stocks</span>
+        </Link>
+        
+        <Link 
+          to="/watchlist" 
+          className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
+            <LineChart className="h-5 w-5 text-slate-600" strokeWidth={2.5} />
+          </div>
+          <span className="text-sm">Watchlist</span>
+        </Link>
+
+        <button 
+          className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
+            <RefreshCw className="h-5 w-5 text-slate-600" strokeWidth={2.5} />
+          </div>
+          <span className="text-sm">Refresh</span>
+        </button>
       </div>
     </div>
   );

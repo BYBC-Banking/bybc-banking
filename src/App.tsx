@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -38,6 +39,7 @@ import StocksPage from "./pages/StocksPage";
 import CardControls from "./pages/CardControls";
 import AppAppearance from "./pages/AppAppearance";
 import ReferralAndEarn from "./pages/ReferralAndEarn";
+import LoadingScreen from "./components/LoadingScreen";
 
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
@@ -71,6 +73,7 @@ const AppRoutes = () => {
   
   // Check initial login status (for first load)
   const [initialCheckDone, setInitialCheckDone] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   // For handling back button
   useEffect(() => {
@@ -92,14 +95,27 @@ const AppRoutes = () => {
       // Default to not logged in for first visit
       localStorage.setItem('isLoggedIn', 'false');
     }
+    
+    // Set initial check done
     setInitialCheckDone(true);
+    
+    // Simulate loading screen with a timeout
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
     
     // Scroll to top on route changes
     window.scrollTo(0, 0);
+    
+    return () => clearTimeout(timer);
   }, [location]);
   
   if (!initialCheckDone) {
     return null; // Don't render until initial check is done
+  }
+  
+  if (loading) {
+    return <LoadingScreen />;
   }
   
   return (

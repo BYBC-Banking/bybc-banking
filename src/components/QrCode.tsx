@@ -5,19 +5,17 @@ import QRCode from 'qrcode';
 interface QrCodeProps {
   value: string;
   size?: number;
+  level?: string;
   bgColor?: string;
   fgColor?: string;
-  level?: string;
-  includeMargin?: boolean;
 }
 
-const QrCode: React.FC<QrCodeProps> = ({
+const QrCodeComponent: React.FC<QrCodeProps> = ({
   value,
   size = 200,
-  bgColor = '#FFFFFF',
-  fgColor = '#000000',
   level = 'M',
-  includeMargin = true,
+  bgColor = '#ffffff',
+  fgColor = '#000000'
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -25,24 +23,24 @@ const QrCode: React.FC<QrCodeProps> = ({
     if (canvasRef.current) {
       QRCode.toCanvas(
         canvasRef.current,
-        value || 'https://bybc.banking',
+        value,
         {
           width: size,
-          margin: includeMargin ? 4 : 0,
+          margin: 2,
+          errorCorrectionLevel: level as any,
           color: {
             dark: fgColor,
-            light: bgColor,
-          },
-          errorCorrectionLevel: level as any,
+            light: bgColor
+          }
         },
         (error) => {
-          if (error) console.error('Error generating QR Code:', error);
+          if (error) console.error('Error generating QR code:', error);
         }
       );
     }
-  }, [value, size, bgColor, fgColor, level, includeMargin]);
+  }, [value, size, level, bgColor, fgColor]);
 
   return <canvas ref={canvasRef} />;
 };
 
-export default QrCode;
+export default QrCodeComponent;

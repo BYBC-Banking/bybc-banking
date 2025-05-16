@@ -5,10 +5,14 @@ import PortfolioSummary from "@/components/PortfolioSummary";
 import InvestmentActionBar from "@/components/InvestmentActionBar";
 import AssetCardList from "@/components/AssetCardList";
 import { useToast } from "@/hooks/use-toast";
+import InvestmentModal from "@/components/InvestmentModal";
 
 const Investments = () => {
   const { toast } = useToast();
   const [selectedTimeframe, setSelectedTimeframe] = useState<"1D" | "1W" | "1M" | "3M" | "1Y" | "ALL">("1W");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalAction, setModalAction] = useState<'buy' | 'sell'>('buy');
+  const [selectedAsset, setSelectedAsset] = useState<string | undefined>(undefined);
   
   // Mock portfolio data
   const portfolioData = {
@@ -102,6 +106,18 @@ const Investments = () => {
     });
   };
   
+  const handleBuyClick = (assetId?: string) => {
+    setModalAction('buy');
+    setSelectedAsset(assetId);
+    setModalOpen(true);
+  };
+
+  const handleSellClick = (assetId?: string) => {
+    setModalAction('sell');
+    setSelectedAsset(assetId);
+    setModalOpen(true);
+  };
+  
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -116,10 +132,25 @@ const Investments = () => {
         />
         
         {/* Quick action buttons */}
-        <InvestmentActionBar />
+        <InvestmentActionBar 
+          onBuyClick={() => handleBuyClick()} 
+          onSellClick={() => handleSellClick()} 
+        />
         
         {/* Asset cards */}
-        <AssetCardList assets={assets} />
+        <AssetCardList 
+          assets={assets} 
+          onBuyClick={handleBuyClick}
+          onSellClick={handleSellClick}
+        />
+        
+        {/* Investment Modal */}
+        <InvestmentModal 
+          isOpen={modalOpen}
+          onOpenChange={setModalOpen}
+          actionType={modalAction}
+          assetName={selectedAsset ? assets.find(a => a.id === selectedAsset)?.name : 'assets'}
+        />
       </div>
     </div>
   );

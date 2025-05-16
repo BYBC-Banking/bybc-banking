@@ -14,6 +14,7 @@ interface Recommendation {
   difficulty: DifficultyLevel;
   imageUrl: string;
   duration: string;
+  description: string;
 }
 
 interface RecommendationsCarouselProps {
@@ -61,11 +62,12 @@ const RecommendationsCarousel = ({ recommendations }: RecommendationsCarouselPro
                   </Badge>
                 </div>
                 <h4 className="font-medium text-sm line-clamp-2">{item.title}</h4>
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-muted-foreground">{item.duration}</span>
-                  <Link to={`/education/${item.id}`} className="text-xs text-finance-blue">
-                    Learn more
-                  </Link>
+                  <Button size="sm" variant="default" className="text-xs">
+                    Start Learning
+                  </Button>
                 </div>
               </CardContent>
             </Card>

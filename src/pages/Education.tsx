@@ -39,11 +39,12 @@ const Education = () => {
     { id: "m7", title: "Advanced Investing", completed: false, current: false }
   ];
   
-  // Mock recommendations data
+  // Mock recommendations data - enhanced with descriptions
   const recommendations = [
     {
       id: "r1",
       title: "Understanding Market Volatility",
+      description: "Learn how markets fluctuate and strategies to handle volatility in your investments",
       type: "Articles" as ContentType,
       difficulty: "Intermediate" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?finance",
@@ -52,6 +53,7 @@ const Education = () => {
     {
       id: "r2",
       title: "Compound Interest Explained",
+      description: "Discover how compound interest works and why it's called the eighth wonder of the world",
       type: "Videos" as ContentType,
       difficulty: "Beginner" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?money",
@@ -60,6 +62,7 @@ const Education = () => {
     {
       id: "r3",
       title: "Test Your Investment Knowledge",
+      description: "Challenge yourself with this interactive quiz on investment fundamentals",
       type: "Quizzes" as ContentType,
       difficulty: "Intermediate" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?invest",
@@ -68,6 +71,7 @@ const Education = () => {
     {
       id: "r4",
       title: "Retirement Calculator",
+      description: "Plan your future with our comprehensive retirement planning calculator",
       type: "Tools" as ContentType,
       difficulty: "Advanced" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?calculator",
@@ -76,6 +80,7 @@ const Education = () => {
     {
       id: "r5",
       title: "Introduction to ETFs",
+      description: "Learn the basics of Exchange Traded Funds and how they can diversify your portfolio",
       type: "Articles" as ContentType,
       difficulty: "Beginner" as DifficultyLevel,
       imageUrl: "https://source.unsplash.com/random/300x200?stocks",
