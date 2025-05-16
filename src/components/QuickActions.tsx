@@ -1,7 +1,7 @@
 
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
-import { ArrowRight, Inbox, QrCode, ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Inbox, QrCode, ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie, Bitcoin } from "lucide-react";
 import { useHomePage } from "@/context/HomePageContext";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -10,6 +10,7 @@ const QuickActions = () => {
   const { toast } = useToast();
   const { selectedAccount } = useHomePage();
   const [scanDialogOpen, setScanDialogOpen] = useState(false);
+  const navigate = useNavigate();
   
   const handleActionClick = (action: string) => {
     toast({
@@ -72,7 +73,8 @@ const QuickActions = () => {
       ],
       "Investments": [
         { id: "chart", label: "Analytics", icon: <ChartPie className="h-5 w-5" />, color: "bg-blue-600", path: "/investments" },
-        { id: "trending", label: "Markets", icon: <TrendingUp className="h-5 w-5" />, color: "bg-green-600", path: "/financial-news" },
+        { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-amber-500", path: "/crypto" },
+        { id: "stocks", label: "Stocks", icon: <TrendingUp className="h-5 w-5" />, color: "bg-teal-500", path: "/stocks" },
         { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-purple-600", path: "/watchlist" },
         { id: "inbox", label: "Inbox", icon: <Inbox className="h-5 w-5" />, color: "bg-yellow-500", path: "/inbox" },
       ]
@@ -127,9 +129,6 @@ const QuickActions = () => {
       <div className="mb-6 animate-fade-in" style={{animationDelay: "50ms"}}>
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-lg font-semibold">Quick Actions</h2>
-          <Link to="/transactions" className="text-sm text-primary flex items-center">
-            More <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
         </div>
         
         <div className="grid grid-cols-4 gap-2">

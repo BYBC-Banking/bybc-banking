@@ -1,22 +1,38 @@
 
 import React, { useEffect } from 'react';
 import { ArrowLeft, User, Lock, Bell, Globe, Shield, CreditCard, Smartphone, ExternalLink, HelpCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from '@/hooks/use-toast';
 
 export default function Settings() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   
+  const handleBack = () => {
+    navigate(-1);
+  };
+  
+  const handleLogout = () => {
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out"
+    });
+    // In a real app, you would handle actual logout logic here
+  };
+  
   return (
     <div className="container mx-auto max-w-md py-8 px-4">
       <header className="flex items-center gap-4 mb-6">
-        <Link to="/" className="p-2">
+        <button onClick={handleBack} className="p-2">
           <ArrowLeft className="h-5 w-5" />
-        </Link>
+        </button>
         <h1 className="text-2xl font-bold">Settings</h1>
       </header>
 
@@ -97,23 +113,23 @@ export default function Settings() {
           
           <Separator />
           
-          <div className="flex items-center justify-between py-2">
+          <Link to="/card-controls" className="flex items-center justify-between py-2">
             <div className="flex items-center">
               <CreditCard className="h-5 w-5 mr-3 text-gray-500" />
               <span>Card Controls</span>
             </div>
             <ArrowLeft className="h-4 w-4 rotate-180" />
-          </div>
+          </Link>
           
           <Separator />
           
-          <div className="flex items-center justify-between py-2">
+          <Link to="/app-appearance" className="flex items-center justify-between py-2">
             <div className="flex items-center">
               <Smartphone className="h-5 w-5 mr-3 text-gray-500" />
               <span>App Appearance</span>
             </div>
             <ArrowLeft className="h-4 w-4 rotate-180" />
-          </div>
+          </Link>
           
           <Separator />
           

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -36,6 +36,8 @@ import { useIsMobile } from "./hooks/use-mobile";
 import AccountOnboarding from "./pages/AccountOnboarding";
 import CryptoPage from "./pages/CryptoPage";
 import StocksPage from "./pages/StocksPage";
+import CardControls from "./pages/CardControls";
+import AppAppearance from "./pages/AppAppearance";
 
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
@@ -62,12 +64,27 @@ const ProtectedRoute = ({ children }) => {
 const AppRoutes = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Determine if we should show navigation based on the current route
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   
   // Check initial login status (for first load)
   const [initialCheckDone, setInitialCheckDone] = useState(false);
+  
+  // For handling back button
+  useEffect(() => {
+    const handlePopState = () => {
+      // This will handle the browser's back button navigation
+      // The history API will automatically update the URL
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate]);
   
   useEffect(() => {
     // If this is the first visit and no login status exists, set default
@@ -226,6 +243,16 @@ const AppRoutes = () => {
             <Route path="/stocks" element={
               <ProtectedRoute>
                 <StocksPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/card-controls" element={
+              <ProtectedRoute>
+                <CardControls />
+              </ProtectedRoute>
+            } />
+            <Route path="/app-appearance" element={
+              <ProtectedRoute>
+                <AppAppearance />
               </ProtectedRoute>
             } />
             

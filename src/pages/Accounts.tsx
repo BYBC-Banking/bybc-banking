@@ -7,9 +7,9 @@ import { accounts } from "@/data/accountsData";
 const Accounts = () => {
   const navigate = useNavigate();
   
-  // Handle account selection - navigate to home with selected account ID
+  // Handle account selection - navigate to dashboard with selected account ID
   const handleAccountSelect = (accountId: string) => {
-    navigate(`/?account=${accountId}`);
+    navigate(`/dashboard?account=${accountId}`);
   };
 
   return (
@@ -17,7 +17,7 @@ const Accounts = () => {
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
-          <Link to="/" className="p-2">
+          <Link to="/dashboard" className="p-2">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-bold">All Accounts</h1>

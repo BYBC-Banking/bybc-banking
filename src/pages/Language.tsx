@@ -1,16 +1,20 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Language() {
-  const [selectedLanguage, setSelectedLanguage] = React.useState("en-US");
+  const [selectedLanguage, setSelectedLanguage] = React.useState(() => {
+    // Get stored language from localStorage or default to en-US
+    return localStorage.getItem('preferredLanguage') || "en-US";
+  });
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const languages = [
     { id: "en-US", name: "English (US)", flag: "🇺🇸" },
@@ -31,20 +35,32 @@ export default function Language() {
   ];
   
   const saveLanguage = () => {
+    // Save to localStorage
+    localStorage.setItem('preferredLanguage', selectedLanguage);
+    
+    // Show toast notification
     toast({
       title: "Language updated",
       description: `Your language preference has been set to ${
         languages.find(lang => lang.id === selectedLanguage)?.name
       }`,
     });
+    
+    // Navigate back
+    navigate(-1);
+  };
+  
+  // Handle back navigation
+  const handleBack = () => {
+    navigate(-1);
   };
   
   return (
     <div className="container mx-auto py-8 px-4 max-w-3xl">
       <div className="flex items-center mb-6">
-        <Link to="/dashboard" className="mr-3">
+        <button onClick={handleBack} className="mr-3">
           <ArrowLeft className="h-5 w-5" />
-        </Link>
+        </button>
         <h1 className="text-2xl font-bold">Language Settings</h1>
       </div>
       
