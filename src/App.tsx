@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -38,6 +37,7 @@ import CryptoPage from "./pages/CryptoPage";
 import StocksPage from "./pages/StocksPage";
 import CardControls from "./pages/CardControls";
 import AppAppearance from "./pages/AppAppearance";
+import ReferralAndEarn from "./pages/ReferralAndEarn";
 
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
@@ -253,6 +253,11 @@ const AppRoutes = () => {
             <Route path="/app-appearance" element={
               <ProtectedRoute>
                 <AppAppearance />
+              </ProtectedRoute>
+            } />
+            <Route path="/referral" element={
+              <ProtectedRoute>
+                <ReferralAndEarn />
               </ProtectedRoute>
             } />
             

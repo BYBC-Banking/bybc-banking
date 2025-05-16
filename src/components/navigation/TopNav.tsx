@@ -11,7 +11,11 @@ const menuItems = [
   {
     label: "Settings",
     href: "/settings"
-  }, 
+  },
+  {
+    label: "Referral and Earn",
+    href: "/referral"
+  },
   {
     label: "Help",
     href: "/help"
