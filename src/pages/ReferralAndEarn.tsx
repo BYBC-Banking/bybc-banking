@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Copy, Facebook, Twitter, Linkedin, Share2, MessageCircle } from "lucide-react";
+import { ArrowLeft, Copy, Facebook, Twitter, Linkedin, Share2, MessageCircle, ScanQrCode, QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
+import QrCodeComponent from "@/components/QrCode";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const ReferralAndEarn = () => {
   const { toast } = useToast();
@@ -26,6 +28,14 @@ const ReferralAndEarn = () => {
     toast({
       title: `Sharing to ${platform}`,
       description: `Your referral link is being shared to ${platform}`,
+    });
+  };
+
+  const handleScanQR = () => {
+    // In a real app, this would use the device's camera to scan a QR code
+    toast({
+      title: "QR Scanner",
+      description: "Opening camera to scan QR code. This is a mock functionality.",
     });
   };
 
@@ -56,6 +66,32 @@ const ReferralAndEarn = () => {
               </div>
             </div>
           </Card>
+
+          {/* QR Code Options */}
+          <div className="flex gap-2 justify-between">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex-1">
+                  <QrCode className="h-5 w-5 mr-2" />
+                  Show QR Code
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Your Referral QR Code</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center justify-center p-4">
+                  <QrCodeComponent value={referralLink} size={200} />
+                  <p className="mt-4 text-sm text-muted-foreground text-center">Scan this code to use your referral</p>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Button variant="outline" className="flex-1" onClick={handleScanQR}>
+              <ScanQrCode className="h-5 w-5 mr-2" />
+              Scan QR Code
+            </Button>
+          </div>
 
           {/* How it works */}
           <div>
