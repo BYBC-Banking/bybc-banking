@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import BusinessPackageSelection from '@/components/BusinessPackageSelection';
 
 // Form step interface
 interface FormStep {
@@ -55,25 +56,39 @@ const accountTypes = {
   }
 };
 
-// Form steps
-const formSteps: FormStep[] = [
-  {
-    title: "Personal Information",
-    description: "Provide your basic personal details"
-  },
-  {
-    title: "Identification",
-    description: "Upload identity verification documents"
-  },
-  {
-    title: "Contact Details",
-    description: "Provide your contact information"
-  },
-  {
-    title: "Additional Information",
-    description: "Complete required information for your account type"
+// Form steps - updated to include package selection for business accounts
+const getFormSteps = (accountType: string): FormStep[] => {
+  const baseSteps = [
+    {
+      title: "Personal Information",
+      description: "Provide your basic personal details"
+    },
+    {
+      title: "Identification",
+      description: "Upload identity verification documents"
+    },
+    {
+      title: "Contact Details",
+      description: "Provide your contact information"
+    },
+    {
+      title: "Additional Information",
+      description: "Complete required information for your account type"
+    }
+  ];
+
+  if (accountType === "business") {
+    return [
+      ...baseSteps,
+      {
+        title: "Package Selection",
+        description: "Choose your business banking package"
+      }
+    ];
   }
-];
+
+  return baseSteps;
+};
 
 // Form fields configuration
 const formFields: FormField[] = [
@@ -114,12 +129,17 @@ const AccountOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [filePreview, setFilePreview] = useState<Record<string, string>>({});
+  const [selectedPackage, setSelectedPackage] = useState<string>("");
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   
   // Get account type info
   const accountTypeInfo = accountTypes[accountType as keyof typeof accountTypes] || accountTypes.spending;
+  
+  // Get form steps based on account type
+  const formSteps = getFormSteps(accountType || "spending");
   
   // Filter fields based on current step and account type
   const getCurrentStepFields = () => {
@@ -163,6 +183,11 @@ const AccountOnboarding = () => {
       };
     }
   };
+
+  const handlePackageSelection = (packageType: string, addOns: string[]) => {
+    setSelectedPackage(packageType);
+    setSelectedAddOns(addOns);
+  };
   
   const nextStep = () => {
     if (currentStep < formSteps.length - 1) {
@@ -182,6 +207,16 @@ const AccountOnboarding = () => {
   };
   
   const handleSubmit = () => {
+    const submissionData = {
+      ...formData,
+      ...(accountType === "business" && {
+        selectedPackage,
+        selectedAddOns
+      })
+    };
+    
+    console.log("Form submission data:", submissionData);
+    
     toast({
       title: "Account Application Submitted",
       description: "We'll review your application and be in touch soon",
@@ -350,6 +385,9 @@ const AccountOnboarding = () => {
     }
   };
 
+  // Check if current step is the package selection step for business accounts
+  const isPackageSelectionStep = accountType === "business" && currentStep === formSteps.length - 1;
+
   return (
     <div className="bg-gradient-to-br from-[#1A1F2C] to-[#7E69AB] min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -387,44 +425,53 @@ const AccountOnboarding = () => {
           ))}
         </div>
         
-        <Card className="mb-6 border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle>{formSteps[currentStep].title}</CardTitle>
-            <CardDescription>{formSteps[currentStep].description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {getCurrentStepFields().map((field) => (
-                <div key={field.id} className="space-y-2">
-                  <Label htmlFor={field.id} className="text-sm font-medium">
-                    {field.label}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </Label>
-                  {renderField(field)}
+        {isPackageSelectionStep ? (
+          <div className="bg-white rounded-lg p-4">
+            <BusinessPackageSelection
+              onContinue={handlePackageSelection}
+              onBack={prevStep}
+            />
+          </div>
+        ) : (
+          <Card className="mb-6 border-0 shadow-lg">
+            <CardHeader>
+              <CardTitle>{formSteps[currentStep].title}</CardTitle>
+              <CardDescription>{formSteps[currentStep].description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {getCurrentStepFields().map((field) => (
+                  <div key={field.id} className="space-y-2">
+                    <Label htmlFor={field.id} className="text-sm font-medium">
+                      {field.label}
+                      {field.required && <span className="text-red-500 ml-1">*</span>}
+                    </Label>
+                    {renderField(field)}
+                  </div>
+                ))}
+                
+                <div className="flex justify-between pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={prevStep}
+                    disabled={currentStep === 0}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={nextStep}
+                    className={cn("text-white", accountTypeInfo.color)}
+                  >
+                    {currentStep === formSteps.length - 1 ? "Submit" : "Next"}
+                    {currentStep !== formSteps.length - 1 && <ChevronRight className="ml-1 h-4 w-4" />}
+                  </Button>
                 </div>
-              ))}
-              
-              <div className="flex justify-between pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={prevStep}
-                  disabled={currentStep === 0}
-                >
-                  Back
-                </Button>
-                <Button
-                  type="button"
-                  onClick={nextStep}
-                  className={cn("text-white", accountTypeInfo.color)}
-                >
-                  {currentStep === formSteps.length - 1 ? "Submit" : "Next"}
-                  {currentStep !== formSteps.length - 1 && <ChevronRight className="ml-1 h-4 w-4" />}
-                </Button>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
