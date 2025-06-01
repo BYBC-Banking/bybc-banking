@@ -35,24 +35,20 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-50 transition-opacity duration-500"
+      className="fixed inset-0 bg-gray-100 flex flex-col items-center justify-center z-50 transition-opacity duration-500"
       style={{ opacity }}
     >
-      <div className="w-24 h-24 mb-8">
+      <div className="w-32 h-32 mb-8">
         <img 
-          src="/public/logo.png" 
-          alt="BYBC Logo" 
+          src="/lovable-uploads/e2051e76-8b0d-490d-b55b-1459c01a5438.png" 
+          alt="BYBC Banking Logo" 
           className="w-full h-full object-contain"
-          onError={(e) => {
-            // Fallback if logo image doesn't exist
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
         />
       </div>
       <div className="animate-spin mb-6">
         <Loader2 className="h-10 w-10 text-amber-500" strokeWidth={3} />
       </div>
-      <p className="text-white text-lg font-medium">BYBC Banking is preparing your experience...</p>
+      <p className="text-gray-700 text-lg font-medium">BYBC Banking is preparing your experience...</p>
     </div>
   );
 };

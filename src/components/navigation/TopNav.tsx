@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, Menu, LogOut, User } from "lucide-react";
+import { Bell, Menu, LogOut, User, Inbox } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -12,6 +12,11 @@ const menuItems = [
     label: "Profile",
     href: "/profile",
     icon: User
+  },
+  {
+    label: "Inbox",
+    href: "/inbox",
+    icon: Inbox
   },
   {
     label: "Settings",
