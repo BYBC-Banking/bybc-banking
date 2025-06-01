@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft, TrendingUp, TrendingDown, Clock, BookmarkPlus } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Wallet, BookmarkPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -117,6 +117,13 @@ const CryptoPage = () => {
       description: `Redirecting to sell ${crypto.name}.`
     });
   };
+
+  const handleWallet = (crypto: any) => {
+    toast({
+      title: "Wallet",
+      description: `Opening wallet for ${crypto.name}.`
+    });
+  };
   
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -220,9 +227,9 @@ const CryptoPage = () => {
               <Button variant="outline" className="border-finance-blue text-finance-blue hover:bg-finance-blue/10" onClick={() => handleSell(selectedCrypto)}>
                 Sell
               </Button>
-              <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10">
-                <Clock className="mr-2 h-4 w-4" />
-                History
+              <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10" onClick={() => handleWallet(selectedCrypto)}>
+                <Wallet className="mr-2 h-4 w-4" />
+                Wallet
               </Button>
             </div>
           </CardContent>

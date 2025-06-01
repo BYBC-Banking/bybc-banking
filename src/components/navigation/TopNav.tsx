@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, Menu, LogOut } from "lucide-react";
+import { Bell, Menu, LogOut, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
@@ -8,6 +8,11 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 const menuItems = [
+  {
+    label: "Profile",
+    href: "/profile",
+    icon: User
+  },
   {
     label: "Settings",
     href: "/settings"
@@ -72,6 +77,7 @@ export default function TopNav() {
                       onClick={handleMenuItemClick} 
                       className={cn("flex items-center py-3 px-6", "text-gray-200 hover:bg-white/5 transition-colors")}
                     >
+                      {item.icon && <item.icon className="h-5 w-5 mr-3" />}
                       <span>{item.label}</span>
                     </Link>
                   ))}

@@ -9,6 +9,7 @@ import AccountsSection from "@/components/AccountsSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
+import { useHomePage } from "@/context/HomePageContext";
 
 const Index = () => {
   return (
@@ -22,14 +23,14 @@ const Index = () => {
             {/* Account Balance Section - Now using context */}
             <AccountBalanceFromContext />
             
+            {/* Accounts Section - Moved above Quick Actions */}
+            <AccountsSectionWithContext />
+            
             {/* Quick Actions */}
             <QuickActions />
             
             {/* Transactions List */}
             <TransactionSection />
-            
-            {/* Accounts Section - Now using context */}
-            <AccountsSectionWithContext />
             
             {/* Create Account Button */}
             <div className="flex justify-center mt-8 animate-fade-in" style={{animationDelay: "300ms"}}>
@@ -68,7 +69,7 @@ const AccountsSectionWithContext = () => {
   };
   
   return (
-    <div className="animate-fade-in" style={{animationDelay: "200ms"}}>
+    <div className="animate-fade-in" style={{animationDelay: "150ms"}}>
       <AccountsSection 
         accounts={accounts} 
         onAccountSelect={handleAccountSelect}
@@ -77,8 +78,5 @@ const AccountsSectionWithContext = () => {
     </div>
   );
 };
-
-// Fix missing import
-import { useHomePage } from "@/context/HomePageContext";
 
 export default Index;
