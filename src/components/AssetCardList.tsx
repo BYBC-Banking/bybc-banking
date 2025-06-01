@@ -21,9 +21,11 @@ interface Asset {
 
 interface AssetCardListProps {
   assets: Asset[];
+  onBuyClick?: (assetId?: string) => void;
+  onSellClick?: (assetId?: string) => void;
 }
 
-const AssetCardList = ({ assets }: AssetCardListProps) => {
+const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) => {
   const [expandedAssetId, setExpandedAssetId] = useState<string | null>(null);
   const { toast } = useToast();
   
@@ -115,7 +117,11 @@ const AssetCardList = ({ assets }: AssetCardListProps) => {
                         className="flex-1 bg-finance-green hover:bg-finance-green/90"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleActionClick("Buy", asset);
+                          if (onBuyClick) {
+                            onBuyClick(asset.id);
+                          } else {
+                            handleActionClick("Buy", asset);
+                          }
                         }}
                       >
                         <ShoppingCart className="h-4 w-4 mr-1" /> Buy
@@ -124,7 +130,11 @@ const AssetCardList = ({ assets }: AssetCardListProps) => {
                         className="flex-1 bg-finance-blue hover:bg-finance-blue/90"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleActionClick("Sell", asset);
+                          if (onSellClick) {
+                            onSellClick(asset.id);
+                          } else {
+                            handleActionClick("Sell", asset);
+                          }
                         }}
                       >
                         <ArrowUp className="h-4 w-4 mr-1 rotate-180" /> Sell

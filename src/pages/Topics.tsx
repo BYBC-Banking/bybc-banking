@@ -21,9 +21,9 @@ const topics = [
         description: "Understand the fundamentals of blockchain technology",
         progress: 0,
         lessons: [
-          { id: "c-l1", title: "What is Blockchain?", type: "video", duration: "5:30", completed: false },
-          { id: "c-l2", title: "Decentralization Explained", type: "reading", duration: "8 min read", completed: false },
-          { id: "c-l3", title: "Blockchain Technology Quiz", type: "quiz", duration: "10 questions", completed: false }
+          { id: "c-l1", title: "What is Blockchain?", type: "video" as const, duration: "5:30", completed: false },
+          { id: "c-l2", title: "Decentralization Explained", type: "reading" as const, duration: "8 min read", completed: false },
+          { id: "c-l3", title: "Blockchain Technology Quiz", type: "quiz" as const, duration: "10 questions", completed: false }
         ]
       },
       {
@@ -32,9 +32,9 @@ const topics = [
         description: "Learn about the first and most popular cryptocurrency",
         progress: 0,
         lessons: [
-          { id: "c-l4", title: "The History of Bitcoin", type: "video", duration: "8:45", completed: false },
-          { id: "c-l5", title: "How Bitcoin Works", type: "reading", duration: "12 min read", completed: false },
-          { id: "c-l6", title: "Bitcoin Wallets and Security", type: "video", duration: "7:20", completed: false }
+          { id: "c-l4", title: "The History of Bitcoin", type: "video" as const, duration: "8:45", completed: false },
+          { id: "c-l5", title: "How Bitcoin Works", type: "reading" as const, duration: "12 min read", completed: false },
+          { id: "c-l6", title: "Bitcoin Wallets and Security", type: "video" as const, duration: "7:20", completed: false }
         ]
       }
     ]
@@ -52,9 +52,9 @@ const topics = [
         description: "Understanding the foreign exchange market",
         progress: 30,
         lessons: [
-          { id: "f-l1", title: "Introduction to Forex", type: "video", duration: "6:15", completed: true },
-          { id: "f-l2", title: "Major Currency Pairs", type: "reading", duration: "10 min read", completed: true },
-          { id: "f-l3", title: "Market Participants", type: "quiz", duration: "8 questions", completed: false }
+          { id: "f-l1", title: "Introduction to Forex", type: "video" as const, duration: "6:15", completed: true },
+          { id: "f-l2", title: "Major Currency Pairs", type: "reading" as const, duration: "10 min read", completed: true },
+          { id: "f-l3", title: "Market Participants", type: "quiz" as const, duration: "8 questions", completed: false }
         ]
       },
       {
@@ -63,9 +63,9 @@ const topics = [
         description: "Learn different approaches to forex trading",
         progress: 0,
         lessons: [
-          { id: "f-l4", title: "Technical Analysis Basics", type: "video", duration: "10:30", completed: false },
-          { id: "f-l5", title: "Fundamental Analysis", type: "reading", duration: "15 min read", completed: false },
-          { id: "f-l6", title: "Risk Management", type: "video", duration: "9:45", completed: false }
+          { id: "f-l4", title: "Technical Analysis Basics", type: "video" as const, duration: "10:30", completed: false },
+          { id: "f-l5", title: "Fundamental Analysis", type: "reading" as const, duration: "15 min read", completed: false },
+          { id: "f-l6", title: "Risk Management", type: "video" as const, duration: "9:45", completed: false }
         ]
       }
     ]
@@ -83,9 +83,9 @@ const topics = [
         description: "Learn how stock markets work",
         progress: 75,
         lessons: [
-          { id: "s-l1", title: "What are Stocks?", type: "video", duration: "5:20", completed: true },
-          { id: "s-l2", title: "How Stock Markets Work", type: "reading", duration: "9 min read", completed: true },
-          { id: "s-l3", title: "Types of Stocks", type: "quiz", duration: "12 questions", completed: true }
+          { id: "s-l1", title: "What are Stocks?", type: "video" as const, duration: "5:20", completed: true },
+          { id: "s-l2", title: "How Stock Markets Work", type: "reading" as const, duration: "9 min read", completed: true },
+          { id: "s-l3", title: "Types of Stocks", type: "quiz" as const, duration: "12 questions", completed: true }
         ]
       },
       {
@@ -94,9 +94,9 @@ const topics = [
         description: "Methods for evaluating stocks",
         progress: 33,
         lessons: [
-          { id: "s-l4", title: "Fundamental Analysis", type: "video", duration: "11:15", completed: true },
-          { id: "s-l5", title: "Technical Analysis", type: "reading", duration: "14 min read", completed: false },
-          { id: "s-l6", title: "Stock Valuation Methods", type: "quiz", duration: "10 questions", completed: false }
+          { id: "s-l4", title: "Fundamental Analysis", type: "video" as const, duration: "11:15", completed: true },
+          { id: "s-l5", title: "Technical Analysis", type: "reading" as const, duration: "14 min read", completed: false },
+          { id: "s-l6", title: "Stock Valuation Methods", type: "quiz" as const, duration: "10 questions", completed: false }
         ]
       }
     ]
@@ -114,9 +114,9 @@ const topics = [
         description: "Understanding different types of commodities",
         progress: 0,
         lessons: [
-          { id: "cm-l1", title: "What are Commodities?", type: "video", duration: "6:30", completed: false },
-          { id: "cm-l2", title: "Commodities Markets", type: "reading", duration: "11 min read", completed: false },
-          { id: "cm-l3", title: "Types of Commodities Quiz", type: "quiz", duration: "8 questions", completed: false }
+          { id: "cm-l1", title: "What are Commodities?", type: "video" as const, duration: "6:30", completed: false },
+          { id: "cm-l2", title: "Commodities Markets", type: "reading" as const, duration: "11 min read", completed: false },
+          { id: "cm-l3", title: "Types of Commodities Quiz", type: "quiz" as const, duration: "8 questions", completed: false }
         ]
       }
     ]
@@ -134,9 +134,9 @@ const topics = [
         description: "Understanding how mutual funds work",
         progress: 50,
         lessons: [
-          { id: "mf-l1", title: "What are Mutual Funds?", type: "video", duration: "7:15", completed: true },
-          { id: "mf-l2", title: "Types of Mutual Funds", type: "reading", duration: "13 min read", completed: true },
-          { id: "mf-l3", title: "Mutual Fund Fees", type: "quiz", duration: "9 questions", completed: false }
+          { id: "mf-l1", title: "What are Mutual Funds?", type: "video" as const, duration: "7:15", completed: true },
+          { id: "mf-l2", title: "Types of Mutual Funds", type: "reading" as const, duration: "13 min read", completed: true },
+          { id: "mf-l3", title: "Mutual Fund Fees", type: "quiz" as const, duration: "9 questions", completed: false }
         ]
       }
     ]
@@ -154,9 +154,9 @@ const topics = [
         description: "Learn about different ways businesses operate",
         progress: 25,
         lessons: [
-          { id: "b-l1", title: "Types of Business Models", type: "video", duration: "8:20", completed: true },
-          { id: "b-l2", title: "Revenue Streams", type: "reading", duration: "10 min read", completed: false },
-          { id: "b-l3", title: "Business Structure Quiz", type: "quiz", duration: "12 questions", completed: false }
+          { id: "b-l1", title: "Types of Business Models", type: "video" as const, duration: "8:20", completed: true },
+          { id: "b-l2", title: "Revenue Streams", type: "reading" as const, duration: "10 min read", completed: false },
+          { id: "b-l3", title: "Business Structure Quiz", type: "quiz" as const, duration: "12 questions", completed: false }
         ]
       }
     ]
