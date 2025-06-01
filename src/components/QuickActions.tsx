@@ -1,7 +1,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie, Bitcoin } from "lucide-react";
+import { ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie, Bitcoin, QrCode } from "lucide-react";
 import { useHomePage } from "@/context/HomePageContext";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
