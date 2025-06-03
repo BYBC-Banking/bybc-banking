@@ -17,21 +17,17 @@ export default function Language() {
   const navigate = useNavigate();
   
   const languages = [
-    { id: "en-US", name: "English (US)", flag: "🇺🇸" },
+    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" },
+    { id: "en-ZA", name: "English (RSA)", flag: "za" },
     { id: "en-GB", name: "English (UK)", flag: "🇬🇧" },
-    { id: "fr-FR", name: "Français", flag: "🇫🇷" },
-    { id: "es-ES", name: "Español", flag: "🇪🇸" },
-    { id: "de-DE", name: "Deutsch", flag: "🇩🇪" },
-    { id: "zh-CN", name: "中文 (简体)", flag: "🇨🇳" },
-    { id: "ja-JP", name: "日本語", flag: "🇯🇵" },
-    { id: "ar-SA", name: "العربية", flag: "🇸🇦" },
-    { id: "pt-BR", name: "Português (Brasil)", flag: "🇧🇷" },
-    { id: "ru-RU", name: "Русский", flag: "🇷🇺" },
-    { id: "hi-IN", name: "हिन्दी", flag: "🇮🇳" },
-    { id: "sw-KE", name: "Kiswahili", flag: "🇰🇪" },
-    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" },
+    { id: "nso-ZA", name: "North Sotho", flag: za" },
+    { id: "st-ZA", name: "Southern Sotho", flag: za" },
+    { id: "ss-ZA", name: "Swati", flag: za" },
+    { id: "ts-ZA", name: "Tsonga", flag: za" },
+    { id: "tn-ZA", name: "Tswana", flag: "za" },
+    { id: "ve-ZA", name: "Venda", flag: za" },
     { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
-    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" }
+    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" }
   ];
   
   const saveLanguage = () => {
