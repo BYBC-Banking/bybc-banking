@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowDown, Banknote, SendHorizontal, ScanLine, CreditCard, TrendingUp, BookmarkCheck, ChartPie, Bitcoin, QrCode } from "lucide-react";
@@ -54,6 +53,7 @@ const QuickActions = () => {
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
         { id: "cards", label: "Cards", icon: <CreditCard className="h-5 w-5" />, color: "bg-slate-500", path: "/cards" },
+        { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-[#006634]", path: "/crypto-wallet" },
       ],
       "Savings": [
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
@@ -69,7 +69,7 @@ const QuickActions = () => {
       ],
       "Investments": [
         { id: "chart", label: "Analytics", icon: <ChartPie className="h-5 w-5" />, color: "bg-blue-600", path: "/investments" },
-        { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-amber-500", path: "/crypto" },
+        { id: "crypto", label: "Crypto", icon: <Bitcoin className="h-5 w-5" />, color: "bg-[#006634]", path: "/crypto-wallet" },
         { id: "stocks", label: "Stocks", icon: <TrendingUp className="h-5 w-5" />, color: "bg-teal-500", path: "/stocks" },
         { id: "watchlist", label: "Watchlist", icon: <BookmarkCheck className="h-5 w-5" />, color: "bg-purple-600", path: "/watchlist" },
       ]
