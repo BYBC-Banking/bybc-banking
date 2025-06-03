@@ -33,14 +33,6 @@ const Index = () => {
             <TransactionSection />
             
             {/* Create Account Button */}
-            <div className="flex justify-center mt-8 animate-fade-in" style={{animationDelay: "300ms"}}>
-              <Link to="/create-account">
-                <Button className="flex items-center gap-2">
-                  <PlusCircle className="h-5 w-5" />
-                  Create New Account
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
