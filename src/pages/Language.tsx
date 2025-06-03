@@ -20,14 +20,14 @@ export default function Language() {
     { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" },
     { id: "en-ZA", name: "English (RSA)", flag: "za" },
     { id: "en-GB", name: "English (UK)", flag: "🇬🇧" },
-    { id: "nso-ZA", name: "North Sotho", flag: za" },
-    { id: "st-ZA", name: "Southern Sotho", flag: za" },
-    { id: "ss-ZA", name: "Swati", flag: za" },
-    { id: "ts-ZA", name: "Tsonga", flag: za" },
-    { id: "tn-ZA", name: "Tswana", flag: "za" },
-    { id: "ve-ZA", name: "Venda", flag: za" },
     { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
-    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" }
+    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" },
+    { id: "nso-ZA", name: "Sepedi", flag: za" },
+    { id: "st-ZA", name: "Sesotho", flag: za" },
+    { id: "ss-ZA", name: "Siswati", flag: za" },
+    { id: "tn-ZA", name: "Tswana", flag: "za" },
+    { id: "ve-ZA", name: "Tshivenda", flag: za" },
+    { id: "ts-ZA", name: "Xitsonga", flag: za" }
   ];
   
   const saveLanguage = () => {
