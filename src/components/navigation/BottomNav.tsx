@@ -37,13 +37,12 @@ export default function BottomNav() {
   const location = useLocation();
   const isMobile = useIsMobile();
   
-  // Don't render bottom nav on desktop
   if (!isMobile) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1A1F2C] border-t border-white/10">
       <div className="max-w-screen-lg mx-auto">
-        <nav className="flex justify-between items-center px-4 py-2">
+        <nav className="flex justify-between items-center px-6 py-3">
           {/* First two nav items */}
           {navItems.slice(0, 2).map((item) => {
             const isActive = location.pathname === item.href;
@@ -52,16 +51,13 @@ export default function BottomNav() {
               <Link
                 key={item.href}
                 to={item.href}
-                className={cn(
-                  "flex flex-col items-center py-2 px-3 min-w-[64px]",
-                  "transition-colors duration-200"
-                )}
+                className="flex flex-col items-center py-1 px-2 min-w-[70px]"
               >
                 <item.icon 
                   className={cn(
                     "h-6 w-6 mb-1",
                     isActive 
-                      ? "text-amber-300" 
+                      ? "text-amber-400" 
                       : "text-gray-400"
                   )}
                 />
@@ -69,7 +65,7 @@ export default function BottomNav() {
                   className={cn(
                     "text-xs font-medium",
                     isActive 
-                      ? "text-amber-300" 
+                      ? "text-amber-400" 
                       : "text-gray-400"
                   )}
                 >
@@ -82,10 +78,10 @@ export default function BottomNav() {
           {/* Central Plus Button */}
           <Link
             to="/create-account"
-            className="flex flex-col items-center py-2 px-3"
+            className="flex flex-col items-center py-1"
           >
-            <div className="w-12 h-12 rounded-full bg-amber-400 flex items-center justify-center mb-1">
-              <Plus className="h-6 w-6 text-black" />
+            <div className="w-14 h-14 rounded-full bg-amber-400 flex items-center justify-center mb-1 shadow-lg">
+              <Plus className="h-7 w-7 text-black font-bold" strokeWidth={3} />
             </div>
           </Link>
           
@@ -97,16 +93,13 @@ export default function BottomNav() {
               <Link
                 key={item.href}
                 to={item.href}
-                className={cn(
-                  "flex flex-col items-center py-2 px-3 min-w-[64px]",
-                  "transition-colors duration-200"
-                )}
+                className="flex flex-col items-center py-1 px-2 min-w-[70px]"
               >
                 <item.icon 
                   className={cn(
                     "h-6 w-6 mb-1",
                     isActive 
-                      ? "text-amber-300" 
+                      ? "text-amber-400" 
                       : "text-gray-400"
                   )}
                 />
@@ -114,7 +107,7 @@ export default function BottomNav() {
                   className={cn(
                     "text-xs font-medium",
                     isActive 
-                      ? "text-amber-300" 
+                      ? "text-amber-400" 
                       : "text-gray-400"
                   )}
                 >

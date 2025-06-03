@@ -53,6 +53,7 @@ const QuickActions = () => {
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },
         { id: "paybills", label: "Pay Bills", icon: <Banknote className="h-5 w-5" />, color: "bg-indigo-500", path: "/" },
         { id: "topup", label: "Top Up", icon: <CreditCard className="h-5 w-5" />, color: "bg-pink-500", path: "/buy" },
+        { id: "cards", label: "Cards", icon: <CreditCard className="h-5 w-5" />, color: "bg-slate-500", path: "/cards" },
       ],
       "Savings": [
         { id: "transfer", label: "Transfer", icon: <SendHorizontal className="h-5 w-5" />, color: "bg-teal-500", path: "/transfer" },

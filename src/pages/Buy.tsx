@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { ArrowLeft, Signal, Zap, CreditCard, Check } from "lucide-react";
+import { ArrowLeft, Signal, Zap, CreditCard, Check, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -22,8 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { BeneficiaryProvider, useBeneficiary } from "@/context/BeneficiaryContext";
 
 type BuyOption = {
   id: string;
@@ -52,21 +51,18 @@ const airtimeAmounts = [
   { value: "custom", label: "Custom Amount" },
 ];
 
-const Buy = () => {
+const BuyContent = () => {
   const { toast } = useToast();
+  const { beneficiaries, addBeneficiary } = useBeneficiary();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [selectedNetwork, setSelectedNetwork] = useState<string>("");
   const [selectedAmount, setSelectedAmount] = useState<string>("10");
   const [customAmount, setCustomAmount] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  
-  const form = useForm({
-    defaultValues: {
-      network: "",
-      amount: "10",
-      phoneNumber: "",
-    }
-  });
+  const [showBeneficiaryDialog, setShowBeneficiaryDialog] = useState(false);
+  const [newBeneficiaryName, setNewBeneficiaryName] = useState("");
+  const [newBeneficiaryPhone, setNewBeneficiaryPhone] = useState("");
+  const [filteredBeneficiaries, setFilteredBeneficiaries] = useState(beneficiaries);
   
   // Buy options
   const buyOptions: BuyOption[] = [
@@ -92,6 +88,41 @@ const Buy = () => {
   
   const handleOptionClick = (option: BuyOption) => {
     setSelectedOption(option.id);
+  };
+
+  const handlePhoneNumberChange = (value: string) => {
+    setPhoneNumber(value);
+    
+    // Filter beneficiaries based on phone number input
+    if (value) {
+      const filtered = beneficiaries.filter(b => 
+        b.phoneNumber.includes(value) || b.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredBeneficiaries(filtered);
+    } else {
+      setFilteredBeneficiaries(beneficiaries);
+    }
+  };
+
+  const handleBeneficiarySelect = (beneficiary: any) => {
+    setPhoneNumber(beneficiary.phoneNumber);
+    setFilteredBeneficiaries([]);
+  };
+
+  const handleAddBeneficiary = () => {
+    if (newBeneficiaryName && newBeneficiaryPhone) {
+      addBeneficiary({
+        name: newBeneficiaryName,
+        phoneNumber: newBeneficiaryPhone,
+      });
+      setNewBeneficiaryName("");
+      setNewBeneficiaryPhone("");
+      setShowBeneficiaryDialog(false);
+      toast({
+        title: "Beneficiary Added",
+        description: `${newBeneficiaryName} has been added to your beneficiaries`,
+      });
+    }
   };
 
   const handlePurchase = () => {
@@ -161,15 +192,32 @@ const Buy = () => {
               </Select>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="phoneNumber">Phone Number</Label>
               <Input 
                 id="phoneNumber" 
                 type="tel" 
                 placeholder="0XX XXX XXXX"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => handlePhoneNumberChange(e.target.value)}
               />
+              
+              {/* Autocomplete dropdown */}
+              {phoneNumber && filteredBeneficiaries.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-10 max-h-40 overflow-y-auto">
+                  {filteredBeneficiaries.map((beneficiary) => (
+                    <div
+                      key={beneficiary.id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleBeneficiarySelect(beneficiary)}
+                    >
+                      <div className="font-medium">{beneficiary.name}</div>
+                      <div className="text-sm text-gray-500">{beneficiary.phoneNumber}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
               <p className="text-xs text-muted-foreground">Format: 0XXXXXXXXX or +27XXXXXXXXX</p>
             </div>
             
@@ -252,6 +300,46 @@ const Buy = () => {
           <h1 className="text-2xl font-bold">Top Up</h1>
         </header>
         
+        {/* Add Beneficiary Button */}
+        <div className="mb-4">
+          <Dialog open={showBeneficiaryDialog} onOpenChange={setShowBeneficiaryDialog}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Add Beneficiary
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Beneficiary</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="beneficiaryName">Name</Label>
+                  <Input
+                    id="beneficiaryName"
+                    value={newBeneficiaryName}
+                    onChange={(e) => setNewBeneficiaryName(e.target.value)}
+                    placeholder="Beneficiary name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="beneficiaryPhone">Phone Number</Label>
+                  <Input
+                    id="beneficiaryPhone"
+                    value={newBeneficiaryPhone}
+                    onChange={(e) => setNewBeneficiaryPhone(e.target.value)}
+                    placeholder="0XX XXX XXXX"
+                  />
+                </div>
+                <Button onClick={handleAddBeneficiary} className="w-full">
+                  Add Beneficiary
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+        
         {!selectedOption ? (
           // Buy Options
           <div className="space-y-4">
@@ -289,6 +377,14 @@ const Buy = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const Buy = () => {
+  return (
+    <BeneficiaryProvider>
+      <BuyContent />
+    </BeneficiaryProvider>
   );
 };
 

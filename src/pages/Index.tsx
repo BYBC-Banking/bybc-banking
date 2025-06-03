@@ -6,9 +6,6 @@ import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
 import TransactionSection from "@/components/home/TransactionSection";
 import AccountsSection from "@/components/AccountsSection";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { PlusCircle } from "lucide-react";
 import { useHomePage } from "@/context/HomePageContext";
 
 const Index = () => {
@@ -31,8 +28,6 @@ const Index = () => {
             
             {/* Transactions List */}
             <TransactionSection />
-            
-            {/* Create Account Button */}
           </div>
         </div>
       </div>
@@ -56,6 +51,9 @@ const AccountBalanceFromContext = () => {
 const AccountsSectionWithContext = () => {
   const { accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
   
+  // Filter out the BYBC Savings account
+  const filteredAccounts = accounts.filter(account => account.id !== "2");
+  
   const handleAccountSelect = (account: any) => {
     setSelectedAccountId(account.id);
   };
@@ -63,7 +61,7 @@ const AccountsSectionWithContext = () => {
   return (
     <div className="animate-fade-in" style={{animationDelay: "150ms"}}>
       <AccountsSection 
-        accounts={accounts} 
+        accounts={filteredAccounts} 
         onAccountSelect={handleAccountSelect}
         selectedAccountId={selectedAccountId}
       />
