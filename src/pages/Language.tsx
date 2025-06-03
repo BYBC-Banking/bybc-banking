@@ -26,8 +26,8 @@ export default function Language() {
     { id: "st-ZA", name: "Sesotho", flag: za" },
     { id: "ss-ZA", name: "Siswati", flag: za" },
     { id: "tn-ZA", name: "Tswana", flag: "za" },
-    { id: "ve-ZA", name: "Tshivenda", flag: za" },
-    { id: "ts-ZA", name: "Xitsonga", flag: za" }
+    { id: "ve-ZA", name: "Tshivenda", flag: "za" },
+    { id: "ts-ZA", name: "Xitsonga", flag: "za" }
   ];
   
   const saveLanguage = () => {
