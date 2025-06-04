@@ -28,6 +28,7 @@ import Register from "@/pages/Register";
 import AccountOnboarding from "@/pages/AccountOnboarding";
 import CryptoPage from "@/pages/CryptoPage";
 import StocksPage from "@/pages/StocksPage";
+import Cards from "@/pages/Cards";
 import CardControls from "@/pages/CardControls";
 import AppAppearance from "@/pages/AppAppearance";
 import ReferralAndEarn from "@/pages/ReferralAndEarn";

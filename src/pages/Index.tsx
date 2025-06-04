@@ -20,6 +20,9 @@ const Index = () => {
             {/* Account Balance Section - Now using context */}
             <AccountBalanceFromContext />
             
+            {/* Dot Navigation */}
+            <DotNavigation />
+            
             {/* Accounts Section - Moved above Quick Actions */}
             <AccountsSectionWithContext />
             
@@ -61,7 +64,30 @@ const AccountBalanceFromContext = () => {
       onNextAccount={handleNextAccount}
       canNavigatePrevious={currentIndex > 0}
       canNavigateNext={currentIndex < accounts.length - 1}
+      accountType={selectedAccount.type}
+      accountName={selectedAccount.name}
     />
+  );
+};
+
+// Dot Navigation Component
+const DotNavigation = () => {
+  const { accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
+  
+  return (
+    <div className="flex justify-center space-x-2 animate-fade-in" style={{animationDelay: "100ms"}}>
+      {accounts.map((account) => (
+        <button
+          key={account.id}
+          onClick={() => setSelectedAccountId(account.id)}
+          className={`w-2 h-2 rounded-full transition-all duration-200 ${
+            selectedAccountId === account.id 
+              ? 'bg-teal-500 w-6' 
+              : 'bg-gray-300 hover:bg-gray-400'
+          }`}
+        />
+      ))}
+    </div>
   );
 };
 
