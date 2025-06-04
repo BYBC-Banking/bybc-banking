@@ -14,9 +14,26 @@ export default function AppAppearance() {
   const { toast } = useToast();
   
   // State for appearance settings
-  const [theme, setTheme] = React.useState("system");
+  const [theme, setTheme] = React.useState(() => {
+    return localStorage.getItem('theme') || "system";
+  });
   const [fontSize, setFontSize] = React.useState([16]);
   const [highContrast, setHighContrast] = React.useState(false);
+  
+  // Apply theme to document
+  React.useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    
+    if (theme === 'system') {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
+    }
+    
+    localStorage.setItem('theme', theme);
+  }, [theme]);
   
   const handleBack = () => {
     navigate(-1);

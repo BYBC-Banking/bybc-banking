@@ -37,12 +37,30 @@ const Index = () => {
 
 // Component to get account balance from context
 const AccountBalanceFromContext = () => {
-  const { selectedAccount } = useHomePage();
+  const { selectedAccount, accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
+  
+  const currentIndex = accounts.findIndex(acc => acc.id === selectedAccountId);
+  
+  const handlePreviousAccount = () => {
+    if (currentIndex > 0) {
+      setSelectedAccountId(accounts[currentIndex - 1].id);
+    }
+  };
+  
+  const handleNextAccount = () => {
+    if (currentIndex < accounts.length - 1) {
+      setSelectedAccountId(accounts[currentIndex + 1].id);
+    }
+  };
   
   return (
     <AccountBalance 
       balance={selectedAccount.balance} 
-      difference={150.75} 
+      difference={150.75}
+      onPreviousAccount={handlePreviousAccount}
+      onNextAccount={handleNextAccount}
+      canNavigatePrevious={currentIndex > 0}
+      canNavigateNext={currentIndex < accounts.length - 1}
     />
   );
 };
