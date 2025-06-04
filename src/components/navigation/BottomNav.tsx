@@ -40,83 +40,91 @@ export default function BottomNav() {
   if (!isMobile) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1A1F2C] border-t border-white/10">
-      <div className="max-w-screen-lg mx-auto">
-        <nav className="flex justify-between items-center px-6 py-3">
-          {/* First two nav items */}
-          {navItems.slice(0, 2).map((item) => {
-            const isActive = location.pathname === item.href;
-            
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="flex flex-col items-center py-1 px-2 min-w-[70px]"
-              >
-                <item.icon 
-                  className={cn(
-                    "h-6 w-6 mb-1",
-                    isActive 
-                      ? "text-amber-400" 
-                      : "text-gray-400"
-                  )}
-                />
-                <span 
-                  className={cn(
-                    "text-xs font-medium",
-                    isActive 
-                      ? "text-amber-400" 
-                      : "text-gray-400"
-                  )}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-          
-          {/* Central Plus Button */}
-          <Link
-            to="/create-account"
-            className="flex flex-col items-center py-1"
-          >
-            <div className="w-14 h-14 rounded-full bg-amber-400 flex items-center justify-center mb-1 shadow-lg">
-              <Plus className="h-7 w-7 text-black font-bold" strokeWidth={3} />
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* Floating Plus Button */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10">
+        <Link
+          to="/create-account"
+          className="flex items-center justify-center w-14 h-14 bg-amber-400 rounded-full shadow-lg hover:bg-amber-500 transition-colors"
+        >
+          <Plus className="h-7 w-7 text-black font-bold" strokeWidth={3} />
+        </Link>
+      </div>
+      
+      {/* Navigation Bar */}
+      <div className="bg-[#1A1F2C] border-t border-white/10">
+        <div className="max-w-screen-lg mx-auto">
+          <nav className="flex justify-center items-center px-6 py-3">
+            <div className="flex justify-between items-center w-full max-w-xs">
+              {/* First two nav items */}
+              {navItems.slice(0, 2).map((item) => {
+                const isActive = location.pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="flex flex-col items-center py-1 px-2 min-w-[60px]"
+                  >
+                    <item.icon 
+                      className={cn(
+                        "h-6 w-6 mb-1",
+                        isActive 
+                          ? "text-amber-400" 
+                          : "text-gray-400"
+                      )}
+                    />
+                    <span 
+                      className={cn(
+                        "text-xs font-medium",
+                        isActive 
+                          ? "text-amber-400" 
+                          : "text-gray-400"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
+              
+              {/* Spacer for center button */}
+              <div className="w-14" />
+              
+              {/* Last two nav items */}
+              {navItems.slice(2).map((item) => {
+                const isActive = location.pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className="flex flex-col items-center py-1 px-2 min-w-[60px]"
+                  >
+                    <item.icon 
+                      className={cn(
+                        "h-6 w-6 mb-1",
+                        isActive 
+                          ? "text-amber-400" 
+                          : "text-gray-400"
+                      )}
+                    />
+                    <span 
+                      className={cn(
+                        "text-xs font-medium",
+                        isActive 
+                          ? "text-amber-400" 
+                          : "text-gray-400"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
-          </Link>
-          
-          {/* Last two nav items */}
-          {navItems.slice(2).map((item) => {
-            const isActive = location.pathname === item.href;
-            
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="flex flex-col items-center py-1 px-2 min-w-[70px]"
-              >
-                <item.icon 
-                  className={cn(
-                    "h-6 w-6 mb-1",
-                    isActive 
-                      ? "text-amber-400" 
-                      : "text-gray-400"
-                  )}
-                />
-                <span 
-                  className={cn(
-                    "text-xs font-medium",
-                    isActive 
-                      ? "text-amber-400" 
-                      : "text-gray-400"
-                  )}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
+          </nav>
+        </div>
       </div>
     </div>
   );
