@@ -31,7 +31,7 @@ export default function BottomNav() {
   return <div className="fixed bottom-0 left-0 right-0 z-50">
       {/* Floating Plus Button */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10">
-        <Link to="/create-account" className="flex items-center justify-center w-12 h-12 bg-amber-400 rounded-full shadow-lg hover:bg-amber-500 transition-colors my-[10px]">
+        <Link to="/create-account" className="flex items-center justify-center w-12 h-12 bg-amber-400 rounded-full shadow-lg hover:bg-amber-500 transition-colors my-[14px]">
           <Plus className="h-7 w-7 text-black font-bold" strokeWidth={3} />
         </Link>
       </div>
