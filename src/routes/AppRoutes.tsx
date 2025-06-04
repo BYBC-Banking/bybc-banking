@@ -32,7 +32,6 @@ import CardControls from "@/pages/CardControls";
 import AppAppearance from "@/pages/AppAppearance";
 import ReferralAndEarn from "@/pages/ReferralAndEarn";
 import CryptoWallet from "@/pages/CryptoWallet";
-import CryptoSwap from "@/pages/CryptoSwap";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 
@@ -188,12 +187,6 @@ const AppRoutes = () => {
       <Route path="/crypto-wallet" element={
         <ProtectedRoute>
           <CryptoWallet />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/crypto/swap" element={
-        <ProtectedRoute>
-          <CryptoSwap />
         </ProtectedRoute>
       } />
       

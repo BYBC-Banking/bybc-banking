@@ -17,17 +17,21 @@ export default function Language() {
   const navigate = useNavigate();
   
   const languages = [
-    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" },
-    { id: "en-ZA", name: "English (RSA)", flag: "za" },
+    { id: "en-US", name: "English (US)", flag: "🇺🇸" },
     { id: "en-GB", name: "English (UK)", flag: "🇬🇧" },
-    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
+    { id: "fr-FR", name: "Français", flag: "🇫🇷" },
+    { id: "es-ES", name: "Español", flag: "🇪🇸" },
+    { id: "de-DE", name: "Deutsch", flag: "🇩🇪" },
+    { id: "zh-CN", name: "中文 (简体)", flag: "🇨🇳" },
+    { id: "ja-JP", name: "日本語", flag: "🇯🇵" },
+    { id: "ar-SA", name: "العربية", flag: "🇸🇦" },
+    { id: "pt-BR", name: "Português (Brasil)", flag: "🇧🇷" },
+    { id: "ru-RU", name: "Русский", flag: "🇷🇺" },
+    { id: "hi-IN", name: "हिन्दी", flag: "🇮🇳" },
+    { id: "sw-KE", name: "Kiswahili", flag: "🇰🇪" },
     { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" },
-    { id: "nso-ZA", name: "Sepedi", flag: za" },
-    { id: "st-ZA", name: "Sesotho", flag: za" },
-    { id: "ss-ZA", name: "Siswati", flag: za" },
-    { id: "tn-ZA", name: "Tswana", flag: "za" },
-    { id: "ve-ZA", name: "Tshivenda", flag: "za" },
-    { id: "ts-ZA", name: "Xitsonga", flag: "za" }
+    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
+    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" }
   ];
   
   const saveLanguage = () => {
