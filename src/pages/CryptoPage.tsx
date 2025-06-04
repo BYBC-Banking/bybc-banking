@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { ArrowLeft, TrendingUp, TrendingDown, Wallet, BookmarkPlus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -94,6 +93,7 @@ const cryptoData = [
 
 const CryptoPage = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedCrypto, setSelectedCrypto] = useState(cryptoData[0]);
   
@@ -119,10 +119,8 @@ const CryptoPage = () => {
   };
 
   const handleWallet = (crypto: any) => {
-    toast({
-      title: "Wallet",
-      description: `Opening wallet for ${crypto.name}.`
-    });
+    // Navigate to crypto wallet page
+    navigate('/crypto-wallet');
   };
   
   const CustomTooltip = ({ active, payload }: any) => {

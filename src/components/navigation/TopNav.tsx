@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Bell, Menu, LogOut, User, Inbox } from "lucide-react";
+import { Bell, Menu, LogOut, User, Inbox, Settings, HelpCircle, FileText, Globe, Gift } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,29 +20,35 @@ const menuItems = [
   },
   {
     label: "Settings",
-    href: "/settings"
+    href: "/settings",
+    icon: Settings
   },
   {
     label: "Referral and Earn",
-    href: "/referral"
+    href: "/referral",
+    icon: Gift
   },
   {
     label: "Help",
-    href: "/help"
+    href: "/help",
+    icon: HelpCircle
   }, 
   {
     label: "Legal",
-    href: "/legal"
+    href: "/legal",
+    icon: FileText
   }, 
   {
     label: "Language",
-    href: "/language"
+    href: "/language",
+    icon: Globe
   }
 ];
 
 export default function TopNav() {
   const [open, setOpen] = React.useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Close the menu after navigation
   const handleMenuItemClick = () => {
@@ -51,11 +57,17 @@ export default function TopNav() {
   
   const handleLogout = () => {
     setOpen(false);
+    // Clear authentication data
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('authToken');
+    
     toast({
       title: "Logged out",
       description: "You have been successfully logged out"
     });
-    // In a real app, you would handle actual logout logic here
+    
+    // Redirect to login page
+    navigate('/login');
   };
   
   return (
@@ -82,7 +94,7 @@ export default function TopNav() {
                       onClick={handleMenuItemClick} 
                       className={cn("flex items-center py-3 px-6", "text-gray-200 hover:bg-white/5 transition-colors")}
                     >
-                      {item.icon && <item.icon className="h-5 w-5 mr-3" />}
+                      <item.icon className="h-5 w-5 mr-3" />
                       <span>{item.label}</span>
                     </Link>
                   ))}

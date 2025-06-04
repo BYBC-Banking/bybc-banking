@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Check, Globe, Users, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,21 +17,17 @@ export default function Language() {
   const navigate = useNavigate();
   
   const languages = [
-    { id: "en-US", name: "English (US)", flag: "🇺🇸" },
-    { id: "en-GB", name: "English (UK)", flag: "🇬🇧" },
-    { id: "fr-FR", name: "Français", flag: "🇫🇷" },
-    { id: "es-ES", name: "Español", flag: "🇪🇸" },
-    { id: "de-DE", name: "Deutsch", flag: "🇩🇪" },
-    { id: "zh-CN", name: "中文 (简体)", flag: "🇨🇳" },
-    { id: "ja-JP", name: "日本語", flag: "🇯🇵" },
-    { id: "ar-SA", name: "العربية", flag: "🇸🇦" },
-    { id: "pt-BR", name: "Português (Brasil)", flag: "🇧🇷" },
-    { id: "ru-RU", name: "Русский", flag: "🇷🇺" },
-    { id: "hi-IN", name: "हिन्दी", flag: "🇮🇳" },
-    { id: "sw-KE", name: "Kiswahili", flag: "🇰🇪" },
-    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦" },
-    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦" },
-    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦" }
+    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦", icon: Globe },
+    { id: "en-US", name: "English", flag: "🇿🇦", icon: Users },
+    { id: "nr-ZA", name: "isiNdebele", flag: "🇿🇦", icon: MapPin },
+    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦", icon: Users },
+    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦", icon: Users },
+    { id: "nso-ZA", name: "Sepedi", flag: "🇿🇦", icon: MapPin },
+    { id: "st-ZA", name: "Sesotho", flag: "🇿🇦", icon: Globe },
+    { id: "tn-ZA", name: "Setswana", flag: "🇿🇦", icon: Users },
+    { id: "ss-ZA", name: "siSwati", flag: "🇿🇦", icon: MapPin },
+    { id: "ve-ZA", name: "Tshivenda", flag: "🇿🇦", icon: Globe },
+    { id: "ts-ZA", name: "Xitsonga", flag: "🇿🇦", icon: Users }
   ];
   
   const saveLanguage = () => {
@@ -86,6 +82,7 @@ export default function Language() {
                   className="flex items-center justify-between w-full cursor-pointer"
                 >
                   <div className="flex items-center">
+                    <language.icon className="h-5 w-5 mr-3 text-muted-foreground" />
                     <span className="text-xl mr-3">{language.flag}</span>
                     <span>{language.name}</span>
                   </div>
