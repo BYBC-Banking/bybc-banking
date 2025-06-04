@@ -110,7 +110,7 @@ export default function Help() {
               </CardHeader>
               <CardContent>
                 <p className="text-xs text-muted-foreground">Response within 24 hours</p>
-                <p className="font-semibold mt-2">support@bybc.com</p>
+                <p className="font-semibold mt-2">support@bybc.co.za</p>
               </CardContent>
             </Card>
             
