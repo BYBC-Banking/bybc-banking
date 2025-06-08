@@ -5,7 +5,6 @@ import DashboardHeader from "@/components/DashboardHeader";
 import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
 import TransactionSection from "@/components/home/TransactionSection";
-import AccountsSection from "@/components/AccountsSection";
 import { useHomePage } from "@/context/HomePageContext";
 
 const Index = () => {
@@ -22,9 +21,6 @@ const Index = () => {
             
             {/* Dot Navigation */}
             <DotNavigation />
-            
-            {/* Accounts Section - Moved above Quick Actions */}
-            <AccountsSectionWithContext />
             
             {/* Quick Actions */}
             <QuickActions />
@@ -87,28 +83,6 @@ const DotNavigation = () => {
           }`}
         />
       ))}
-    </div>
-  );
-};
-
-// Component to handle accounts section with context
-const AccountsSectionWithContext = () => {
-  const { accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
-  
-  // Filter out the BYBC Savings account
-  const filteredAccounts = accounts.filter(account => account.id !== "2");
-  
-  const handleAccountSelect = (account: any) => {
-    setSelectedAccountId(account.id);
-  };
-  
-  return (
-    <div className="animate-fade-in" style={{animationDelay: "150ms"}}>
-      <AccountsSection 
-        accounts={filteredAccounts} 
-        onAccountSelect={handleAccountSelect}
-        selectedAccountId={selectedAccountId}
-      />
     </div>
   );
 };
