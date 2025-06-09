@@ -170,6 +170,11 @@ const AppRoutes = () => {
           <StocksPage />
         </ProtectedRoute>
       } />
+      <Route path="/cards" element={
+        <ProtectedRoute>
+          <Cards />
+        </ProtectedRoute>
+      } />
       <Route path="/card-controls" element={
         <ProtectedRoute>
           <CardControls />
