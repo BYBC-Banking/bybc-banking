@@ -27,7 +27,7 @@ const createShoppingCartIcon = () => <ShoppingCart className="h-5 w-5" />;
 const createFileIcon = () => <File className="h-5 w-5" />;
 const createCreditCardIcon = () => <CreditCard className="h-5 w-5" />;
 
-// Mock data for bybc-banking accounts
+// Mock data for bybc-banking accounts (removed savings account with id "2")
 export const accounts: Account[] = [
   {
     id: "1",
@@ -63,34 +63,6 @@ export const accounts: Account[] = [
         amount: 129.99,
         type: "expense",
         category: "Online Shopping"
-      }
-    ]
-  },
-  {
-    id: "2",
-    name: "BYBC Savings",
-    type: "Savings",
-    accountNumber: "0987654321",
-    balance: 15750.00,
-    color: "green",
-    transactions: [
-      {
-        id: "tx4",
-        merchant: "Interest",
-        merchantIcon: createFileIcon(),
-        date: "Mar 01, 00:01",
-        amount: 125.45,
-        type: "income",
-        category: "Interest"
-      },
-      {
-        id: "tx5",
-        merchant: "Transfer to Spending",
-        merchantIcon: createCreditCardIcon(),
-        date: "Feb 15, 10:22",
-        amount: 500.00,
-        type: "expense",
-        category: "Transfer"
       }
     ]
   },

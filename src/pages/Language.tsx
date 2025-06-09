@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Globe, Users, MapPin } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,17 +17,17 @@ export default function Language() {
   const navigate = useNavigate();
   
   const languages = [
-    { id: "af-ZA", name: "Afrikaans", flag: "🇿🇦", icon: Globe },
-    { id: "en-US", name: "English", flag: "🇿🇦", icon: Users },
-    { id: "nr-ZA", name: "isiNdebele", flag: "🇿🇦", icon: MapPin },
-    { id: "xh-ZA", name: "isiXhosa", flag: "🇿🇦", icon: Users },
-    { id: "zu-ZA", name: "isiZulu", flag: "🇿🇦", icon: Users },
-    { id: "nso-ZA", name: "Sepedi", flag: "🇿🇦", icon: MapPin },
-    { id: "st-ZA", name: "Sesotho", flag: "🇿🇦", icon: Globe },
-    { id: "tn-ZA", name: "Setswana", flag: "🇿🇦", icon: Users },
-    { id: "ss-ZA", name: "siSwati", flag: "🇿🇦", icon: MapPin },
-    { id: "ve-ZA", name: "Tshivenda", flag: "🇿🇦", icon: Globe },
-    { id: "ts-ZA", name: "Xitsonga", flag: "🇿🇦", icon: Users }
+    { id: "af-ZA", name: "Afrikaans", code: "AF" },
+    { id: "en-US", name: "English", code: "EN" },
+    { id: "nr-ZA", name: "isiNdebele", code: "NR" },
+    { id: "xh-ZA", name: "isiXhosa", code: "XH" },
+    { id: "zu-ZA", name: "isiZulu", code: "ZU" },
+    { id: "nso-ZA", name: "Sepedi", code: "NSO" },
+    { id: "st-ZA", name: "Sesotho", code: "ST" },
+    { id: "tn-ZA", name: "Setswana", code: "TN" },
+    { id: "ss-ZA", name: "siSwati", code: "SS" },
+    { id: "ve-ZA", name: "Tshivenda", code: "VE" },
+    { id: "ts-ZA", name: "Xitsonga", code: "TS" }
   ];
   
   const saveLanguage = () => {
@@ -82,8 +82,9 @@ export default function Language() {
                   className="flex items-center justify-between w-full cursor-pointer"
                 >
                   <div className="flex items-center">
-                    <language.icon className="h-5 w-5 mr-3 text-muted-foreground" />
-                    <span className="text-xl mr-3">{language.flag}</span>
+                    <span className="text-sm font-mono bg-slate-100 px-2 py-1 rounded mr-3 text-slate-600">
+                      {language.code}
+                    </span>
                     <span>{language.name}</span>
                   </div>
                   {selectedLanguage === language.id && (

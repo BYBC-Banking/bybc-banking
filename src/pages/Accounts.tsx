@@ -7,9 +7,6 @@ import { accounts } from "@/data/accountsData";
 const Accounts = () => {
   const navigate = useNavigate();
   
-  // Filter out the BYBC Savings account (id: "2")
-  const filteredAccounts = accounts.filter(account => account.id !== "2");
-  
   // Handle account selection - navigate to dashboard with selected account ID
   const handleAccountSelect = (accountId: string) => {
     navigate(`/dashboard?account=${accountId}`);
@@ -28,7 +25,7 @@ const Accounts = () => {
         
         {/* Accounts List */}
         <div className="space-y-4">
-          {filteredAccounts.map((account) => (
+          {accounts.map((account) => (
             <div
               key={account.id}
               className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"

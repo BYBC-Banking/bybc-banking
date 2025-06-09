@@ -66,9 +66,31 @@ const AccountBalanceFromContext = () => {
   );
 };
 
-// Dot Navigation Component
+// Dot Navigation Component with dynamic colors
 const DotNavigation = () => {
-  const { accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
+  const { accounts, selectedAccountId, setSelectedAccountId, selectedAccount } = useHomePage();
+  
+  // Helper function to get the appropriate background color for each account
+  const getAccountDotColor = (account: any, isSelected: boolean) => {
+    if (!isSelected) {
+      return 'bg-gray-300 hover:bg-gray-400';
+    }
+    
+    switch (account.color) {
+      case 'blue':
+        return 'bg-finance-blue';
+      case 'green':
+        return 'bg-finance-green';
+      case 'purple':
+        return 'bg-[#7E69AB]';
+      case 'orange':
+        return 'bg-orange-500';
+      case 'teal':
+        return 'bg-teal-600';
+      default:
+        return 'bg-teal-500';
+    }
+  };
   
   return (
     <div className="flex justify-center space-x-2 animate-fade-in" style={{animationDelay: "100ms"}}>
@@ -78,8 +100,8 @@ const DotNavigation = () => {
           onClick={() => setSelectedAccountId(account.id)}
           className={`w-2 h-2 rounded-full transition-all duration-200 ${
             selectedAccountId === account.id 
-              ? 'bg-teal-500 w-6' 
-              : 'bg-gray-300 hover:bg-gray-400'
+              ? `${getAccountDotColor(account, true)} w-6` 
+              : getAccountDotColor(account, false)
           }`}
         />
       ))}
