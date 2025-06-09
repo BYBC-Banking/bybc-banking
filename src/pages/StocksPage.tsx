@@ -284,7 +284,7 @@ const StocksPage = () => {
                 Sell
               </Button>
               <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10">
-                <Briefcase className="mr-1 h-4 w-4" />
+                <Briefcase className="h-4 w-4" />
                 Holdings
               </Button>
             </div>
