@@ -123,16 +123,29 @@ const CryptoWalletOnboarding = () => {
                   onboardingData={onboardingData}
                 />
               )}
+              {currentStep === 2 && (
+                <CurrentStepComponent 
+                  onComplete={handleStepComplete}
+                />
+              )}
+              {currentStep === 3 && (
+                <CurrentStepComponent 
+                  onComplete={handleStepComplete}
+                />
+              )}
               {currentStep === 4 && (
                 <CurrentStepComponent 
                   onComplete={() => handleStepComplete()}
                 />
               )}
-              {(currentStep === 2 || currentStep === 3 || currentStep === 5 || currentStep === 6) && (
+              {currentStep === 5 && (
                 <CurrentStepComponent 
                   onComplete={handleStepComplete}
-                  onNext={handleNext}
-                  onboardingData={onboardingData}
+                />
+              )}
+              {currentStep === 6 && (
+                <CurrentStepComponent 
+                  onComplete={handleStepComplete}
                 />
               )}
             </>
