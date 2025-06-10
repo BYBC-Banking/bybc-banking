@@ -1,4 +1,5 @@
 
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -35,6 +36,7 @@ import ReferralAndEarn from "@/pages/ReferralAndEarn";
 import PayBills from "@/pages/PayBills";
 import CryptoWalletOnboarding from "@/pages/CryptoWalletOnboarding";
 import CryptoSwap from "@/pages/CryptoSwap";
+import MultisigWallet from "@/pages/MultisigWallet";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 
@@ -206,6 +208,11 @@ const AppRoutes = () => {
           <CryptoSwap />
         </ProtectedRoute>
       } />
+      <Route path="/multisig-wallet" element={
+        <ProtectedRoute>
+          <MultisigWallet />
+        </ProtectedRoute>
+      } />
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
@@ -214,3 +221,4 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
