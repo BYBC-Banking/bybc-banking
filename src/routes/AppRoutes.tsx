@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -34,7 +33,7 @@ import AppAppearance from "@/pages/AppAppearance";
 import ReferralAndEarn from "@/pages/ReferralAndEarn";
 import PayBills from "@/pages/PayBills";
 import CryptoWalletOnboarding from "@/pages/CryptoWalletOnboarding";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import CryptoSwap from "@/pages/CryptoSwap";
 import { isLoggedIn } from "@/utils/auth";
 
 const AppRoutes = () => {
@@ -198,6 +197,11 @@ const AppRoutes = () => {
       <Route path="/crypto-wallet-onboarding" element={
         <ProtectedRoute>
           <CryptoWalletOnboarding />
+        </ProtectedRoute>
+      } />
+      <Route path="/crypto-swap" element={
+        <ProtectedRoute>
+          <CryptoSwap />
         </ProtectedRoute>
       } />
       
