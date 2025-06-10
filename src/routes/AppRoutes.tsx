@@ -32,7 +32,6 @@ import Cards from "@/pages/Cards";
 import CardControls from "@/pages/CardControls";
 import AppAppearance from "@/pages/AppAppearance";
 import ReferralAndEarn from "@/pages/ReferralAndEarn";
-import CryptoWallet from "@/pages/CryptoWallet";
 import PayBills from "@/pages/PayBills";
 import CryptoWalletOnboarding from "@/pages/CryptoWalletOnboarding";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -194,11 +193,6 @@ const AppRoutes = () => {
       <Route path="/pay-bills" element={
         <ProtectedRoute>
           <PayBills />
-        </ProtectedRoute>
-      } />
-      <Route path="/crypto-wallet" element={
-        <ProtectedRoute>
-          <CryptoWallet />
         </ProtectedRoute>
       } />
       <Route path="/crypto-wallet-onboarding" element={

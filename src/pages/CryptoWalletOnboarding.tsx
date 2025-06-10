@@ -62,7 +62,7 @@ const CryptoWalletOnboarding = () => {
   };
 
   const handleExit = () => {
-    navigate("/crypto-wallet");
+    navigate("/dashboard");
   };
 
   if (currentStep === 7) {
@@ -71,7 +71,7 @@ const CryptoWalletOnboarding = () => {
         <div className="container mx-auto max-w-md px-4 py-6">
           {CurrentStepComponent && (
             <CurrentStepComponent 
-              onComplete={() => navigate("/crypto-wallet")}
+              onComplete={() => navigate("/dashboard")}
               onboardingData={onboardingData}
             />
           )}
@@ -119,7 +119,7 @@ const CryptoWalletOnboarding = () => {
             <>
               {currentStep === 1 && (
                 <CurrentStepComponent 
-                  onComplete={() => handleStepComplete()}
+                  onComplete={(stepData?: any) => handleStepComplete(stepData)}
                   onboardingData={onboardingData}
                 />
               )}
