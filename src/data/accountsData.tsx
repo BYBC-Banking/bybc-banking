@@ -31,7 +31,7 @@ const createCreditCardIcon = () => <CreditCard className="h-5 w-5" />;
 export const accounts: Account[] = [
   {
     id: "1",
-    name: "BYBC Spending",
+    name: "BYBC Current",
     type: "Spending",
     accountNumber: "1234567890",
     balance: 2450.75,
