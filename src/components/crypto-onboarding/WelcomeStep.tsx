@@ -5,6 +5,7 @@ import { Shield, Banknote, Smartphone } from "lucide-react";
 
 interface WelcomeStepProps {
   onComplete: () => void;
+  onboardingData?: any;
 }
 
 const WelcomeStep = ({ onComplete }: WelcomeStepProps) => {

@@ -54,8 +54,10 @@ const CryptoWalletOnboarding = () => {
     }
   };
 
-  const handleStepComplete = (stepData: any) => {
-    setOnboardingData(prev => ({ ...prev, ...stepData }));
+  const handleStepComplete = (stepData?: any) => {
+    if (stepData) {
+      setOnboardingData(prev => ({ ...prev, ...stepData }));
+    }
     handleNext();
   };
 
@@ -114,11 +116,26 @@ const CryptoWalletOnboarding = () => {
         {/* Step Content */}
         <div className="space-y-6">
           {CurrentStepComponent && (
-            <CurrentStepComponent 
-              onComplete={handleStepComplete}
-              onNext={handleNext}
-              onboardingData={onboardingData}
-            />
+            <>
+              {currentStep === 1 && (
+                <CurrentStepComponent 
+                  onComplete={() => handleStepComplete()}
+                  onboardingData={onboardingData}
+                />
+              )}
+              {currentStep === 4 && (
+                <CurrentStepComponent 
+                  onComplete={() => handleStepComplete()}
+                />
+              )}
+              {(currentStep === 2 || currentStep === 3 || currentStep === 5 || currentStep === 6) && (
+                <CurrentStepComponent 
+                  onComplete={handleStepComplete}
+                  onNext={handleNext}
+                  onboardingData={onboardingData}
+                />
+              )}
+            </>
           )}
         </div>
       </div>
