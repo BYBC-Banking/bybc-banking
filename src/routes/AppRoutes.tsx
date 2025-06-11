@@ -1,3 +1,4 @@
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -36,6 +37,7 @@ import CryptoWalletOnboarding from "@/pages/CryptoWalletOnboarding";
 import CryptoSwap from "@/pages/CryptoSwap";
 import MultisigWallet from "@/pages/MultisigWallet";
 import AccountRecovery from "@/pages/AccountRecovery";
+import Recovery from "@/pages/Recovery";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 

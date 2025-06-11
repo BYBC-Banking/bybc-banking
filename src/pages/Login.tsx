@@ -246,9 +246,16 @@ const Login = () => {
                 Forgot Password?
               </Link>
               
+              <Link
+                to="/recovery"
+                className="text-sm text-[#7E69AB] hover:underline transition-all block font-medium"
+              >
+                Can't access account?
+              </Link>
+              
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <Link to="/register" className="text-[#9b87f5] font-medium hover:underline">
+                <Link to="/register" className="text-[#7E69AB] font-medium hover:underline">
                   Register
                 </Link>
               </p>
