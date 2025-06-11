@@ -1,12 +1,15 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { login } from "@/utils/auth";
+import { isValidEmail, isValidPhone, sanitizeInput, isStrongPassword } from "@/utils/security";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,6 +25,8 @@ const Register = () => {
   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const [validation, setValidation] = useState({
     fullName: false,
@@ -35,6 +40,9 @@ const Register = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     
+    // Clear error when user types
+    setError(null);
+    
     // Basic validation
     switch (name) {
       case "fullName":
@@ -44,25 +52,24 @@ const Register = () => {
         }));
         break;
       case "email":
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         setValidation(prev => ({
           ...prev,
-          email: emailRegex.test(value)
+          email: isValidEmail(value)
         }));
         break;
       case "mobile":
-        const phoneRegex = /^(\+27|0)[0-9]{9}$/; // South African phone format
         setValidation(prev => ({
           ...prev,
-          mobile: phoneRegex.test(value)
+          mobile: isValidPhone(value)
         }));
         break;
       case "password":
+        const isStrong = isStrongPassword(value);
         setValidation(prev => ({
           ...prev,
-          password: value.length >= 8,
+          password: isStrong,
           // Also update confirmPassword validation when password changes
-          confirmPassword: value === formData.confirmPassword && value.length > 0
+          confirmPassword: isStrong && value === formData.confirmPassword
         }));
         break;
       case "confirmPassword":
@@ -76,29 +83,55 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check if all fields are valid
     const isFormValid = Object.values(validation).every(valid => valid);
     
-    if (isFormValid) {
-      // In a real app, this would handle registration
-      console.log("Registration attempt with:", formData);
+    if (!isFormValid) {
+      setError("Please ensure all fields are valid before submitting");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Sanitize inputs to prevent XSS
+      const sanitizedEmail = sanitizeInput(formData.email.trim());
+      const sanitizedName = sanitizeInput(formData.fullName.trim());
+      const sanitizedMobile = sanitizeInput(formData.mobile.trim());
       
+      // In a real app, this would make an API call to register the user
+      console.log("Registration attempt with:", {
+        email: sanitizedEmail,
+        name: sanitizedName,
+        mobile: sanitizedMobile,
+        // Password would be hashed on the server, not logged
+      });
+      
+      // Simulate successful registration and login
       toast({
         title: "Registration successful",
         description: "Your account has been created.",
       });
       
-      // Navigate to dashboard on successful registration
-      navigate("/dashboard");
-    } else {
-      toast({
-        title: "Registration failed",
-        description: "Please fill all fields correctly.",
-        variant: "destructive"
-      });
+      // Auto-login after registration
+      const loginSuccess = await login(sanitizedEmail, formData.password);
+      
+      if (loginSuccess) {
+        // Navigate to dashboard on successful registration
+        navigate("/dashboard");
+      } else {
+        // This should rarely happen as we just registered
+        setError("Account created but login failed. Please try logging in manually.");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -111,6 +144,14 @@ const Register = () => {
           <h1 className="text-2xl font-bold text-finance-blue">Create Account</h1>
           <p className="text-muted-foreground">Start your financial journey with us</p>
         </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Full Name */}
@@ -220,13 +261,13 @@ const Register = () => {
 
           <Button
             type="submit"
-            disabled={!isFormValid}
+            disabled={!isFormValid || isSubmitting}
             className={cn(
               "w-full mt-4 transition-all duration-200 hover:scale-[1.02]",
-              isFormValid ? "bg-finance-blue hover:bg-finance-blue-light" : "opacity-70"
+              isFormValid && !isSubmitting ? "bg-finance-blue hover:bg-finance-blue-light" : "opacity-70"
             )}
           >
-            Create Account
+            {isSubmitting ? "Creating Account..." : "Create Account"}
           </Button>
           
           <p className="text-sm text-center text-muted-foreground pt-2">

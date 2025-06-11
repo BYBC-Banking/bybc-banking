@@ -1,16 +1,20 @@
 
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Fingerprint, Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { Fingerprint, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { login } from "@/utils/auth";
+import { isValidEmail, sanitizeInput } from "@/utils/security";
 
 const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -20,10 +24,19 @@ const Login = () => {
     identifier: false,
     password: false,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Get the redirect URL from query params
+  const params = new URLSearchParams(location.search);
+  const redirectTo = params.get('redirect') || "/dashboard";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear error when user types
+    setError(null);
     
     // Basic validation
     if (name === "identifier") {
@@ -41,52 +54,58 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validation.identifier && validation.password) {
-      // Check for admin credentials
-      if (formData.identifier === "bybc.banking@gmail.com" && formData.password === "adminbybc") {
-        console.log("Login successful with admin credentials");
+    
+    // Validate inputs
+    if (!validation.identifier || !validation.password) {
+      setError("Please ensure all fields are valid before submitting");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Sanitize inputs to prevent XSS
+      const sanitizedIdentifier = sanitizeInput(formData.identifier.trim());
+      
+      // Determine if input is email or phone
+      const isEmail = isValidEmail(sanitizedIdentifier);
+      
+      // Attempt login with the sanitized email
+      if (isEmail) {
+        const loginSuccess = await login(sanitizedIdentifier, formData.password);
         
-        // Set login state
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        // Show success toast
-        toast({
-          title: "Login successful",
-          description: "Welcome to BYBC Banking",
-        });
-        
-        navigate("/dashboard"); // Navigate to dashboard on successful login
+        if (loginSuccess) {
+          toast({
+            title: "Login successful",
+            description: "Welcome to BYBC Banking",
+          });
+          
+          // Redirect to intended destination
+          navigate(redirectTo);
+        } else {
+          setError("Invalid email or password");
+        }
       } else {
-        console.log("Login attempt with:", formData);
-        
-        // For demo purposes, accept any valid format credentials
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        toast({
-          title: "Login successful",
-          description: "Welcome to BYBC Banking",
-        });
-        
-        navigate("/dashboard"); // For demo purposes, navigate anyway
+        // For demo purposes, phone login isn't implemented yet
+        setError("Please use your email address to login");
       }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleBiometricAuth = () => {
     // This would integrate with device biometric APIs in a real app
-    console.log("Biometric authentication requested");
-    
-    // For demo purposes, simulate successful biometric auth
-    localStorage.setItem('isLoggedIn', 'true');
-    
     toast({
-      title: "Biometric authentication successful",
-      description: "Welcome to BYBC Banking",
+      title: "Biometric authentication",
+      description: "This feature is not available in the demo",
     });
-    
-    navigate("/dashboard");
   };
 
   const isFormValid = validation.identifier && validation.password;
@@ -99,10 +118,18 @@ const Login = () => {
           <p className="text-[#8E9196]">Continue your financial journey</p>
         </div>
 
+        {error && (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label htmlFor="identifier">Mobile or Email</Label>
+              <Label htmlFor="identifier">Email Address</Label>
               {validation.identifier && (
                 <span className="text-sm text-finance-green flex items-center gap-1">
                   <svg
@@ -128,7 +155,7 @@ const Login = () => {
                 name="identifier"
                 value={formData.identifier}
                 onChange={handleChange}
-                placeholder="Enter mobile or email"
+                placeholder="Enter your email address"
                 className={cn(
                   "transition-all duration-200",
                   validation.identifier && "border-finance-green pr-10"
@@ -187,13 +214,13 @@ const Login = () => {
           <div className="flex flex-col space-y-4">
             <Button
               type="submit"
-              disabled={!isFormValid}
+              disabled={!isFormValid || isSubmitting}
               className={cn(
                 "bg-[#9b87f5] hover:bg-[#7E69AB] transition-all shadow-md duration-200 hover:scale-[1.02]",
-                isFormValid ? "" : "opacity-70"
+                (!isFormValid || isSubmitting) ? "opacity-70" : ""
               )}
             >
-              Log In
+              {isSubmitting ? "Signing In..." : "Log In"}
             </Button>
             
             <div className="relative flex items-center justify-center">
@@ -212,12 +239,12 @@ const Login = () => {
             </Button>
             
             <div className="text-center space-y-2 pt-2">
-              <a 
-                href="#forgot-password" 
+              <Link
+                to="/account-recovery"
                 className="text-sm text-[#999] hover:underline transition-all block"
               >
                 Forgot Password?
-              </a>
+              </Link>
               
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}

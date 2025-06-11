@@ -1,5 +1,3 @@
-
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -37,6 +35,7 @@ import PayBills from "@/pages/PayBills";
 import CryptoWalletOnboarding from "@/pages/CryptoWalletOnboarding";
 import CryptoSwap from "@/pages/CryptoSwap";
 import MultisigWallet from "@/pages/MultisigWallet";
+import AccountRecovery from "@/pages/AccountRecovery";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 
@@ -46,6 +45,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Navigate to={isLoggedIn() ? "/dashboard" : "/login"} replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/account-recovery" element={<AccountRecovery />} />
       
       {/* Protected routes */}
       <Route path="/dashboard" element={
@@ -221,4 +221,3 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-

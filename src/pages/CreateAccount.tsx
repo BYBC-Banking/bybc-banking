@@ -7,7 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { login } from '@/utils/auth';
+import { isValidEmail, sanitizeInput } from '@/utils/security';
 
 interface AccountType {
   id: string;
@@ -56,29 +59,55 @@ const CreateAccount = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoginMode, setIsLoginMode] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    setIsSubmitting(true);
+    setError(null);
+    
     if (isLoginMode) {
-      // Check if credentials match the admin credentials
-      if (email === "bybc.banking@gmail.com" && password === "adminbybc") {
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to BYBC Banking",
-        });
-        localStorage.setItem('isLoggedIn', 'true');
-        navigate("/dashboard");
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "Invalid email or password",
-          variant: "destructive",
-        });
+      try {
+        // Validate email
+        if (!isValidEmail(email)) {
+          setError("Please enter a valid email address");
+          setIsSubmitting(false);
+          return;
+        }
+        
+        // Sanitize input to prevent XSS
+        const sanitizedEmail = sanitizeInput(email);
+        
+        // Attempt login
+        const loginSuccess = await login(sanitizedEmail, password);
+        
+        if (loginSuccess) {
+          toast({
+            title: "Login Successful",
+            description: "Welcome back to BYBC Banking",
+          });
+          navigate("/dashboard");
+        } else {
+          setError("Invalid email or password");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        setError("An unexpected error occurred. Please try again.");
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
-      // Redirect to the appropriate onboarding page for the selected account type
-      navigate(`/account-onboarding/${accountType}`);
+      // For account creation
+      try {
+        setIsSubmitting(false);
+        // Redirect to the appropriate onboarding page for the selected account type
+        navigate(`/account-onboarding/${accountType}`);
+      } catch (err) {
+        setError("Failed to redirect to account creation");
+        setIsSubmitting(false);
+      }
     }
   };
   
@@ -103,6 +132,13 @@ const CreateAccount = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               {isLoginMode ? (
                 // Login form
@@ -168,14 +204,24 @@ const CreateAccount = () => {
               )}
               
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  {isLoginMode ? "Login" : "Create Account"}
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting 
+                    ? (isLoginMode ? "Signing In..." : "Creating Account...") 
+                    : (isLoginMode ? "Login" : "Create Account")}
                 </Button>
                 <Button 
                   type="button" 
                   variant="outline" 
                   className="w-full"
-                  onClick={() => setIsLoginMode(!isLoginMode)}
+                  onClick={() => {
+                    setIsLoginMode(!isLoginMode);
+                    setError(null);
+                  }}
+                  disabled={isSubmitting}
                 >
                   {isLoginMode ? "Create New Account" : "Already Have an Account? Login"}
                 </Button>
