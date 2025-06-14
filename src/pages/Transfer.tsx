@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -12,16 +13,22 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useHomePage } from "@/context/HomePageContext";
 
 export default function Transfer() {
   const { toast } = useToast();
+  const { accountSection, isBusinessSection } = useHomePage();
   
-  // Filter accounts to only show Personal section accounts (Spending and Investments)
-  const personalAccounts = accounts.filter(account => 
-    ['Spending', 'Investments'].includes(account.type)
-  );
+  // Filter accounts based on current section to respect user's context
+  const sectionAccounts = accounts.filter(account => {
+    if (accountSection === 'personal') {
+      return ['Spending', 'Investments'].includes(account.type);
+    } else {
+      return ['Business', 'Nonprofit', 'Investments'].includes(account.type);
+    }
+  });
   
-  const [fromAccount, setFromAccount] = useState(personalAccounts[0]?.id || "");
+  const [fromAccount, setFromAccount] = useState(sectionAccounts[0]?.id || "");
   const [toAccount, setToAccount] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -58,7 +65,7 @@ export default function Transfer() {
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
-          <Link to="/" className="p-2">
+          <Link to="/dashboard" className="p-2">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-bold">Transfer Money</h1>
@@ -77,7 +84,7 @@ export default function Transfer() {
                   <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {personalAccounts.map((account) => (
+                  {sectionAccounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name} - R{account.balance.toLocaleString()}
                     </SelectItem>
@@ -102,7 +109,7 @@ export default function Transfer() {
                   <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {personalAccounts.map((account) => (
+                  {sectionAccounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name} - R{account.balance.toLocaleString()}
                     </SelectItem>
