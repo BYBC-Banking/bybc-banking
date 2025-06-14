@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
 
 const DashboardHeader = () => {
-  const { selectedAccount, selectedAccountId } = useHomePage();
+  const { selectedAccount, selectedAccountId, accountSection, setAccountSection } = useHomePage();
   const isInvestmentAccount = selectedAccount.type === "Investments";
   
   return (
@@ -20,23 +20,23 @@ const DashboardHeader = () => {
       
       {/* Pill-shaped account switcher */}
       <div className="flex bg-gray-100 rounded-full p-1">
-        <Link 
-          to="/dashboard?account=1" 
+        <button 
+          onClick={() => setAccountSection('personal')}
           className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
-            selectedAccountId === "1" ? "bg-white shadow-sm text-finance-blue" : ""
+            accountSection === 'personal' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
         >
           P
-        </Link>
+        </button>
         <div className="w-px bg-gray-300 my-1"></div>
-        <Link 
-          to="/dashboard?account=3" 
+        <button 
+          onClick={() => setAccountSection('business')}
           className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
-            selectedAccountId === "3" ? "bg-white shadow-sm text-finance-blue" : ""
+            accountSection === 'business' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
         >
           B
-        </Link>
+        </button>
       </div>
     </header>
   );

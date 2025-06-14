@@ -1,3 +1,4 @@
+
 import { HomePageProvider } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import DashboardHeader from "@/components/DashboardHeader";
@@ -59,19 +60,19 @@ const DashboardContent = () => {
 
 // Component to get account balance from context
 const AccountBalanceFromContext = () => {
-  const { selectedAccount, accounts, selectedAccountId, setSelectedAccountId } = useHomePage();
+  const { selectedAccount, filteredAccounts, selectedAccountId, setSelectedAccountId } = useHomePage();
   
-  const currentIndex = accounts.findIndex(acc => acc.id === selectedAccountId);
+  const currentIndex = filteredAccounts.findIndex(acc => acc.id === selectedAccountId);
   
   const handlePreviousAccount = () => {
     if (currentIndex > 0) {
-      setSelectedAccountId(accounts[currentIndex - 1].id);
+      setSelectedAccountId(filteredAccounts[currentIndex - 1].id);
     }
   };
   
   const handleNextAccount = () => {
-    if (currentIndex < accounts.length - 1) {
-      setSelectedAccountId(accounts[currentIndex + 1].id);
+    if (currentIndex < filteredAccounts.length - 1) {
+      setSelectedAccountId(filteredAccounts[currentIndex + 1].id);
     }
   };
   
@@ -82,7 +83,7 @@ const AccountBalanceFromContext = () => {
       onPreviousAccount={handlePreviousAccount}
       onNextAccount={handleNextAccount}
       canNavigatePrevious={currentIndex > 0}
-      canNavigateNext={currentIndex < accounts.length - 1}
+      canNavigateNext={currentIndex < filteredAccounts.length - 1}
       accountType={selectedAccount.type}
       accountName={selectedAccount.name}
     />
@@ -91,7 +92,7 @@ const AccountBalanceFromContext = () => {
 
 // Dot Navigation Component with dynamic colors
 const DotNavigation = () => {
-  const { accounts, selectedAccountId, setSelectedAccountId, selectedAccount } = useHomePage();
+  const { filteredAccounts, selectedAccountId, setSelectedAccountId } = useHomePage();
   
   // Helper function to get the appropriate background color for each account
   const getAccountDotColor = (account: any, isSelected: boolean) => {
@@ -117,7 +118,7 @@ const DotNavigation = () => {
   
   return (
     <div className="flex justify-center space-x-2 animate-fade-in" style={{animationDelay: "100ms"}}>
-      {accounts.map((account) => (
+      {filteredAccounts.map((account) => (
         <button
           key={account.id}
           onClick={() => setSelectedAccountId(account.id)}
