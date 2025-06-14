@@ -10,8 +10,9 @@ interface CryptoAccessModalProps {
 
 const CryptoAccessModal = ({ isOpen, onOpenChange }: CryptoAccessModalProps) => {
   const handleOpenInvestmentAccount = () => {
-    // Navigate to investment account switching
+    // Navigate to investment account switching but don't proceed with the action
     window.location.href = "/dashboard?account=1";
+    // Close modal without allowing the user to proceed
     onOpenChange(false);
   };
 
@@ -23,7 +24,7 @@ const CryptoAccessModal = ({ isOpen, onOpenChange }: CryptoAccessModalProps) => 
             Investment Account Required
           </DialogTitle>
           <DialogDescription className="text-center">
-            To access the crypto wallet feature, first open an investments account.
+            To access the crypto wallet feature, you must first switch to your investments account.
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center py-4">

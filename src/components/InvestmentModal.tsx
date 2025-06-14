@@ -16,8 +16,9 @@ const InvestmentModal = ({
   assetName = 'assets',
 }: InvestmentModalProps) => {
   const handleSwitchAccount = () => {
-    // Navigate to investment account (mock functionality)
+    // Navigate to investment account but don't proceed with the action
     console.log("Switching to investment account");
+    // Close modal without allowing the user to proceed with their intended action
     onOpenChange(false);
   };
 
