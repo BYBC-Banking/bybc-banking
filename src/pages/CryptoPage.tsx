@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Wallet } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import CryptoChart from "@/components/crypto/CryptoChart";
@@ -11,6 +12,7 @@ import { cryptoAssets, categories } from "@/components/crypto/cryptoData";
 
 const CryptoPageContent = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { selectedAccount } = useHomePage();
   const [selectedTab, setSelectedTab] = useState("All");
   const [selectedCrypto, setSelectedCrypto] = useState(cryptoAssets[0]);
@@ -39,16 +41,35 @@ const CryptoPageContent = () => {
       description: `Redirecting to sell ${crypto.name}.`
     });
   };
+
+  const handleWalletClick = () => {
+    navigate("/crypto-wallet");
+  };
   
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
-        <header className="flex items-center gap-4 mb-6">
-          <Link to="/investments" className="p-2">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <h1 className="text-2xl font-bold">Crypto Market</h1>
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Link to="/investments" className="p-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <h1 className="text-2xl font-bold">Crypto Market</h1>
+          </div>
+          
+          {/* Wallet button - only show if user has investment access */}
+          {hasInvestmentAccess && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleWalletClick}
+              className="flex items-center gap-2"
+            >
+              <Wallet className="h-4 w-4" />
+              Wallet
+            </Button>
+          )}
         </header>
         
         {/* Crypto Price Chart */}
