@@ -42,8 +42,18 @@ const CryptoWalletPageContent = () => {
 
   const totalValue = cryptoAssets.reduce((sum, asset) => sum + asset.value, 0);
 
+  // Check if user has access to crypto wallet features
+  const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
+
+  // Show modal immediately if user doesn't have investment access
+  useState(() => {
+    if (!hasInvestmentAccess) {
+      setShowAccessModal(true);
+    }
+  }, [hasInvestmentAccess]);
+
   const handleAssetClick = () => {
-    if (!selectedAccount || selectedAccount.type !== "Investments") {
+    if (!hasInvestmentAccess) {
       setShowAccessModal(true);
     } else {
       // Allow access to crypto wallet features
@@ -52,7 +62,7 @@ const CryptoWalletPageContent = () => {
   };
 
   const handleBuyCrypto = () => {
-    if (!selectedAccount || selectedAccount.type !== "Investments") {
+    if (!hasInvestmentAccess) {
       setShowAccessModal(true);
     } else {
       navigate("/buy");
@@ -60,11 +70,8 @@ const CryptoWalletPageContent = () => {
   };
 
   const handleCryptoSwap = () => {
-    if (!selectedAccount || selectedAccount.type !== "Investments") {
-      setShowAccessModal(true);
-    } else {
-      navigate("/crypto-swap");
-    }
+    // Allow swap functionality regardless of account type
+    navigate("/crypto-swap");
   };
 
   return (
