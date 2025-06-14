@@ -80,6 +80,12 @@ export default {
 				'sa-gold': '#FFB81C',
 				'sa-red': '#E03C31',
 				'sa-blue': '#001489',
+				// Business theme colors
+				'business': {
+					primary: '#1a1a1a',
+					secondary: '#f5f5f5',
+					accent: '#e5e5e5',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

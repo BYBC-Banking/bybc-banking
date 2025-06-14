@@ -6,31 +6,54 @@ import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
 import TransactionSection from "@/components/home/TransactionSection";
 import { useHomePage } from "@/context/HomePageContext";
+import { useEffect } from "react";
 
 const Index = () => {
   return (
     <HomePageProvider accounts={accounts}>
-      <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
-        <div className="container mx-auto max-w-md px-4 py-6">
-          {/* Header */}
-          <DashboardHeader />
+      <DashboardContent />
+    </HomePageProvider>
+  );
+};
+
+const DashboardContent = () => {
+  const { selectedAccountId } = useHomePage();
+  
+  // Apply business theme when business account is selected
+  useEffect(() => {
+    const root = document.documentElement;
+    if (selectedAccountId === "3") {
+      root.setAttribute('data-theme', 'business');
+      root.style.setProperty('--background', '220 14% 96%');
+      root.style.setProperty('--card', '0 0% 100%');
+    } else {
+      root.removeAttribute('data-theme');
+      root.style.removeProperty('--background');
+      root.style.removeProperty('--card');
+    }
+  }, [selectedAccountId]);
+
+  return (
+    <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
+      <div className="container mx-auto max-w-md px-4 py-6">
+        {/* Header */}
+        <DashboardHeader />
+        
+        <div className="space-y-6">
+          {/* Account Balance Section - Now using context */}
+          <AccountBalanceFromContext />
           
-          <div className="space-y-6">
-            {/* Account Balance Section - Now using context */}
-            <AccountBalanceFromContext />
-            
-            {/* Dot Navigation */}
-            <DotNavigation />
-            
-            {/* Quick Actions */}
-            <QuickActions />
-            
-            {/* Transactions List */}
-            <TransactionSection />
-          </div>
+          {/* Dot Navigation */}
+          <DotNavigation />
+          
+          {/* Quick Actions */}
+          <QuickActions />
+          
+          {/* Transactions List */}
+          <TransactionSection />
         </div>
       </div>
-    </HomePageProvider>
+    </div>
   );
 };
 
