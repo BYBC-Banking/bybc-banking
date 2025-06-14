@@ -10,15 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 [html[data-theme='business']_&]:bg-business-primary [html[data-theme='business']_&]:text-white [html[data-theme='business']_&]:hover:bg-business-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground [html[data-theme='business']_&]:border-business-primary/20 [html[data-theme='business']_&]:hover:bg-business-primary/5",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 [html[data-theme='business']_&]:bg-business-secondary [html[data-theme='business']_&]:text-business-primary [html[data-theme='business']_&]:hover:bg-business-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground [html[data-theme='business']_&]:hover:bg-business-primary/5 [html[data-theme='business']_&]:hover:text-business-primary",
+        link: "text-primary underline-offset-4 hover:underline [html[data-theme='business']_&]:text-business-primary",
       },
       size: {
         default: "h-10 px-4 py-2",
