@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { ArrowLeft, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
-import CryptoAccessModal from "@/components/CryptoAccessModal";
 
 const CryptoWalletPageContent = () => {
   const { selectedAccount } = useHomePage();
-  const [showAccessModal, setShowAccessModal] = useState(false);
   const navigate = useNavigate();
 
   const cryptoAssets = [
@@ -41,32 +40,15 @@ const CryptoWalletPageContent = () => {
 
   const totalValue = cryptoAssets.reduce((sum, asset) => sum + asset.value, 0);
 
-  // Check if user has access to crypto wallet features
-  const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
-
-  // Show modal immediately if user doesn't have investment access when first loading the page
-  useEffect(() => {
-    if (!hasInvestmentAccess) {
-      setShowAccessModal(true);
-    }
-  }, [hasInvestmentAccess]);
-
   const handleAssetClick = () => {
-    if (!hasInvestmentAccess) {
-      setShowAccessModal(true);
-    } else {
-      // Allow access to crypto wallet features
-      console.log("Access granted to crypto wallet");
-    }
+    console.log("Asset clicked");
   };
 
   const handleBuyCrypto = () => {
-    // Allow buy functionality regardless of account type when on crypto wallet page
     navigate("/buy");
   };
 
   const handleCryptoSwap = () => {
-    // Allow swap functionality regardless of account type
     navigate("/crypto-swap");
   };
 
@@ -166,11 +148,6 @@ const CryptoWalletPageContent = () => {
           ))}
         </div>
       </div>
-
-      {/* Only show modal if user doesn't have investment access */}
-      {!hasInvestmentAccess && (
-        <CryptoAccessModal isOpen={showAccessModal} onOpenChange={setShowAccessModal} />
-      )}
     </div>
   );
 };

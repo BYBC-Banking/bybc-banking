@@ -5,14 +5,10 @@ import PortfolioSummary from "@/components/PortfolioSummary";
 import InvestmentActionBar from "@/components/InvestmentActionBar";
 import AssetCardList from "@/components/AssetCardList";
 import { useToast } from "@/hooks/use-toast";
-import InvestmentModal from "@/components/InvestmentModal";
 
 const Investments = () => {
   const { toast } = useToast();
   const [selectedTimeframe, setSelectedTimeframe] = useState<"1D" | "1W" | "1M" | "3M" | "1Y" | "ALL">("1W");
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalAction, setModalAction] = useState<'buy' | 'sell'>('buy');
-  const [selectedAsset, setSelectedAsset] = useState<string | undefined>(undefined);
   
   // Mock portfolio data
   const portfolioData = {
@@ -107,15 +103,17 @@ const Investments = () => {
   };
   
   const handleBuyClick = (assetId?: string) => {
-    setModalAction('buy');
-    setSelectedAsset(assetId);
-    setModalOpen(true);
+    toast({
+      title: "Buy Stock",
+      description: `Proceeding to buy ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`,
+    });
   };
 
   const handleSellClick = (assetId?: string) => {
-    setModalAction('sell');
-    setSelectedAsset(assetId);
-    setModalOpen(true);
+    toast({
+      title: "Sell Stock",
+      description: `Proceeding to sell ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`,
+    });
   };
   
   return (
@@ -142,14 +140,6 @@ const Investments = () => {
           assets={assets} 
           onBuyClick={handleBuyClick}
           onSellClick={handleSellClick}
-        />
-        
-        {/* Investment Modal */}
-        <InvestmentModal 
-          isOpen={modalOpen}
-          onOpenChange={setModalOpen}
-          actionType={modalAction}
-          assetName={selectedAsset ? assets.find(a => a.id === selectedAsset)?.name : 'assets'}
         />
       </div>
     </div>
