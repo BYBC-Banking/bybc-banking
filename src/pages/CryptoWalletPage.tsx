@@ -45,7 +45,7 @@ const CryptoWalletPageContent = () => {
   // Check if user has access to crypto wallet features
   const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
 
-  // Show modal immediately if user doesn't have investment access
+  // Show modal immediately if user doesn't have investment access when first loading the page
   useEffect(() => {
     if (!hasInvestmentAccess) {
       setShowAccessModal(true);
@@ -62,6 +62,8 @@ const CryptoWalletPageContent = () => {
   };
 
   const handleBuyCrypto = () => {
+    // If user is already on the crypto wallet page and has investment access, allow buy
+    // If no investment access, show modal
     if (!hasInvestmentAccess) {
       setShowAccessModal(true);
     } else {
@@ -171,7 +173,10 @@ const CryptoWalletPageContent = () => {
         </div>
       </div>
 
-      <CryptoAccessModal isOpen={showAccessModal} onOpenChange={setShowAccessModal} />
+      {/* Only show modal if user doesn't have investment access */}
+      {!hasInvestmentAccess && (
+        <CryptoAccessModal isOpen={showAccessModal} onOpenChange={setShowAccessModal} />
+      )}
     </div>
   );
 };
