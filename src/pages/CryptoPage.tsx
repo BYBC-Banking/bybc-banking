@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft, TrendingUp, TrendingDown, Briefcase, BookmarkPlus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -242,14 +241,14 @@ const CryptoPage = () => {
             </div>
             
             <div className="grid grid-cols-3 gap-2 mt-4">
-              <Button variant="default" className="bg-green-600 hover:bg-green-700" onClick={() => handleBuy(selectedCrypto)}>
+              <Button variant="default" className="bg-finance-green hover:bg-finance-green/90" onClick={() => handleBuy(selectedCrypto)}>
                 Buy
               </Button>
-              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-500/10" onClick={() => handleSell(selectedCrypto)}>
+              <Button variant="outline" className="border-finance-blue text-finance-blue hover:bg-finance-blue/10" onClick={() => handleSell(selectedCrypto)}>
                 Sell
               </Button>
               <Link to="/crypto-wallet">
-                <Button variant="outline" className="w-full border-amber-500 text-amber-500 hover:bg-amber-500/10">
+                <Button variant="outline" className="w-full border-finance-blue text-finance-blue hover:bg-finance-blue/10">
                   <Briefcase className="h-4 w-4" />
                   Wallet
                 </Button>
@@ -282,7 +281,7 @@ const CryptoPage = () => {
                     variant={selectedTab === category ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedTab(category)}
-                    className={selectedTab === category ? "bg-orange-600" : ""}
+                    className={selectedTab === category ? "bg-finance-blue hover:bg-finance-blue/90" : ""}
                   >
                     {category}
                   </Button>
@@ -300,7 +299,7 @@ const CryptoPage = () => {
                     onClick={() => setSelectedCrypto(crypto)}
                   >
                     <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-3">
+                      <div className="w-8 h-8 rounded-full bg-finance-blue/10 text-finance-blue flex items-center justify-center mr-3">
                         {crypto.ticker.substring(0, 3)}
                       </div>
                       <div>
