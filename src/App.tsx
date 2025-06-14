@@ -30,11 +30,9 @@ const AppContent = () => {
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <HomePageProvider accounts={accounts}>
-        <AppLayout>
-          <AppRoutes />
-        </AppLayout>
-      </HomePageProvider>
+      <AppLayout>
+        <AppRoutes />
+      </AppLayout>
     </TooltipProvider>
   );
 };
@@ -43,7 +41,9 @@ const App = () => (
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppContent />
+        <HomePageProvider accounts={accounts}>
+          <AppContent />
+        </HomePageProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
