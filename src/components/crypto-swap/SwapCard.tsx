@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,7 +14,7 @@ interface SwapCardProps {
     nextExecution: string;
     isActive: boolean;
     successRate: { successful: number; total: number };
-    status: 'active' | 'paused' | 'failed' | 'executing';
+    status: 'active' | 'paused' | 'failed' | 'executing' | 'completed';
     retryCount?: number;
     lastFailureReason?: string;
   };
@@ -33,6 +32,7 @@ const SwapCard = ({ swap, onToggleStatus, onEdit, onDelete, onDuplicate, onViewD
       case 'executing': return 'bg-blue-500';
       case 'failed': return 'bg-red-500';
       case 'paused': return 'bg-gray-400';
+      case 'completed': return 'bg-gray-600';
       default: return 'bg-gray-400';
     }
   };
@@ -43,6 +43,7 @@ const SwapCard = ({ swap, onToggleStatus, onEdit, onDelete, onDuplicate, onViewD
       case 'executing': return '🔵';
       case 'failed': return '🔴';
       case 'paused': return '⚪';
+      case 'completed': return '⚫';
       default: return '⚪';
     }
   };
