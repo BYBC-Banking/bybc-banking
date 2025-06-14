@@ -6,9 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { Plus, Play, Pause, Edit, Trash2, Calendar } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, BarChart3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import SwapCard from "./SwapCard";
+import SwapDetailView from "./SwapDetailView";
+import SwapAnalytics from "./SwapAnalytics";
 
 interface ScheduledSwap {
   id: string;
@@ -20,23 +23,90 @@ interface ScheduledSwap {
   totalSwaps: number;
   completedSwaps: number;
   totalValue: number;
+  status: 'active' | 'paused' | 'failed' | 'executing' | 'completed';
+  successRate: { successful: number; total: number };
+  retryCount?: number;
+  lastFailureReason?: string;
+  totalConverted: number;
+  avgRate: number;
+  executionHistory: Array<{
+    date: string;
+    status: 'success' | 'failed';
+    amount: number;
+    rate: number;
+    reason?: string;
+  }>;
 }
 
 const ScheduledSwaps = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [selectedView, setSelectedView] = useState<'list' | 'detail' | 'analytics'>('list');
+  const [selectedSwapId, setSelectedSwapId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('active');
+  
   const [schedules, setSchedules] = useState<ScheduledSwap[]>([
     {
       id: "1",
       fromAsset: "BTC",
       amount: "0.01",
       frequency: "Weekly",
-      nextExecution: "Tomorrow",
+      nextExecution: "Tomorrow 09:00",
       isActive: true,
       totalSwaps: 12,
       completedSwaps: 5,
-      totalValue: 62500
+      totalValue: 62500,
+      status: 'active',
+      successRate: { successful: 8, total: 8 },
+      totalConverted: 45000,
+      avgRate: 850000,
+      executionHistory: [
+        { date: "Dec 8, 2024", status: 'success', amount: 8500, rate: 850000 },
+        { date: "Dec 1, 2024", status: 'success', amount: 8200, rate: 820000 },
+        { date: "Nov 24, 2024", status: 'success', amount: 8800, rate: 880000 },
+      ]
+    },
+    {
+      id: "2",
+      fromAsset: "ETH",
+      amount: "0.5",
+      frequency: "Daily",
+      nextExecution: "Today 14:00",
+      isActive: false,
+      totalSwaps: 30,
+      completedSwaps: 15,
+      totalValue: 25000,
+      status: 'paused',
+      successRate: { successful: 14, total: 15 },
+      totalConverted: 22000,
+      avgRate: 44000,
+      executionHistory: [
+        { date: "Dec 7, 2024", status: 'success', amount: 1600, rate: 44000 },
+        { date: "Dec 6, 2024", status: 'failed', amount: 0, rate: 0, reason: "Network timeout" },
+      ]
+    },
+    {
+      id: "3",
+      fromAsset: "BTC",
+      amount: "0.005",
+      frequency: "Monthly",
+      nextExecution: "Failed - Retry pending",
+      isActive: true,
+      totalSwaps: 6,
+      completedSwaps: 4,
+      totalValue: 15000,
+      status: 'failed',
+      successRate: { successful: 4, total: 5 },
+      retryCount: 2,
+      lastFailureReason: "Insufficient balance - R500 required",
+      totalConverted: 12000,
+      avgRate: 820000,
+      executionHistory: [
+        { date: "Dec 1, 2024", status: 'failed', amount: 0, rate: 0, reason: "Insufficient balance" },
+        { date: "Nov 1, 2024", status: 'success', amount: 4200, rate: 840000 },
+      ]
     }
   ]);
+  
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -50,6 +120,20 @@ const ScheduledSwaps = () => {
     skipLowBalance: true,
     pauseVolatility: true
   });
+
+  // Filter schedules by status
+  const activeSchedules = schedules.filter(s => s.status === 'active' || s.status === 'executing');
+  const pausedSchedules = schedules.filter(s => s.status === 'paused' || s.status === 'failed');
+  const completedSchedules = schedules.filter(s => s.status === 'completed');
+
+  const getCurrentSchedules = () => {
+    switch (activeTab) {
+      case 'active': return activeSchedules;
+      case 'paused': return pausedSchedules;
+      case 'completed': return completedSchedules;
+      default: return activeSchedules;
+    }
+  };
 
   const handleCreateSchedule = () => {
     if (!formData.amount) {
@@ -70,7 +154,12 @@ const ScheduledSwaps = () => {
       isActive: true,
       totalSwaps: parseInt(formData.occurrences),
       completedSwaps: 0,
-      totalValue: 0
+      totalValue: 0,
+      status: 'active',
+      successRate: { successful: 0, total: 0 },
+      totalConverted: 0,
+      avgRate: 0,
+      executionHistory: []
     };
 
     setSchedules(prev => [...prev, newSchedule]);
@@ -96,7 +185,11 @@ const ScheduledSwaps = () => {
   const toggleSchedule = (id: string) => {
     setSchedules(prev => prev.map(schedule => 
       schedule.id === id 
-        ? { ...schedule, isActive: !schedule.isActive }
+        ? { 
+            ...schedule, 
+            isActive: !schedule.isActive,
+            status: schedule.isActive ? 'paused' : 'active'
+          }
         : schedule
     ));
   };
@@ -107,8 +200,39 @@ const ScheduledSwaps = () => {
       title: "Schedule Deleted",
       description: "Scheduled swap has been removed",
     });
+    if (selectedSwapId === id) {
+      setSelectedView('list');
+      setSelectedSwapId(null);
+    }
   };
 
+  const duplicateSchedule = (id: string) => {
+    const original = schedules.find(s => s.id === id);
+    if (original) {
+      const duplicate = {
+        ...original,
+        id: Date.now().toString(),
+        completedSwaps: 0,
+        totalValue: 0,
+        successRate: { successful: 0, total: 0 },
+        executionHistory: []
+      };
+      setSchedules(prev => [...prev, duplicate]);
+      toast({
+        title: "Schedule Duplicated",
+        description: "A copy of the schedule has been created",
+      });
+    }
+  };
+
+  const viewSwapDetails = (id: string) => {
+    setSelectedSwapId(id);
+    setSelectedView('detail');
+  };
+
+  const selectedSwap = selectedSwapId ? schedules.find(s => s.id === selectedSwapId) : null;
+
+  // Handle empty state
   if (schedules.length === 0 && !showCreateForm) {
     return (
       <div className="text-center space-y-6 py-12">
@@ -130,19 +254,56 @@ const ScheduledSwaps = () => {
     );
   }
 
+  // Show detail view
+  if (selectedView === 'detail' && selectedSwap) {
+    return (
+      <SwapDetailView
+        swap={selectedSwap}
+        onBack={() => setSelectedView('list')}
+        onEdit={() => {
+          // TODO: Implement edit functionality
+          toast({ title: "Edit", description: "Edit functionality coming soon" });
+        }}
+        onDuplicate={() => duplicateSchedule(selectedSwap.id)}
+        onDelete={() => deleteSchedule(selectedSwap.id)}
+      />
+    );
+  }
+
+  // Show analytics view
+  if (selectedView === 'analytics') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" onClick={() => setSelectedView('list')}>
+            ← Back to Swaps
+          </Button>
+        </div>
+        <SwapAnalytics />
+      </div>
+    );
+  }
+
+  // Show main list view
   return (
     <div className="space-y-6">
-      {/* Create New Schedule Button */}
-      {!showCreateForm && (
+      {/* Header with actions */}
+      <div className="flex justify-between items-center">
+        {!showCreateForm && (
+          <Button onClick={() => setShowCreateForm(true)} className="flex-1 mr-2">
+            <Plus className="h-4 w-4 mr-2" />
+            Create New Schedule
+          </Button>
+        )}
         <Button 
-          onClick={() => setShowCreateForm(true)}
-          className="w-full h-12"
-          variant="outline"
+          variant="outline" 
+          onClick={() => setSelectedView('analytics')}
+          className={showCreateForm ? 'flex-1' : ''}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Create New Schedule
+          <BarChart3 className="h-4 w-4 mr-2" />
+          Analytics
         </Button>
-      )}
+      </div>
 
       {/* Create Schedule Form */}
       {showCreateForm && (
@@ -182,7 +343,6 @@ const ScheduledSwaps = () => {
               <Label>TO: South African Rand (ZAR)</Label>
             </div>
 
-            {/* Frequency */}
             <div className="space-y-2">
               <Label>📅 Frequency:</Label>
               <div className="flex gap-2">
@@ -199,7 +359,6 @@ const ScheduledSwaps = () => {
               </div>
             </div>
 
-            {/* Schedule Details */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>🗓️ Start:</Label>
@@ -234,7 +393,6 @@ const ScheduledSwaps = () => {
               </div>
             </div>
 
-            {/* Duration */}
             <div className="space-y-4">
               <Label>🔄 Duration:</Label>
               <div className="space-y-3">
@@ -268,7 +426,6 @@ const ScheduledSwaps = () => {
               </div>
             </div>
 
-            {/* Smart Features */}
             <div className="space-y-4">
               <Label>💡 Smart Features:</Label>
               <div className="space-y-3">
@@ -303,7 +460,6 @@ const ScheduledSwaps = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline" onClick={() => setShowCreateForm(false)}>
                 Cancel
@@ -316,68 +472,44 @@ const ScheduledSwaps = () => {
         </Card>
       )}
 
-      {/* Active Schedules */}
-      {schedules.map((schedule) => (
-        <Card key={schedule.id}>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${
-                    schedule.isActive ? 'bg-green-500' : 'bg-gray-400'
-                  }`} />
-                  <span className="font-semibold">
-                    {schedule.fromAsset} → ZAR {schedule.frequency}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => toggleSchedule(schedule.id)}
-                  >
-                    {schedule.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => deleteSchedule(schedule.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+      {/* Tabbed Schedule List */}
+      {!showCreateForm && (
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="active">
+              Active ({activeSchedules.length})
+            </TabsTrigger>
+            <TabsTrigger value="paused">
+              Paused ({pausedSchedules.length})
+            </TabsTrigger>
+            <TabsTrigger value="completed">
+              Completed ({completedSchedules.length})
+            </TabsTrigger>
+          </TabsList>
 
-              {/* Details */}
-              <div className="text-sm text-muted-foreground">
-                <div>R{schedule.totalValue.toLocaleString()} • {schedule.frequency}s 9:00 AM</div>
-                <div>Next: {schedule.nextExecution}</div>
+          <TabsContent value={activeTab} className="space-y-4 mt-6">
+            {getCurrentSchedules().map((schedule) => (
+              <SwapCard
+                key={schedule.id}
+                swap={schedule}
+                onToggleStatus={toggleSchedule}
+                onEdit={() => {
+                  toast({ title: "Edit", description: "Edit functionality coming soon" });
+                }}
+                onDelete={deleteSchedule}
+                onDuplicate={duplicateSchedule}
+                onViewDetails={viewSwapDetails}
+              />
+            ))}
+            
+            {getCurrentSchedules().length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No {activeTab} swaps</p>
               </div>
-
-              {/* Progress */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Progress:</span>
-                  <span>{schedule.completedSwaps}/{schedule.totalSwaps} swaps</span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all"
-                    style={{ width: `${(schedule.completedSwaps / schedule.totalSwaps) * 100}%` }}
-                  />
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Total: R{schedule.totalValue.toLocaleString()}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 };
