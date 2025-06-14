@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import StockChart from "@/components/stocks/StockChart";
@@ -39,16 +40,38 @@ const StocksPageContent = () => {
       description: `Redirecting to sell ${stock.name}.`
     });
   };
+
+  const handleHoldingsClick = () => {
+    toast({
+      title: "Holdings",
+      description: "Viewing your stock holdings."
+    });
+  };
   
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
-        <header className="flex items-center gap-4 mb-6">
-          <Link to="/investments" className="p-2">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <h1 className="text-2xl font-bold">JSE Stocks</h1>
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Link to="/investments" className="p-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <h1 className="text-2xl font-bold">JSE Stocks</h1>
+          </div>
+          
+          {/* Holdings button - only show if user has investment access */}
+          {hasInvestmentAccess && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleHoldingsClick}
+              className="flex items-center gap-2"
+            >
+              <Briefcase className="h-4 w-4" />
+              Holdings
+            </Button>
+          )}
         </header>
         
         {/* Stock Price Chart */}
