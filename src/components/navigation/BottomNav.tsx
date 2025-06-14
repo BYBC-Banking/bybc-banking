@@ -3,39 +3,41 @@ import { Home, Wallet2, TrendingUp, GraduationCap, Plus } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useHomePage } from "@/context/HomePageContext";
 
 type NavItem = {
   icon: React.ElementType;
   label: string;
-  href: string;
+  getHref: (section: 'personal' | 'business') => string;
 };
 
 const navItems: NavItem[] = [
   {
     icon: Home,
     label: "Home",
-    href: "/dashboard"
+    getHref: () => "/dashboard"
   },
   {
     icon: Wallet2,
     label: "Accounts",
-    href: "/accounts"
+    getHref: (section) => `/accounts-${section}`
   },
   {
     icon: TrendingUp,
     label: "Invest",
-    href: "/investments"
+    getHref: (section) => `/investments-${section}`
   },
   {
     icon: GraduationCap,
     label: "Learn",
-    href: "/education"
+    getHref: (section) => `/education-${section}`
   }
 ];
 
 export default function BottomNav() {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { accountSection } = useHomePage();
   
   if (!isMobile) return null;
   
@@ -58,12 +60,13 @@ export default function BottomNav() {
             <div className="flex justify-between items-center w-full max-w-xs">
               {/* First two nav items */}
               {navItems.slice(0, 2).map((item) => {
-                const isActive = location.pathname === item.href;
+                const href = item.getHref(accountSection);
+                const isActive = location.pathname === href;
                 const IconComponent = item.icon;
                 return (
                   <Link 
-                    key={item.href} 
-                    to={item.href} 
+                    key={href} 
+                    to={href} 
                     className="flex flex-col items-center py-1 px-2 min-w-[60px]"
                   >
                     <IconComponent 
@@ -87,12 +90,13 @@ export default function BottomNav() {
               
               {/* Last two nav items */}
               {navItems.slice(2).map((item) => {
-                const isActive = location.pathname === item.href;
+                const href = item.getHref(accountSection);
+                const isActive = location.pathname === href;
                 const IconComponent = item.icon;
                 return (
                   <Link 
-                    key={item.href} 
-                    to={item.href} 
+                    key={href} 
+                    to={href} 
                     className="flex flex-col items-center py-1 px-2 min-w-[60px]"
                   >
                     <IconComponent 

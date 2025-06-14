@@ -1,11 +1,25 @@
 
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { accounts } from "@/data/accountsData";
 
 const Accounts = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Determine section from route
+  const isBusinessSection = location.pathname.includes('-business');
+  const section = isBusinessSection ? 'business' : 'personal';
+  
+  // Filter accounts based on section
+  const filteredAccounts = accounts.filter(account => {
+    if (section === 'personal') {
+      return ['Spending', 'Investments'].includes(account.type);
+    } else {
+      return ['Business', 'Nonprofit', 'Investments'].includes(account.type);
+    }
+  });
   
   // Handle account selection - navigate to dashboard with selected account ID
   const handleAccountSelect = (accountId: string) => {
@@ -20,12 +34,14 @@ const Accounts = () => {
           <Link to="/dashboard" className="p-2">
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <h1 className="text-2xl font-bold">All Accounts</h1>
+          <h1 className="text-2xl font-bold">
+            {section === 'personal' ? 'Personal Accounts' : 'Business Accounts'}
+          </h1>
         </header>
         
         {/* Accounts List */}
         <div className="space-y-4">
-          {accounts.map((account) => (
+          {filteredAccounts.map((account) => (
             <div
               key={account.id}
               className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"

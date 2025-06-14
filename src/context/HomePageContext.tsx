@@ -1,5 +1,6 @@
+
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Account {
   id: string;
@@ -50,10 +51,18 @@ interface HomePageProviderProps {
 
 export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Extract account ID from URL if present
   const params = new URLSearchParams(location.search);
   const accountIdFromUrl = params.get('account');
+  
+  // Determine section from current route
+  const getSectionFromRoute = (): AccountSection => {
+    if (location.pathname.includes('-business')) return 'business';
+    if (location.pathname.includes('-personal')) return 'personal';
+    return 'personal'; // default
+  };
   
   // Determine initial section based on account type
   const getAccountSection = (accountId: string): AccountSection => {
@@ -63,7 +72,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     // For Investment accounts, we need to check the current section context
     // Since they can appear in both sections, we'll use the current section state
     if (account.type === 'Investments') {
-      return 'personal'; // Default to personal for initial load
+      return getSectionFromRoute();
     }
     
     const personalTypes = ['Spending'];
@@ -79,7 +88,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     if (accountIdFromUrl) {
       return getAccountSection(accountIdFromUrl);
     }
-    return 'personal';
+    return getSectionFromRoute();
   });
   
   // Filter accounts based on selected section
@@ -109,6 +118,14 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     }
   }, [accountIdFromUrl, accounts]);
   
+  // Update section when route changes
+  useEffect(() => {
+    const newSection = getSectionFromRoute();
+    if (newSection !== accountSection) {
+      setAccountSection(newSection);
+    }
+  }, [location.pathname]);
+  
   // Update selected account when section changes
   useEffect(() => {
     const currentAccount = accounts.find(acc => acc.id === selectedAccountId);
@@ -135,6 +152,22 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     }
   }, [accountSection, filteredAccounts]);
   
+  // Custom setAccountSection that also handles route updates
+  const handleSetAccountSection = (section: AccountSection) => {
+    const currentPath = location.pathname;
+    
+    // Update routes that need section-specific paths
+    if (currentPath.includes('/accounts-')) {
+      navigate(`/accounts-${section}`);
+    } else if (currentPath.includes('/investments-')) {
+      navigate(`/investments-${section}`);
+    } else if (currentPath.includes('/education-')) {
+      navigate(`/education-${section}`);
+    }
+    
+    setAccountSection(section);
+  };
+  
   // Find selected account, with fallback to first account
   const selectedAccount = accounts.find(account => account.id === selectedAccountId) || accounts[0];
   
@@ -146,7 +179,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
       setSelectedAccountId,
       selectedAccount,
       accountSection,
-      setAccountSection
+      setAccountSection: handleSetAccountSection
     }}>
       {children}
     </HomePageContext.Provider>

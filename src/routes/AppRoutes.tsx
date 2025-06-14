@@ -56,16 +56,46 @@ const AppRoutes = () => {
           <Index />
         </ProtectedRoute>
       } />
-      <Route path="/investments" element={
+      
+      {/* Personal section routes */}
+      <Route path="/accounts-personal" element={
+        <ProtectedRoute>
+          <Accounts />
+        </ProtectedRoute>
+      } />
+      <Route path="/investments-personal" element={
         <ProtectedRoute>
           <Investments />
         </ProtectedRoute>
       } />
-      <Route path="/education" element={
+      <Route path="/education-personal" element={
         <ProtectedRoute>
           <Education />
         </ProtectedRoute>
       } />
+      
+      {/* Business section routes */}
+      <Route path="/accounts-business" element={
+        <ProtectedRoute>
+          <Accounts />
+        </ProtectedRoute>
+      } />
+      <Route path="/investments-business" element={
+        <ProtectedRoute>
+          <Investments />
+        </ProtectedRoute>
+      } />
+      <Route path="/education-business" element={
+        <ProtectedRoute>
+          <Education />
+        </ProtectedRoute>
+      } />
+      
+      {/* Legacy routes - redirect to personal by default */}
+      <Route path="/accounts" element={<Navigate to="/accounts-personal" replace />} />
+      <Route path="/investments" element={<Navigate to="/investments-personal" replace />} />
+      <Route path="/education" element={<Navigate to="/education-personal" replace />} />
+      
       <Route path="/topics" element={
         <ProtectedRoute>
           <Topics />
@@ -114,11 +144,6 @@ const AppRoutes = () => {
       <Route path="/language" element={
         <ProtectedRoute>
           <Language />
-        </ProtectedRoute>
-      } />
-      <Route path="/accounts" element={
-        <ProtectedRoute>
-          <Accounts />
         </ProtectedRoute>
       } />
       <Route path="/transactions" element={
