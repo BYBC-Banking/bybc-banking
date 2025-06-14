@@ -13,6 +13,7 @@ interface Lesson {
   type: 'video' | 'reading' | 'quiz';
   duration: string;
   completed: boolean;
+  videoUrl?: string;
 }
 
 interface Module {
@@ -32,9 +33,10 @@ interface TopicCurriculumProps {
     modules: Module[];
   };
   onBack: () => void;
+  onLessonClick: (lesson: Lesson) => void;
 }
 
-const TopicCurriculum = ({ topic, onBack }: TopicCurriculumProps) => {
+const TopicCurriculum = ({ topic, onBack, onLessonClick }: TopicCurriculumProps) => {
   const [openModules, setOpenModules] = React.useState<Record<string, boolean>>({});
 
   const toggleModule = (moduleId: string) => {
@@ -55,6 +57,10 @@ const TopicCurriculum = ({ topic, onBack }: TopicCurriculumProps) => {
       default:
         return <FileText className="h-4 w-4" />;
     }
+  };
+
+  const handleLessonClick = (lesson: Lesson) => {
+    onLessonClick(lesson);
   };
 
   return (
@@ -129,7 +135,9 @@ const TopicCurriculum = ({ topic, onBack }: TopicCurriculumProps) => {
                         </div>
                         {lesson.completed ? 
                           <CheckCircle className="h-5 w-5 text-green-500" /> :
-                          <Button size="sm">Start</Button>
+                          <Button size="sm" onClick={() => handleLessonClick(lesson)}>
+                            Start
+                          </Button>
                         }
                       </div>
                     ))}
