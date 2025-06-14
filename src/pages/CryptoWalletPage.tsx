@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ const CryptoWalletPageContent = () => {
   const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
 
   // Show modal immediately if user doesn't have investment access
-  useState(() => {
+  useEffect(() => {
     if (!hasInvestmentAccess) {
       setShowAccessModal(true);
     }
