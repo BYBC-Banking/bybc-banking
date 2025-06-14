@@ -119,20 +119,18 @@ const CryptoChart = ({
           </ResponsiveContainer>
         </div>
         
-        <div className={`grid gap-2 mt-4 ${hasInvestmentAccess ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <div className="grid grid-cols-3 gap-2 mt-4">
           <Button variant="default" className="bg-finance-green hover:bg-finance-green/90" onClick={() => onBuy(selectedCrypto)}>
             Buy
           </Button>
           <Button variant="outline" className="border-finance-blue text-finance-blue hover:bg-finance-blue/10" onClick={() => onSell(selectedCrypto)}>
             Sell
           </Button>
-          {hasInvestmentAccess && (
-            <Link to="/crypto-wallet">
-              <Button variant="outline" className="w-full border-finance-blue text-finance-blue hover:bg-finance-blue/10">
-                Wallet
-              </Button>
-            </Link>
-          )}
+          <Link to="/crypto-wallet">
+            <Button variant="outline" className="w-full border-finance-blue text-finance-blue hover:bg-finance-blue/10">
+              Wallet
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
