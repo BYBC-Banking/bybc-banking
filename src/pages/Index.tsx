@@ -19,9 +19,9 @@ const Index = () => {
     }
   }, [selectedAccountId]);
 
-  // Use different background based on selected account
+  // Use professional background for business theme
   const backgroundClass = selectedAccountId === "3" 
-    ? "bg-background min-h-screen" 
+    ? "bg-gray-50 min-h-screen [html[data-theme='business']_&]:bg-gray-50" 
     : "bg-gradient-to-br from-white to-slate-100 min-h-screen";
 
   return (
@@ -87,22 +87,22 @@ const DotNavigation = () => {
   // Helper function to get the appropriate background color for each account
   const getAccountDotColor = (account: any, isSelected: boolean) => {
     if (!isSelected) {
-      return 'bg-gray-300 hover:bg-gray-400';
+      return 'bg-gray-300 hover:bg-gray-400 [html[data-theme="business"]_&]:bg-gray-400 [html[data-theme="business"]_&]:hover:bg-gray-500';
     }
     
     switch (account.color) {
       case 'blue':
-        return 'bg-finance-blue';
+        return 'bg-finance-blue [html[data-theme="business"]_&]:bg-business-primary';
       case 'green':
-        return 'bg-finance-green';
+        return 'bg-finance-green [html[data-theme="business"]_&]:bg-business-primary';
       case 'purple':
-        return 'bg-[#7E69AB]';
+        return 'bg-[#7E69AB] [html[data-theme="business"]_&]:bg-business-primary';
       case 'orange':
-        return 'bg-orange-500';
+        return 'bg-orange-500 [html[data-theme="business"]_&]:bg-business-primary';
       case 'teal':
-        return 'bg-teal-600';
+        return 'bg-teal-600 [html[data-theme="business"]_&]:bg-business-primary';
       default:
-        return 'bg-teal-500';
+        return 'bg-teal-500 [html[data-theme="business"]_&]:bg-business-primary';
     }
   };
   

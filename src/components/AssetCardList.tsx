@@ -42,7 +42,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
   
   return (
     <div className="animate-fade-in" style={{ animationDelay: "150ms" }}>
-      <h2 className="text-lg font-semibold mb-3">Your Assets</h2>
+      <h2 className="text-lg font-semibold mb-3 [html[data-theme='business']_&]:text-gray-900 [html[data-theme='business']_&]:font-bold">Your Assets</h2>
       <div className="space-y-3">
         {assets.map((asset) => {
           const isExpanded = expandedAssetId === asset.id;
@@ -54,7 +54,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
           return (
             <Card 
               key={asset.id} 
-              className="overflow-hidden transition-all duration-300 cursor-pointer bg-white"
+              className="overflow-hidden transition-all duration-300 cursor-pointer bg-white [html[data-theme='business']_&]:hover:shadow-lg"
               style={{ maxHeight: isExpanded ? '240px' : '88px' }}
               onClick={() => toggleAssetExpanded(asset.id)}
             >
@@ -62,20 +62,20 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                 {/* Main card content - always visible */}
                 <div className="p-4 flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3 font-bold">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3 font-bold [html[data-theme='business']_&]:bg-gray-50 [html[data-theme='business']_&]:text-gray-700">
                       {asset.logo}
                     </div>
                     <div>
-                      <div className="font-medium">{asset.name}</div>
-                      <div className="text-sm text-muted-foreground">{asset.symbol}</div>
+                      <div className="font-medium [html[data-theme='business']_&]:text-gray-900 [html[data-theme='business']_&]:font-semibold">{asset.name}</div>
+                      <div className="text-sm text-muted-foreground [html[data-theme='business']_&]:text-gray-600">{asset.symbol}</div>
                     </div>
                   </div>
                   
                   <div className="flex items-end flex-col">
-                    <div className="font-bold">R{asset.currentPrice.toLocaleString()}</div>
+                    <div className="font-bold [html[data-theme='business']_&]:text-gray-900">R{asset.currentPrice.toLocaleString()}</div>
                     <div 
                       className={`text-xs ${
-                        asset.isPositive ? "text-finance-green" : "text-destructive"
+                        asset.isPositive ? "text-finance-green [html[data-theme='business']_&]:text-green-700" : "text-destructive [html[data-theme='business']_&]:text-red-700"
                       }`}
                     >
                       {asset.isPositive ? "+" : ""}{asset.change}%
@@ -100,21 +100,21 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                 
                 {/* Expanded content */}
                 {isExpanded && (
-                  <div className="p-4 border-t pt-4 animate-fade-in">
+                  <div className="p-4 border-t pt-4 animate-fade-in [html[data-theme='business']_&]:border-gray-200">
                     <div className="flex justify-between mb-4">
                       <div>
-                        <div className="text-sm text-muted-foreground">Your Holdings</div>
-                        <div className="font-medium">{asset.holdings} {asset.symbol}</div>
+                        <div className="text-sm text-muted-foreground [html[data-theme='business']_&]:text-gray-600">Your Holdings</div>
+                        <div className="font-medium [html[data-theme='business']_&]:text-gray-900">{asset.holdings} {asset.symbol}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-muted-foreground">Value</div>
-                        <div className="font-medium">R{asset.holdingsValue.toLocaleString()}</div>
+                        <div className="text-sm text-muted-foreground [html[data-theme='business']_&]:text-gray-600">Value</div>
+                        <div className="font-medium [html[data-theme='business']_&]:text-gray-900">R{asset.holdingsValue.toLocaleString()}</div>
                       </div>
                     </div>
                     
                     <div className="flex gap-2">
                       <Button 
-                        className="flex-1 bg-finance-green hover:bg-finance-green/90"
+                        className="flex-1 bg-finance-green hover:bg-finance-green/90 [html[data-theme='business']_&]:bg-business-primary [html[data-theme='business']_&]:hover:bg-business-primary/90"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onBuyClick) {
@@ -127,7 +127,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                         <ShoppingCart className="h-4 w-4 mr-1" /> Buy
                       </Button>
                       <Button 
-                        className="flex-1 bg-finance-blue hover:bg-finance-blue/90"
+                        className="flex-1 bg-finance-blue hover:bg-finance-blue/90 [html[data-theme='business']_&]:bg-gray-600 [html[data-theme='business']_&]:hover:bg-gray-700"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onSellClick) {

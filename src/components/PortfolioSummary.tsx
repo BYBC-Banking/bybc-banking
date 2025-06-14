@@ -90,10 +90,10 @@ const PortfolioSummary = ({
       <Card className="bg-white mb-6">
         <CardContent className="pt-6">
           <div className="mb-4">
-            <div className="text-3xl font-bold">
+            <div className="text-3xl font-bold [html[data-theme='business']_&]:text-gray-900">
               R{data.totalValue.toLocaleString()}
             </div>
-            <div className={`text-sm flex items-center ${data.isPositive ? "text-finance-green" : "text-destructive"}`}>
+            <div className={`text-sm flex items-center ${data.isPositive ? "text-finance-green [html[data-theme='business']_&]:text-green-700" : "text-destructive [html[data-theme='business']_&]:text-red-700"}`}>
               {data.isPositive ? "+" : "-"}R{data.change.toLocaleString()} 
               <span className="ml-2">({data.changePercent.toFixed(2)}%)</span>
             </div>
@@ -141,10 +141,10 @@ const PortfolioSummary = ({
               <button
                 key={timeframe}
                 onClick={() => onTimeframeChange(timeframe)}
-                className={`px-4 py-1.5 rounded-full text-xs min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                className={`px-4 py-1.5 rounded-full text-xs min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors ${
                   selectedTimeframe === timeframe
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/80"
+                    ? "bg-primary text-primary-foreground [html[data-theme='business']_&]:bg-business-primary [html[data-theme='business']_&]:text-white"
+                    : "bg-muted hover:bg-muted/80 [html[data-theme='business']_&]:bg-gray-100 [html[data-theme='business']_&]:hover:bg-gray-200 [html[data-theme='business']_&]:text-gray-700"
                 }`}
               >
                 {timeframe}
