@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ArrowLeft, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -62,13 +61,8 @@ const CryptoWalletPageContent = () => {
   };
 
   const handleBuyCrypto = () => {
-    // If user is already on the crypto wallet page and has investment access, allow buy
-    // If no investment access, show modal
-    if (!hasInvestmentAccess) {
-      setShowAccessModal(true);
-    } else {
-      navigate("/buy");
-    }
+    // Allow buy functionality regardless of account type when on crypto wallet page
+    navigate("/buy");
   };
 
   const handleCryptoSwap = () => {
