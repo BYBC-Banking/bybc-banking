@@ -1,4 +1,3 @@
-
 import { HomePageProvider } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import DashboardHeader from "@/components/DashboardHeader";
@@ -24,17 +23,18 @@ const DashboardContent = () => {
     const root = document.documentElement;
     if (selectedAccountId === "3") {
       root.setAttribute('data-theme', 'business');
-      root.style.setProperty('--background', '220 14% 96%');
-      root.style.setProperty('--card', '0 0% 100%');
     } else {
       root.removeAttribute('data-theme');
-      root.style.removeProperty('--background');
-      root.style.removeProperty('--card');
     }
   }, [selectedAccountId]);
 
+  // Use different background based on selected account
+  const backgroundClass = selectedAccountId === "3" 
+    ? "bg-background min-h-screen" 
+    : "bg-gradient-to-br from-white to-slate-100 min-h-screen";
+
   return (
-    <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
+    <div className={backgroundClass}>
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <DashboardHeader />
