@@ -1,3 +1,4 @@
+
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -61,7 +62,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     if (!account) return 'personal';
     
     const personalTypes = ['Spending', 'Investments'];
-    const businessTypes = ['Business', 'Nonprofit'];
+    const businessTypes = ['Business', 'Nonprofit', 'Investments'];
     
     if (personalTypes.includes(account.type)) return 'personal';
     if (businessTypes.includes(account.type)) return 'business';
@@ -81,7 +82,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     if (accountSection === 'personal') {
       return ['Spending', 'Investments'].includes(account.type);
     } else {
-      return ['Business', 'Nonprofit'].includes(account.type);
+      return ['Business', 'Nonprofit', 'Investments'].includes(account.type);
     }
   });
   
