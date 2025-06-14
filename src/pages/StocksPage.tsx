@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft, TrendingUp, TrendingDown, Briefcase, BookmarkPlus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Input } from "@/components/ui/input";
+import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
+import { accounts } from "@/data/accountsData";
 
 // Mock JSE stocks data
 const jseStocks = [
@@ -134,11 +135,15 @@ const jseStocks = [
 
 const sectors = [...new Set(jseStocks.map(stock => stock.sector))];
 
-const StocksPage = () => {
+const StocksPageContent = () => {
   const { toast } = useToast();
+  const { selectedAccount } = useHomePage();
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedStock, setSelectedStock] = useState(jseStocks[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Check if user has investment account access
+  const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
   
   const handleAddToWatchlist = (stock: any) => {
     toast({
@@ -276,17 +281,19 @@ const StocksPage = () => {
               </ResponsiveContainer>
             </div>
             
-            <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className={`grid gap-2 mt-4 ${hasInvestmentAccess ? 'grid-cols-3' : 'grid-cols-2'}`}>
               <Button variant="default" className="bg-finance-green hover:bg-finance-green/90" onClick={() => handleBuy(selectedStock)}>
                 Buy
               </Button>
               <Button variant="outline" className="border-finance-blue text-finance-blue hover:bg-finance-blue/10" onClick={() => handleSell(selectedStock)}>
                 Sell
               </Button>
-              <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10">
-                <Briefcase className="h-4 w-4" />
-                Holdings
-              </Button>
+              {hasInvestmentAccess && (
+                <Button variant="outline" className="border-amber-500 text-amber-500 hover:bg-amber-500/10">
+                  <Briefcase className="h-4 w-4" />
+                  Holdings
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -386,6 +393,14 @@ const StocksPage = () => {
         </Card>
       </div>
     </div>
+  );
+};
+
+const StocksPage = () => {
+  return (
+    <HomePageProvider accounts={accounts}>
+      <StocksPageContent />
+    </HomePageProvider>
   );
 };
 

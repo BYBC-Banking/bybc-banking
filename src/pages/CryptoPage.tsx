@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { Input } from "@/components/ui/input";
+import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
+import { accounts } from "@/data/accountsData";
 
 // Mock crypto data
 const cryptoAssets = [
@@ -98,11 +100,15 @@ const cryptoAssets = [
 
 const categories = ["All", "Gainers", "Losers", "DeFi", "Layer 1", "Meme"];
 
-const CryptoPage = () => {
+const CryptoPageContent = () => {
   const { toast } = useToast();
+  const { selectedAccount } = useHomePage();
   const [selectedTab, setSelectedTab] = useState("All");
   const [selectedCrypto, setSelectedCrypto] = useState(cryptoAssets[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Check if user has investment account access
+  const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
   
   const handleAddToWatchlist = (crypto: any) => {
     toast({
@@ -240,19 +246,21 @@ const CryptoPage = () => {
               </ResponsiveContainer>
             </div>
             
-            <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className={`grid gap-2 mt-4 ${hasInvestmentAccess ? 'grid-cols-3' : 'grid-cols-2'}`}>
               <Button variant="default" className="bg-finance-green hover:bg-finance-green/90" onClick={() => handleBuy(selectedCrypto)}>
                 Buy
               </Button>
               <Button variant="outline" className="border-finance-blue text-finance-blue hover:bg-finance-blue/10" onClick={() => handleSell(selectedCrypto)}>
                 Sell
               </Button>
-              <Link to="/crypto-wallet">
-                <Button variant="outline" className="w-full border-finance-blue text-finance-blue hover:bg-finance-blue/10">
-                  <Briefcase className="h-4 w-4" />
-                  Wallet
-                </Button>
-              </Link>
+              {hasInvestmentAccess && (
+                <Link to="/crypto-wallet">
+                  <Button variant="outline" className="w-full border-finance-blue text-finance-blue hover:bg-finance-blue/10">
+                    <Briefcase className="h-4 w-4" />
+                    Wallet
+                  </Button>
+                </Link>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -329,6 +337,14 @@ const CryptoPage = () => {
         </Card>
       </div>
     </div>
+  );
+};
+
+const CryptoPage = () => {
+  return (
+    <HomePageProvider accounts={accounts}>
+      <CryptoPageContent />
+    </HomePageProvider>
   );
 };
 
