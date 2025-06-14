@@ -87,13 +87,13 @@ const PortfolioSummary = ({
   
   return (
     <div className="animate-fade-in" style={{ animationDelay: "50ms" }}>
-      <Card className="bg-white mb-6">
+      <Card variant="neumorphism" className="mb-6">
         <CardContent className="pt-6">
           <div className="mb-4">
-            <div className="text-3xl font-bold">
+            <div className="text-3xl font-bold text-gray-700">
               R{data.totalValue.toLocaleString()}
             </div>
-            <div className={`text-sm flex items-center ${data.isPositive ? "text-finance-green" : "text-destructive"}`}>
+            <div className={`text-sm flex items-center ${data.isPositive ? "text-green-700" : "text-red-700"}`}>
               {data.isPositive ? "+" : "-"}R{data.change.toLocaleString()} 
               <span className="ml-2">({data.changePercent.toFixed(2)}%)</span>
             </div>
@@ -136,15 +136,15 @@ const PortfolioSummary = ({
             </ChartContainer>
           </div>
           
-          <div className="flex justify-between mt-4 overflow-x-auto">
+          <div className="flex justify-between mt-4 overflow-x-auto gap-2">
             {timeframes.map((timeframe) => (
               <button
                 key={timeframe}
                 onClick={() => onTimeframeChange(timeframe)}
-                className={`px-4 py-1.5 rounded-full text-xs min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                className={`px-4 py-1.5 rounded-xl text-xs min-w-[44px] min-h-[44px] flex items-center justify-center transition-all ${
                   selectedTimeframe === timeframe
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted hover:bg-muted/80"
+                    ? "bg-gray-100 text-gray-700 shadow-[inset_4px_4px_8px_#d1d9e6,inset_-4px_-4px_8px_#ffffff]"
+                    : "bg-gray-100 shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] hover:shadow-[2px_2px_4px_#d1d9e6,-2px_-2px_4px_#ffffff] text-gray-600"
                 }`}
               >
                 {timeframe}
