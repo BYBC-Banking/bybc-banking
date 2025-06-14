@@ -61,7 +61,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
   const getSectionFromRoute = (): AccountSection => {
     if (location.pathname.includes('-business')) return 'business';
     if (location.pathname.includes('-personal')) return 'personal';
-    return 'personal'; // default
+    return null; // Don't default for routes that don't specify section
   };
   
   // Determine initial section based on account type
@@ -72,7 +72,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     // For Investment accounts, we need to check the current section context
     // Since they can appear in both sections, we'll use the current section state
     if (account.type === 'Investments') {
-      return getSectionFromRoute();
+      return getSectionFromRoute() || getStoredSection() || 'personal';
     }
     
     const personalTypes = ['Spending'];
@@ -83,12 +83,27 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     return 'personal';
   };
   
-  // State for account section (P or B)
+  // Get stored section from localStorage
+  const getStoredSection = (): AccountSection => {
+    const stored = localStorage.getItem('accountSection');
+    return (stored === 'business' || stored === 'personal') ? stored : 'personal';
+  };
+  
+  // Store section in localStorage
+  const storeSection = (section: AccountSection) => {
+    localStorage.setItem('accountSection', section);
+  };
+  
+  // State for account section (P or B) - prioritize URL, then localStorage, then default
   const [accountSection, setAccountSection] = useState<AccountSection>(() => {
+    const routeSection = getSectionFromRoute();
+    if (routeSection) return routeSection;
+    
     if (accountIdFromUrl) {
       return getAccountSection(accountIdFromUrl);
     }
-    return getSectionFromRoute();
+    
+    return getStoredSection();
   });
   
   // Filter accounts based on selected section
@@ -114,15 +129,20 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
   useEffect(() => {
     if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
       setSelectedAccountId(accountIdFromUrl);
-      setAccountSection(getAccountSection(accountIdFromUrl));
+      const newSection = getAccountSection(accountIdFromUrl);
+      if (newSection !== accountSection) {
+        setAccountSection(newSection);
+        storeSection(newSection);
+      }
     }
   }, [accountIdFromUrl, accounts]);
   
-  // Update section when route changes
+  // Update section when route changes (only for routes that explicitly specify section)
   useEffect(() => {
-    const newSection = getSectionFromRoute();
-    if (newSection !== accountSection) {
-      setAccountSection(newSection);
+    const routeSection = getSectionFromRoute();
+    if (routeSection && routeSection !== accountSection) {
+      setAccountSection(routeSection);
+      storeSection(routeSection);
     }
   }, [location.pathname]);
   
@@ -152,7 +172,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     }
   }, [accountSection, filteredAccounts]);
   
-  // Custom setAccountSection that also handles route updates
+  // Custom setAccountSection that also handles route updates and storage
   const handleSetAccountSection = (section: AccountSection) => {
     const currentPath = location.pathname;
     
@@ -166,6 +186,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     }
     
     setAccountSection(section);
+    storeSection(section);
   };
   
   // Find selected account, with fallback to first account
