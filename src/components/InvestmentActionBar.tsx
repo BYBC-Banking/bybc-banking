@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LineChart, Bitcoin, BarChart3 } from 'lucide-react';
+import { LineChart, Bitcoin, BarChart3, Shield } from 'lucide-react';
 
 interface InvestmentActionBarProps {
   onBuyClick?: () => void;
@@ -15,7 +15,7 @@ const InvestmentActionBar = ({ onBuyClick, onSellClick }: InvestmentActionBarPro
         <h2 className="text-lg font-semibold">Quick Actions</h2>
       </div>
       
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Link 
           to="/crypto"
           className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
@@ -44,6 +44,16 @@ const InvestmentActionBar = ({ onBuyClick, onSellClick }: InvestmentActionBarPro
             <LineChart className="h-5 w-5 text-slate-600" strokeWidth={2.5} />
           </div>
           <span className="text-sm">Watchlist</span>
+        </Link>
+
+        <Link 
+          to="/compliance" 
+          className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-2">
+            <Shield className="h-5 w-5 text-amber-600" strokeWidth={2.5} />
+          </div>
+          <span className="text-sm">Compliance</span>
         </Link>
       </div>
     </div>

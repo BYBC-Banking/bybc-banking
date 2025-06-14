@@ -1,5 +1,7 @@
-import { Send, ArrowUpDown, CreditCard, Receipt, MessageCircle, Shield } from "lucide-react";
+
+import { Send, ArrowUpDown, CreditCard, Receipt, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+
 const quickActions = [{
   icon: Send,
   label: "Send",
@@ -25,12 +27,13 @@ const quickActions = [{
   gradient: "from-orange-100 to-orange-200",
   iconColor: "text-orange-600"
 }, {
-  icon: Shield,
-  label: "Compliance",
-  href: "/compliance",
-  gradient: "from-amber-100 to-amber-200",
-  iconColor: "text-amber-600"
+  icon: MessageCircle,
+  label: "Inbox",
+  href: "/inbox",
+  gradient: "from-slate-100 to-slate-200",
+  iconColor: "text-slate-600"
 }];
+
 const QuickActions = () => {
   return <div className="px-4">
       <h2 className="text-lg font-semibold mb-4 text-gray-800">Quick Actions</h2>
@@ -48,4 +51,5 @@ const QuickActions = () => {
       </div>
     </div>;
 };
+
 export default QuickActions;
