@@ -88,6 +88,16 @@ export default function Settings() {
           
           <Separator />
           
+          <Link to="/privacy-dashboard" className="flex items-center justify-between py-2">
+            <div className="flex items-center">
+              <Shield className="h-5 w-5 mr-3 text-gray-500" />
+              <span>Privacy & Data</span>
+            </div>
+            <ArrowLeft className="h-4 w-4 rotate-180" />
+          </Link>
+          
+          <Separator />
+          
           <Link to="/language" className="flex items-center justify-between py-2">
             <div className="flex items-center">
               <Globe className="h-5 w-5 mr-3 text-gray-500" />

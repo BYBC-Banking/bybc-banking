@@ -1,3 +1,4 @@
+
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -39,6 +40,7 @@ import MultisigWallet from "@/pages/MultisigWallet";
 import AccountRecovery from "@/pages/AccountRecovery";
 import Recovery from "@/pages/Recovery";
 import ComplianceCenter from "@/pages/ComplianceCenter";
+import PrivacyDashboard from "@/pages/PrivacyDashboard";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 
@@ -250,6 +252,12 @@ const AppRoutes = () => {
       <Route path="/compliance" element={
         <ProtectedRoute>
           <ComplianceCenter />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/privacy-dashboard" element={
+        <ProtectedRoute>
+          <PrivacyDashboard />
         </ProtectedRoute>
       } />
       
