@@ -4,10 +4,11 @@ import { ArrowLeft, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useHomePage } from "@/context/HomePageContext";
+import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
+import { accounts } from "@/data/accountsData";
 import CryptoAccessModal from "@/components/CryptoAccessModal";
 
-const CryptoPage = () => {
+const CryptoPageContent = () => {
   const { selectedAccount } = useHomePage();
   const [showAccessModal, setShowAccessModal] = useState(!selectedAccount || selectedAccount.type !== "Investments");
   const navigate = useNavigate();
@@ -135,6 +136,14 @@ const CryptoPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const CryptoPage = () => {
+  return (
+    <HomePageProvider accounts={accounts}>
+      <CryptoPageContent />
+    </HomePageProvider>
   );
 };
 
