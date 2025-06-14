@@ -1,5 +1,5 @@
 
-import { Send, ArrowUpDown, CreditCard, Receipt, MessageCircle } from "lucide-react";
+import { Send, ArrowUpDown, CreditCard, Receipt, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const quickActions = [{
@@ -27,9 +27,9 @@ const quickActions = [{
   gradient: "from-orange-100 to-orange-200",
   iconColor: "text-orange-600"
 }, {
-  icon: MessageCircle,
-  label: "Inbox",
-  href: "/inbox",
+  icon: User,
+  label: "Advisor",
+  href: "/advisor",
   gradient: "from-slate-100 to-slate-200",
   iconColor: "text-slate-600"
 }];
