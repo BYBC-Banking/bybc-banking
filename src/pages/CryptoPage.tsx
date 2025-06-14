@@ -10,7 +10,7 @@ import CryptoAccessModal from "@/components/CryptoAccessModal";
 
 const CryptoPageContent = () => {
   const { selectedAccount } = useHomePage();
-  const [showAccessModal, setShowAccessModal] = useState(!selectedAccount || selectedAccount.type !== "Investments");
+  const [showAccessModal, setShowAccessModal] = useState(false);
   const navigate = useNavigate();
 
   const cryptoAssets = [
@@ -42,9 +42,30 @@ const CryptoPageContent = () => {
 
   const totalValue = cryptoAssets.reduce((sum, asset) => sum + asset.value, 0);
 
-  if (showAccessModal) {
-    return <CryptoAccessModal isOpen={showAccessModal} onOpenChange={setShowAccessModal} />;
-  }
+  const handleAssetClick = () => {
+    if (!selectedAccount || selectedAccount.type !== "Investments") {
+      setShowAccessModal(true);
+    } else {
+      // Allow access to crypto wallet features
+      console.log("Access granted to crypto wallet");
+    }
+  };
+
+  const handleBuyCrypto = () => {
+    if (!selectedAccount || selectedAccount.type !== "Investments") {
+      setShowAccessModal(true);
+    } else {
+      navigate("/buy");
+    }
+  };
+
+  const handleCryptoSwap = () => {
+    if (!selectedAccount || selectedAccount.type !== "Investments") {
+      setShowAccessModal(true);
+    } else {
+      navigate("/crypto-swap");
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
@@ -63,7 +84,7 @@ const CryptoPageContent = () => {
         </header>
 
         {/* Portfolio Summary */}
-        <Card className="mb-6">
+        <Card className="mb-6" onClick={handleAssetClick}>
           <CardHeader>
             <CardTitle className="text-center">Total Portfolio Value</CardTitle>
           </CardHeader>
@@ -81,17 +102,20 @@ const CryptoPageContent = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <Link to="/buy">
-            <Button className="w-full h-12 bg-green-600 hover:bg-green-700">
-              <Plus className="h-4 w-4 mr-2" />
-              Buy Crypto
-            </Button>
-          </Link>
-          <Link to="/crypto-swap">
-            <Button variant="outline" className="w-full h-12">
-              Swap
-            </Button>
-          </Link>
+          <Button 
+            className="w-full h-12 bg-green-600 hover:bg-green-700"
+            onClick={handleBuyCrypto}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Buy Crypto
+          </Button>
+          <Button 
+            variant="outline" 
+            className="w-full h-12"
+            onClick={handleCryptoSwap}
+          >
+            Swap
+          </Button>
         </div>
 
         {/* Assets List */}
@@ -99,7 +123,11 @@ const CryptoPageContent = () => {
           <h2 className="text-lg font-semibold">Your Assets</h2>
           
           {cryptoAssets.map((asset) => (
-            <Card key={asset.symbol} className="hover:shadow-md transition-shadow cursor-pointer">
+            <Card 
+              key={asset.symbol} 
+              className="hover:shadow-md transition-shadow cursor-pointer"
+              onClick={handleAssetClick}
+            >
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -135,6 +163,8 @@ const CryptoPageContent = () => {
           ))}
         </div>
       </div>
+
+      <CryptoAccessModal isOpen={showAccessModal} onOpenChange={setShowAccessModal} />
     </div>
   );
 };
