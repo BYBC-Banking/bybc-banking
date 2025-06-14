@@ -21,14 +21,14 @@ const DashboardHeader = () => {
       {/* Pill-shaped account switcher */}
       <div className="flex bg-gray-100 rounded-full p-1">
         <Link 
-          to="/?account=1" 
+          to="/dashboard?account=1" 
           className="px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm"
         >
           P
         </Link>
         <div className="w-px bg-gray-300 my-1"></div>
         <Link 
-          to="/?account=3" 
+          to="/dashboard?account=3" 
           className="px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm"
         >
           B
