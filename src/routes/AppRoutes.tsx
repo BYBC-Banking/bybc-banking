@@ -27,6 +27,7 @@ import CreateAccount from "@/pages/CreateAccount";
 import Register from "@/pages/Register";
 import AccountOnboarding from "@/pages/AccountOnboarding";
 import CryptoPage from "@/pages/CryptoPage";
+import CryptoWalletPage from "@/pages/CryptoWalletPage";
 import StocksPage from "@/pages/StocksPage";
 import Cards from "@/pages/Cards";
 import CardControls from "@/pages/CardControls";
@@ -168,6 +169,11 @@ const AppRoutes = () => {
       <Route path="/crypto" element={
         <ProtectedRoute>
           <CryptoPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/crypto-wallet" element={
+        <ProtectedRoute>
+          <CryptoWalletPage />
         </ProtectedRoute>
       } />
       <Route path="/stocks" element={
