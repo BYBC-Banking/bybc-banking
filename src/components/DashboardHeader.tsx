@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
 
 const DashboardHeader = () => {
-  const { selectedAccount } = useHomePage();
+  const { selectedAccount, selectedAccountId } = useHomePage();
   const isInvestmentAccount = selectedAccount.type === "Investments";
   
   return (
@@ -22,14 +22,18 @@ const DashboardHeader = () => {
       <div className="flex bg-gray-100 rounded-full p-1">
         <Link 
           to="/dashboard?account=1" 
-          className="px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm"
+          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
+            selectedAccountId === "1" ? "bg-white shadow-sm text-finance-blue" : ""
+          }`}
         >
           P
         </Link>
         <div className="w-px bg-gray-300 my-1"></div>
         <Link 
           to="/dashboard?account=3" 
-          className="px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm"
+          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
+            selectedAccountId === "3" ? "bg-white shadow-sm text-finance-blue" : ""
+          }`}
         >
           B
         </Link>
