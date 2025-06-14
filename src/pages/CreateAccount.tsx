@@ -1,37 +1,16 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { login } from '@/utils/auth';
 import { isValidEmail, sanitizeInput } from '@/utils/security';
-
-interface AccountType {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-}
-
-const accountTypes: AccountType[] = [
-  {
-    id: "spending",
-    name: "Personal Account",
-    description: "Everyday banking for daily transactions",
-    color: "blue"
-  },
-  {
-    id: "business",
-    name: "Business Account",
-    description: "Manage your business finances",
-    color: "purple"
-  }
-];
+import AccountTypeSelector from '@/components/auth/AccountTypeSelector';
+import CreateAccountLoginForm from '@/components/auth/CreateAccountLoginForm';
+import { accountTypes } from '@/data/accountTypes';
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -122,66 +101,18 @@ const CreateAccount = () => {
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {isLoginMode ? (
-                // Login form
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="yourname@example.com" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input 
-                      id="password" 
-                      type="password" 
-                      placeholder="••••••••" 
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-                </>
+                <CreateAccountLoginForm
+                  email={email}
+                  password={password}
+                  onEmailChange={setEmail}
+                  onPasswordChange={setPassword}
+                />
               ) : (
-                // Account type selection
-                <RadioGroup 
-                  value={accountType} 
-                  onValueChange={setAccountType}
-                  className="space-y-3"
-                >
-                  {accountTypes.map((type) => (
-                    <div
-                      key={type.id}
-                      className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-slate-50 cursor-pointer"
-                      onClick={() => setAccountType(type.id)}
-                    >
-                      <RadioGroupItem value={type.id} id={type.id} />
-                      <div className="flex-1">
-                        <Label htmlFor={type.id} className="font-medium cursor-pointer">
-                          {type.name}
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          {type.description}
-                        </p>
-                      </div>
-                      <div 
-                        className={`w-4 h-4 rounded-full
-                          ${type.color === "blue" ? "bg-finance-blue" : ""} 
-                          ${type.color === "green" ? "bg-finance-green" : ""}
-                          ${type.color === "purple" ? "bg-[#7E69AB]" : ""}
-                          ${type.color === "orange" ? "bg-orange-500" : ""}
-                          ${type.color === "teal" ? "bg-teal-600" : ""}
-                        `}
-                      />
-                    </div>
-                  ))}
-                </RadioGroup>
+                <AccountTypeSelector
+                  accountTypes={accountTypes}
+                  selectedType={accountType}
+                  onTypeChange={setAccountType}
+                />
               )}
               
               <div className="flex flex-col gap-3">
