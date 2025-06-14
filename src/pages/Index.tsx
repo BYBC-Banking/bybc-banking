@@ -1,6 +1,4 @@
 
-import { HomePageProvider } from "@/context/HomePageContext";
-import { accounts } from "@/data/accountsData";
 import DashboardHeader from "@/components/DashboardHeader";
 import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
@@ -9,14 +7,6 @@ import { useHomePage } from "@/context/HomePageContext";
 import { useEffect } from "react";
 
 const Index = () => {
-  return (
-    <HomePageProvider accounts={accounts}>
-      <DashboardContent />
-    </HomePageProvider>
-  );
-};
-
-const DashboardContent = () => {
   const { selectedAccountId } = useHomePage();
   
   // Apply business theme when business account is selected

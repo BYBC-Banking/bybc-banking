@@ -9,6 +9,8 @@ import AppLayout from "./components/AppLayout";
 import AppRoutes from "./routes/AppRoutes";
 import LoadingScreen from "./components/LoadingScreen";
 import { useAppInitialization } from "./hooks/useAppInitialization";
+import { HomePageProvider } from "./context/HomePageContext";
+import { accounts } from "./data/accountsData";
 
 // Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
@@ -28,9 +30,11 @@ const AppContent = () => {
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <AppLayout>
-        <AppRoutes />
-      </AppLayout>
+      <HomePageProvider accounts={accounts}>
+        <AppLayout>
+          <AppRoutes />
+        </AppLayout>
+      </HomePageProvider>
     </TooltipProvider>
   );
 };
