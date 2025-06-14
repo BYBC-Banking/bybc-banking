@@ -42,7 +42,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
   
   return (
     <div className="animate-fade-in" style={{ animationDelay: "150ms" }}>
-      <h2 className="text-lg font-semibold mb-3 text-gray-700">Your Assets</h2>
+      <h2 className="text-lg font-semibold mb-3">Your Assets</h2>
       <div className="space-y-3">
         {assets.map((asset) => {
           const isExpanded = expandedAssetId === asset.id;
@@ -54,8 +54,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
           return (
             <Card 
               key={asset.id} 
-              variant="neumorphism"
-              className="overflow-hidden transition-all duration-300 cursor-pointer"
+              className="overflow-hidden transition-all duration-300 cursor-pointer bg-white"
               style={{ maxHeight: isExpanded ? '240px' : '88px' }}
               onClick={() => toggleAssetExpanded(asset.id)}
             >
@@ -63,20 +62,20 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                 {/* Main card content - always visible */}
                 <div className="p-4 flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 shadow-[inset_2px_2px_4px_#d1d9e6,inset_-2px_-2px_4px_#ffffff] flex items-center justify-center mr-3 font-bold text-gray-600">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3 font-bold">
                       {asset.logo}
                     </div>
                     <div>
-                      <div className="font-medium text-gray-700">{asset.name}</div>
-                      <div className="text-sm text-gray-500">{asset.symbol}</div>
+                      <div className="font-medium">{asset.name}</div>
+                      <div className="text-sm text-muted-foreground">{asset.symbol}</div>
                     </div>
                   </div>
                   
                   <div className="flex items-end flex-col">
-                    <div className="font-bold text-gray-700">R{asset.currentPrice.toLocaleString()}</div>
+                    <div className="font-bold">R{asset.currentPrice.toLocaleString()}</div>
                     <div 
                       className={`text-xs ${
-                        asset.isPositive ? "text-green-700" : "text-red-700"
+                        asset.isPositive ? "text-finance-green" : "text-destructive"
                       }`}
                     >
                       {asset.isPositive ? "+" : ""}{asset.change}%
@@ -101,21 +100,21 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                 
                 {/* Expanded content */}
                 {isExpanded && (
-                  <div className="p-4 border-t border-gray-300 pt-4 animate-fade-in">
+                  <div className="p-4 border-t pt-4 animate-fade-in">
                     <div className="flex justify-between mb-4">
                       <div>
-                        <div className="text-sm text-gray-500">Your Holdings</div>
-                        <div className="font-medium text-gray-700">{asset.holdings} {asset.symbol}</div>
+                        <div className="text-sm text-muted-foreground">Your Holdings</div>
+                        <div className="font-medium">{asset.holdings} {asset.symbol}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-gray-500">Value</div>
-                        <div className="font-medium text-gray-700">R{asset.holdingsValue.toLocaleString()}</div>
+                        <div className="text-sm text-muted-foreground">Value</div>
+                        <div className="font-medium">R{asset.holdingsValue.toLocaleString()}</div>
                       </div>
                     </div>
                     
                     <div className="flex gap-2">
-                      <button 
-                        className="flex-1 px-4 py-2 rounded-xl bg-gray-100 shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] hover:shadow-[2px_2px_4px_#d1d9e6,-2px_-2px_4px_#ffffff] text-green-700 font-medium flex items-center justify-center transition-all"
+                      <Button 
+                        className="flex-1 bg-finance-green hover:bg-finance-green/90"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onBuyClick) {
@@ -126,9 +125,9 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                         }}
                       >
                         <ShoppingCart className="h-4 w-4 mr-1" /> Buy
-                      </button>
-                      <button 
-                        className="flex-1 px-4 py-2 rounded-xl bg-gray-100 shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] hover:shadow-[2px_2px_4px_#d1d9e6,-2px_-2px_4px_#ffffff] text-blue-700 font-medium flex items-center justify-center transition-all"
+                      </Button>
+                      <Button 
+                        className="flex-1 bg-finance-blue hover:bg-finance-blue/90"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onSellClick) {
@@ -139,7 +138,7 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                         }}
                       >
                         <ArrowUp className="h-4 w-4 mr-1 rotate-180" /> Sell
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}
