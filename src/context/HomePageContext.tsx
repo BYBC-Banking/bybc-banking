@@ -32,7 +32,6 @@ interface HomePageContextType {
   selectedAccount: Account;
   accountSection: AccountSection;
   setAccountSection: (section: AccountSection) => void;
-  isBusinessSection: boolean;
 }
 
 const HomePageContext = createContext<HomePageContextType | undefined>(undefined);
@@ -92,9 +91,6 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     return getSectionFromRoute();
   });
   
-  // Derived state for business section check
-  const isBusinessSection = accountSection === 'business';
-  
   // Filter accounts based on selected section
   const filteredAccounts = accounts.filter(account => {
     if (accountSection === 'personal') {
@@ -118,28 +114,19 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
   useEffect(() => {
     if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
       setSelectedAccountId(accountIdFromUrl);
-      const newSection = getAccountSection(accountIdFromUrl);
-      // Only update section if not in business section to prevent interruption
-      if (!isBusinessSection || newSection === 'business') {
-        setAccountSection(newSection);
-      }
+      setAccountSection(getAccountSection(accountIdFromUrl));
     }
-  }, [accountIdFromUrl, accounts, isBusinessSection]);
+  }, [accountIdFromUrl, accounts]);
   
-  // Update section when route changes - but protect business section users
+  // Update section when route changes
   useEffect(() => {
     const newSection = getSectionFromRoute();
-    // Only update section if:
-    // 1. Not currently in business section, OR
-    // 2. The new section is also business (moving within business section)
-    if (!isBusinessSection || newSection === 'business') {
-      if (newSection !== accountSection) {
-        setAccountSection(newSection);
-      }
+    if (newSection !== accountSection) {
+      setAccountSection(newSection);
     }
-  }, [location.pathname, accountSection, isBusinessSection]);
+  }, [location.pathname]);
   
-  // Update selected account when section changes - but protect business section users
+  // Update selected account when section changes
   useEffect(() => {
     const currentAccount = accounts.find(acc => acc.id === selectedAccountId);
     if (currentAccount) {
@@ -149,31 +136,24 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
       }
       
       const currentAccountSection = getAccountSection(selectedAccountId);
-      // Only switch accounts if not in business section or if the account doesn't belong to current section
-      if (!isBusinessSection && currentAccountSection !== accountSection) {
+      if (currentAccountSection !== accountSection) {
         // Switch to first account in the new section
         const firstAccountInSection = filteredAccounts[0];
         if (firstAccountInSection) {
           setSelectedAccountId(firstAccountInSection.id);
         }
       }
-    } else if (!isBusinessSection) {
-      // If no current account and not in business section, select first in section
+    } else {
+      // If no current account, select first in section
       const firstAccountInSection = filteredAccounts[0];
       if (firstAccountInSection) {
         setSelectedAccountId(firstAccountInSection.id);
       }
     }
-  }, [accountSection, filteredAccounts, isBusinessSection]);
+  }, [accountSection, filteredAccounts]);
   
-  // Custom setAccountSection that also handles route updates - with business section protection
+  // Custom setAccountSection that also handles route updates
   const handleSetAccountSection = (section: AccountSection) => {
-    // If user is in business section and trying to switch to personal, ask for confirmation
-    if (isBusinessSection && section === 'personal') {
-      console.log('User is in business section - preventing automatic switch to personal');
-      return;
-    }
-    
     const currentPath = location.pathname;
     
     // Update routes that need section-specific paths
@@ -199,8 +179,7 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
       setSelectedAccountId,
       selectedAccount,
       accountSection,
-      setAccountSection: handleSetAccountSection,
-      isBusinessSection
+      setAccountSection: handleSetAccountSection
     }}>
       {children}
     </HomePageContext.Provider>
