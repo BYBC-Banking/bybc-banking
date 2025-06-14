@@ -16,7 +16,7 @@ const Education = () => {
   
   // Mock user data
   const userData = {
-    name: "Thabo",
+    name: "",
     completedModules: 3,
     totalModules: 7,
     currentModule: {

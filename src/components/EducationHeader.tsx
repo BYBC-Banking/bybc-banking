@@ -11,7 +11,7 @@ const EducationHeader = ({ name }: EducationHeaderProps) => {
     <div className="flex justify-between items-center mb-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-800">
-          Hello, {name}
+          Hello{name && `, ${name}`}
         </h1>
         <p className="text-sm text-gray-600 mt-1">
           Continue your financial learning journey
