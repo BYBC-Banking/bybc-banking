@@ -61,8 +61,14 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
     const account = accounts.find(acc => acc.id === accountId);
     if (!account) return 'personal';
     
-    const personalTypes = ['Spending', 'Investments'];
-    const businessTypes = ['Business', 'Nonprofit', 'Investments'];
+    // For Investment accounts, we need to check the current section context
+    // Since they can appear in both sections, we'll use the current section state
+    if (account.type === 'Investments') {
+      return 'personal'; // Default to personal for initial load
+    }
+    
+    const personalTypes = ['Spending'];
+    const businessTypes = ['Business', 'Nonprofit'];
     
     if (personalTypes.includes(account.type)) return 'personal';
     if (businessTypes.includes(account.type)) return 'business';
@@ -108,6 +114,11 @@ export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) 
   useEffect(() => {
     const currentAccount = accounts.find(acc => acc.id === selectedAccountId);
     if (currentAccount) {
+      // For Investment accounts, they can stay selected in either section
+      if (currentAccount.type === 'Investments') {
+        return; // Don't change selection for Investment accounts
+      }
+      
       const currentAccountSection = getAccountSection(selectedAccountId);
       if (currentAccountSection !== accountSection) {
         // Switch to first account in the new section
