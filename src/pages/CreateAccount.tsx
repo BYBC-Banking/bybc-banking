@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,33 +21,15 @@ interface AccountType {
 const accountTypes: AccountType[] = [
   {
     id: "spending",
-    name: "Spending Account",
+    name: "Personal Account",
     description: "Everyday banking for daily transactions",
     color: "blue"
-  },
-  {
-    id: "savings",
-    name: "Savings Account",
-    description: "Higher interest for your savings goals",
-    color: "green"
   },
   {
     id: "business",
     name: "Business Account",
     description: "Manage your business finances",
     color: "purple"
-  },
-  {
-    id: "investment",
-    name: "Investment Account",
-    description: "Invest in stocks, bonds, and more",
-    color: "teal"
-  },
-  {
-    id: "nonprofit",
-    name: "Nonprofit Account",
-    description: "Special features for nonprofit organizations",
-    color: "orange"
   }
 ];
 
