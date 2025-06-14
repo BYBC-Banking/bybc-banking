@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useHomePage } from "@/context/HomePageContext";
 
 interface Message {
   id: string;
@@ -12,58 +13,104 @@ interface Message {
   date: string;
   isRead: boolean;
   category: 'important' | 'promotion' | 'update' | 'general';
+  section: 'personal' | 'business' | 'both';
 }
 
-// Sample messages data
+// Sample messages data with section-specific content
 const messages: Message[] = [
+  // Personal messages
   {
     id: "msg1",
-    subject: "Your Account Statement",
+    subject: "Your Personal Account Statement",
     sender: "BYBC Banking",
-    preview: "Your monthly account statement for April is now available. Login to view the details.",
+    preview: "Your monthly personal account statement for April is now available. Login to view the details.",
     date: "2025-05-10",
     isRead: false,
-    category: 'important'
+    category: 'important',
+    section: 'personal'
   },
   {
     id: "msg2",
+    subject: "New Savings Options Available",
+    sender: "BYBC Savings",
+    preview: "Discover our new high-yield personal savings options tailored for you.",
+    date: "2025-05-05",
+    isRead: true,
+    category: 'promotion',
+    section: 'personal'
+  },
+  {
+    id: "msg3",
+    subject: "Investment Portfolio Update",
+    sender: "BYBC Investments",
+    preview: "Your investment portfolio performance summary for this quarter is ready.",
+    date: "2025-05-03",
+    isRead: true,
+    category: 'update',
+    section: 'personal'
+  },
+  // Business messages
+  {
+    id: "msg4",
+    subject: "Business Account Statement",
+    sender: "BYBC Business Banking",
+    preview: "Your monthly business account statement and transaction summary for April.",
+    date: "2025-05-10",
+    isRead: false,
+    category: 'important',
+    section: 'business'
+  },
+  {
+    id: "msg5",
+    subject: "Multi-signature Wallet Update",
+    sender: "BYBC Business Solutions",
+    preview: "New features available for your business multi-signature wallet management.",
+    date: "2025-05-08",
+    isRead: false,
+    category: 'update',
+    section: 'business'
+  },
+  {
+    id: "msg6",
+    subject: "Business Loan Pre-approval",
+    sender: "BYBC Business Lending",
+    preview: "You've been pre-approved for a business loan up to R50,000. Apply now.",
+    date: "2025-05-06",
+    isRead: true,
+    category: 'promotion',
+    section: 'business'
+  },
+  // Shared messages
+  {
+    id: "msg7",
     subject: "Security Alert",
     sender: "BYBC Security Team",
     preview: "We noticed a login from a new device. Was this you?",
     date: "2025-05-08",
     isRead: false,
-    category: 'important'
+    category: 'important',
+    section: 'both'
   },
   {
-    id: "msg3",
-    subject: "New Savings Options Available",
-    sender: "BYBC Savings",
-    preview: "Discover our new high-yield savings options tailored for you.",
-    date: "2025-05-05",
-    isRead: true,
-    category: 'promotion'
-  },
-  {
-    id: "msg4",
-    subject: "Payment Confirmation",
-    sender: "BYBC Payments",
-    preview: "Your payment of R240.50 to Electric Company was successful.",
-    date: "2025-05-03",
-    isRead: true,
-    category: 'update'
-  },
-  {
-    id: "msg5",
+    id: "msg8",
     subject: "App Update Available",
     sender: "BYBC Mobile",
     preview: "A new version of the BYBC Banking app is available with exciting features.",
     date: "2025-05-01",
     isRead: true,
-    category: 'general'
+    category: 'general',
+    section: 'both'
   }
 ];
 
 export default function Inbox() {
+  const { accountSection } = useHomePage();
+  
+  // Filter messages based on current section
+  const filteredMessages = messages.filter(message => 
+    message.section === accountSection || message.section === 'both'
+  );
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -75,15 +122,18 @@ export default function Inbox() {
           <h1 className="text-2xl font-bold">Inbox</h1>
           <div className="ml-auto">
             <Badge variant="secondary" className="ml-2">
-              {messages.filter(msg => !msg.isRead).length} unread
+              {filteredMessages.filter(msg => !msg.isRead).length} unread
             </Badge>
+            <span className="text-sm text-muted-foreground ml-2">
+              {accountSection === 'personal' ? 'Personal' : 'Business'}
+            </span>
           </div>
         </header>
 
         {/* Messages List */}
         <ScrollArea className="h-[calc(100vh-120px)]">
           <div className="space-y-2">
-            {messages.map((message) => (
+            {filteredMessages.map((message) => (
               <div 
                 key={message.id}
                 className={`bg-white rounded-lg shadow-sm p-4 ${!message.isRead ? 'border-l-4 border-finance-blue' : ''}`}
