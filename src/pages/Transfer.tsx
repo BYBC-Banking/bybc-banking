@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -16,7 +15,13 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Transfer() {
   const { toast } = useToast();
-  const [fromAccount, setFromAccount] = useState(accounts[0]?.id || "");
+  
+  // Filter accounts to only show Personal section accounts (Spending and Investments)
+  const personalAccounts = accounts.filter(account => 
+    ['Spending', 'Investments'].includes(account.type)
+  );
+  
+  const [fromAccount, setFromAccount] = useState(personalAccounts[0]?.id || "");
   const [toAccount, setToAccount] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -72,7 +77,7 @@ export default function Transfer() {
                   <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {accounts.map((account) => (
+                  {personalAccounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name} - R{account.balance.toLocaleString()}
                     </SelectItem>
@@ -97,7 +102,7 @@ export default function Transfer() {
                   <SelectValue placeholder="Select an account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {accounts.map((account) => (
+                  {personalAccounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
                       {account.name} - R{account.balance.toLocaleString()}
                     </SelectItem>
