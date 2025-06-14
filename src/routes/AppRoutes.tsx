@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -39,6 +38,7 @@ import CryptoSwap from "@/pages/CryptoSwap";
 import MultisigWallet from "@/pages/MultisigWallet";
 import AccountRecovery from "@/pages/AccountRecovery";
 import Recovery from "@/pages/Recovery";
+import ComplianceCenter from "@/pages/ComplianceCenter";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 
@@ -244,6 +244,12 @@ const AppRoutes = () => {
       <Route path="/multisig-wallet" element={
         <ProtectedRoute>
           <MultisigWallet />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/compliance" element={
+        <ProtectedRoute>
+          <ComplianceCenter />
         </ProtectedRoute>
       } />
       
