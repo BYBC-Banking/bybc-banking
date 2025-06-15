@@ -17,10 +17,12 @@ interface CryptoAsset {
 }
 
 const SwapInterface = () => {
+  // Asset selection for crypto-to-crypto swap
   const [fromAsset, setFromAsset] = useState<string>("BTC");
+  const [toAsset, setToAsset] = useState<string>("ETH");
   const [fromAmount, setFromAmount] = useState<string>("");
   const [toAmount, setToAmount] = useState<string>("");
-  const [exchangeRate, setExchangeRate] = useState<number>(1250000);
+  const [exchangeRate, setExchangeRate] = useState<number>(0); // units of toAsset per 1 fromAsset
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [riskLevel, setRiskLevel] = useState<"low" | "medium" | "high">("low");
@@ -32,33 +34,56 @@ const SwapInterface = () => {
     { symbol: "XRP", name: "Ripple", balance: 1000, price: 8.5 },
   ];
 
-  const selectedAsset = cryptoAssets.find(asset => asset.symbol === fromAsset);
+  const fromAssetObj = cryptoAssets.find(asset => asset.symbol === fromAsset);
+  const toAssetObj = cryptoAssets.find(asset => asset.symbol === toAsset);
 
+  // Calculate exchange rate (toAsset per 1 fromAsset)
   useEffect(() => {
-    if (fromAmount && selectedAsset) {
+    if (fromAssetObj && toAssetObj) {
+      const rate = fromAssetObj.price / toAssetObj.price;
+      setExchangeRate(rate);
+    }
+  }, [fromAssetObj, toAssetObj]);
+
+  // Calculate toAmount whenever fromAmount or assets change
+  useEffect(() => {
+    if (fromAmount && fromAssetObj && toAssetObj) {
       const amount = parseFloat(fromAmount);
-      const zarValue = amount * selectedAsset.price;
-      setToAmount(zarValue.toLocaleString('en-ZA', { 
-        style: 'currency', 
-        currency: 'ZAR',
-        minimumFractionDigits: 2 
-      }));
+      if (!isNaN(amount)) {
+        const toAmt = amount * (fromAssetObj.price / toAssetObj.price);
+        // Use up to 8 decimal places for small balances
+        setToAmount(toAmt.toFixed(8));
+      } else {
+        setToAmount("");
+      }
     } else {
       setToAmount("");
     }
-  }, [fromAmount, selectedAsset]);
+  }, [fromAmount, fromAssetObj, toAssetObj]);
 
-  const handleQuickAmount = (zarAmount: number) => {
-    if (selectedAsset) {
-      const cryptoAmount = zarAmount / selectedAsset.price;
+  // Quick amount buttons suggest fractions of balance
+  const handleQuickAmount = (fraction: number) => {
+    if (fromAssetObj) {
+      const cryptoAmount = fromAssetObj.balance * fraction;
       setFromAmount(cryptoAmount.toFixed(8));
     }
   };
 
   const handleMaxAmount = () => {
-    if (selectedAsset) {
-      setFromAmount(selectedAsset.balance.toString());
+    if (fromAssetObj) {
+      setFromAmount(fromAssetObj.balance.toString());
     }
+  };
+
+  // Prevent selection of the same asset for from/to
+  const getAvailableToAssets = () =>
+    cryptoAssets.filter(a => a.symbol !== fromAsset);
+
+  // Swap assets handler (switch from and to assets)
+  const handleSwapAssets = () => {
+    setFromAsset(toAsset);
+    setToAsset(fromAsset);
+    setFromAmount(toAmount);
   };
 
   const getRiskIndicator = () => {
@@ -106,10 +131,13 @@ const SwapInterface = () => {
       return;
     }
 
-    if (selectedAsset && parseFloat(fromAmount) > selectedAsset.balance) {
+    if (
+      fromAssetObj &&
+      parseFloat(fromAmount) > fromAssetObj.balance
+    ) {
       toast({
         title: "Insufficient Balance",
-        description: `You only have ${selectedAsset.balance} ${selectedAsset.symbol}`,
+        description: `You only have ${fromAssetObj.balance} ${fromAssetObj.symbol}`,
         variant: "destructive"
       });
       return;
@@ -147,12 +175,18 @@ const SwapInterface = () => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">FROM:</span>
               <span className="text-sm text-muted-foreground">
-                Balance: {selectedAsset?.balance} {fromAsset}
+                Balance: {fromAssetObj?.balance} {fromAsset}
               </span>
             </div>
-            
             <div className="flex gap-3">
-              <Select value={fromAsset} onValueChange={setFromAsset}>
+              <Select value={fromAsset} onValueChange={val => {
+                setFromAsset(val);
+                // If selecting the same as toAsset, auto-cycle to another available asset
+                if (val === toAsset) {
+                  const altTo = cryptoAssets.find(a => a.symbol !== val);
+                  setToAsset(altTo ? altTo.symbol : "");
+                }
+              }}>
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
@@ -164,7 +198,6 @@ const SwapInterface = () => {
                   ))}
                 </SelectContent>
               </Select>
-              
               <Input
                 placeholder="0.001"
                 value={fromAmount}
@@ -182,6 +215,8 @@ const SwapInterface = () => {
           variant="outline"
           size="icon"
           className="h-12 w-12 rounded-full border-2 border-primary/20 hover:border-primary"
+          type="button"
+          onClick={handleSwapAssets}
         >
           <ArrowUpDown className="h-5 w-5" />
         </Button>
@@ -191,47 +226,42 @@ const SwapInterface = () => {
       <Card>
         <CardContent className="p-6">
           <div className="space-y-4">
-            <div className="text-sm font-medium text-muted-foreground">TO:</div>
-            <div className="text-center">
-              <div className="text-sm text-muted-foreground mb-2">South African Rand</div>
-              <div className="text-3xl font-bold text-center p-4 bg-secondary/50 rounded-lg min-h-[80px] flex items-center justify-center">
-                {toAmount ? `≈ ${toAmount}` : "R0.00"}
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-muted-foreground">TO:</span>
+              <span className="text-sm text-muted-foreground">
+                {toAssetObj ? `Balance: ${toAssetObj.balance} ${toAssetObj.symbol}` : ""}
+              </span>
+            </div>
+            <div className="flex gap-3">
+              <Select value={toAsset} onValueChange={val => setToAsset(val)}>
+                <SelectTrigger className="w-32">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {getAvailableToAssets().map(asset => (
+                    <SelectItem key={asset.symbol} value={asset.symbol}>
+                      {asset.symbol}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                placeholder="Calculated"
+                value={toAmount}
+                readOnly
+                className="text-2xl h-14 text-center font-mono bg-gray-100"
+              />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Quick Amount Buttons */}
+      {/* Quick Amount Buttons - % of balance */}
       <div className="grid grid-cols-4 gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleQuickAmount(1000)}
-        >
-          R1,000
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleQuickAmount(5000)}
-        >
-          R5,000
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleQuickAmount(10000)}
-        >
-          R10,000
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleMaxAmount}
-        >
-          Max
-        </Button>
+        <Button variant="outline" size="sm" type="button" onClick={() => handleQuickAmount(0.25)}>25%</Button>
+        <Button variant="outline" size="sm" type="button" onClick={() => handleQuickAmount(0.5)}>50%</Button>
+        <Button variant="outline" size="sm" type="button" onClick={() => handleQuickAmount(0.75)}>75%</Button>
+        <Button variant="outline" size="sm" type="button" onClick={handleMaxAmount}>Max</Button>
       </div>
 
       {/* Market Info */}
@@ -240,11 +270,13 @@ const SwapInterface = () => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">💹 Rate:</span>
-              <span className="text-sm font-medium">1 {fromAsset} = R{selectedAsset?.price.toLocaleString()}</span>
+              <span className="text-sm font-medium">
+                1 {fromAsset} = {exchangeRate.toFixed(8)} {toAsset}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">📊 Fee:</span>
-              <span className="text-sm font-medium">R12.50 (1%)</span>
+              <span className="text-sm font-medium">1% of from-asset amount</span>
             </div>
           </div>
         </CardContent>
