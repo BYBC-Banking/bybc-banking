@@ -26,6 +26,65 @@ const Accounts = () => {
     navigate(`/dashboard?account=${accountId}`);
   };
 
+  // Get professional colors for business section accounts
+  const getAccountColors = (account: any) => {
+    // Special case: Nonprofit in business section gets Dark Green Finance theme
+    if (account.type === "Nonprofit" && section === "business") {
+      return {
+        bgColor: "bg-slate-900",
+        textColor: "text-slate-100",
+        iconBg: "bg-slate-800",
+        iconText: "text-emerald-400"
+      };
+    }
+
+    // Default colors based on account.color
+    switch (account.color) {
+      case "blue":
+        return {
+          bgColor: "bg-finance-blue",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+      case "green":
+        return {
+          bgColor: "bg-finance-green",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+      case "purple":
+        return {
+          bgColor: "bg-[#7E69AB]",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+      case "orange":
+        return {
+          bgColor: "bg-orange-500",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+      case "teal":
+        return {
+          bgColor: "bg-teal-600",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+      default:
+        return {
+          bgColor: "bg-gray-500",
+          textColor: "text-white",
+          iconBg: "",
+          iconText: ""
+        };
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -41,34 +100,39 @@ const Accounts = () => {
         
         {/* Accounts List */}
         <div className="space-y-4">
-          {filteredAccounts.map((account) => (
-            <div
-              key={account.id}
-              className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"
-              onClick={() => handleAccountSelect(account.id)}
-            >
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold 
-                    ${account.color === "blue" ? "bg-finance-blue text-white" : ""}
-                    ${account.color === "green" ? "bg-finance-green text-white" : ""}
-                    ${account.color === "purple" ? "bg-[#7E69AB] text-white" : ""}
-                    ${account.color === "orange" ? "bg-orange-500 text-white" : ""}
-                    ${account.color === "teal" ? "bg-teal-600 text-white" : ""}
-                  `}>
-                    {account.type.charAt(0)}
+          {filteredAccounts.map((account) => {
+            const colors = getAccountColors(account);
+            const isNonprofitBusiness = account.type === "Nonprofit" && section === "business";
+            
+            return (
+              <div
+                key={account.id}
+                className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+                onClick={() => handleAccountSelect(account.id)}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                      isNonprofitBusiness 
+                        ? `${colors.bgColor} ${colors.iconBg} border border-slate-700`
+                        : colors.bgColor
+                    } ${colors.textColor}`}>
+                      <span className={isNonprofitBusiness ? colors.iconText : ""}>
+                        {account.type.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="font-medium">{account.name}</div>
+                      <div className="text-xs text-muted-foreground">•••• {account.accountNumber.slice(-4)}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-medium">{account.name}</div>
-                    <div className="text-xs text-muted-foreground">•••• {account.accountNumber.slice(-4)}</div>
+                  <div className="text-right">
+                    <div className="font-semibold">R{account.balance.toLocaleString()}</div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">R{account.balance.toLocaleString()}</div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
