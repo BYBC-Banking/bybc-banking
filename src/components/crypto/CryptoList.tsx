@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { Buy, Sell } from "lucide-react";
+import { ShoppingCart, ArrowDownLeft } from "lucide-react";
 import CryptoFilterTabs from "./CryptoFilterTabs";
 
 interface CryptoAsset {
@@ -141,7 +140,7 @@ const CryptoList = ({
                           // else could call a buy callback if provided in the future
                         }}
                       >
-                        <Buy className="h-4 w-4 mr-1" /> Buy
+                        <ShoppingCart className="h-4 w-4 mr-1" /> Buy
                       </Button>
                       <Button
                         className="flex-1 bg-finance-blue hover:bg-finance-blue/90 text-white"
@@ -151,7 +150,7 @@ const CryptoList = ({
                           // else could call a sell callback if provided in the future
                         }}
                       >
-                        <Sell className="h-4 w-4 mr-1" /> Sell
+                        <ArrowDownLeft className="h-4 w-4 mr-1" /> Sell
                       </Button>
                     </div>
                   </div>
