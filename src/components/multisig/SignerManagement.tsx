@@ -77,10 +77,10 @@ const SignerManagement = () => {
 
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case "admin": return <Crown className="h-4 w-4 text-yellow-600" />;
-      case "approver": return <User className="h-4 w-4 text-blue-600" />;
-      case "view-only": return <Eye className="h-4 w-4 text-gray-500" />;
-      default: return <User className="h-4 w-4" />;
+      case "admin": return <Crown className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-600" />;
+      case "approver": return <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />;
+      case "view-only": return <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />;
+      default: return <User className="h-3 w-3 sm:h-4 sm:w-4" />;
     }
   };
 
@@ -104,44 +104,44 @@ const SignerManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Wallet Configuration */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Settings className="h-5 w-5" />
+        <CardHeader className="mobile-padding">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
             Wallet Configuration
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="mobile-padding space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <div className="text-sm text-muted-foreground mb-1">Signature Threshold</div>
-              <div className="font-semibold text-lg">
+              <div className="text-xs sm:text-sm text-muted-foreground mb-1">Signature Threshold</div>
+              <div className="font-semibold text-base sm:text-lg">
                 {walletSettings.signatureThreshold} of {walletSettings.totalSigners}
               </div>
             </div>
             <div>
-              <div className="text-sm text-muted-foreground mb-1">Expiry Period</div>
-              <div className="font-semibold text-lg">{walletSettings.transactionExpiry} days</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mb-1">Expiry Period</div>
+              <div className="font-semibold text-base sm:text-lg">{walletSettings.transactionExpiry} days</div>
             </div>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Auto-execute when threshold met</div>
-                <div className="text-sm text-muted-foreground">Automatically execute approved transactions</div>
+              <div className="flex-1 min-w-0 pr-3">
+                <div className="font-medium text-sm sm:text-base">Auto-execute when threshold met</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Automatically execute approved transactions</div>
               </div>
-              <Switch checked={walletSettings.autoExecute} />
+              <Switch checked={walletSettings.autoExecute} className="flex-shrink-0" />
             </div>
 
             <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Require comments for declines</div>
-                <div className="text-sm text-muted-foreground">Mandatory comments when declining</div>
+              <div className="flex-1 min-w-0 pr-3">
+                <div className="font-medium text-sm sm:text-base">Require comments for declines</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Mandatory comments when declining</div>
               </div>
-              <Switch checked={walletSettings.requireComments} />
+              <Switch checked={walletSettings.requireComments} className="flex-shrink-0" />
             </div>
           </div>
         </CardContent>
@@ -149,40 +149,41 @@ const SignerManagement = () => {
 
       {/* Signers List */}
       <Card>
-        <CardHeader>
+        <CardHeader className="mobile-padding">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
               Signers ({signers.length})
             </CardTitle>
             <Button 
               size="sm" 
               onClick={() => setIsInviting(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
             >
-              <Plus className="h-4 w-4" />
-              Invite
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Invite</span>
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="mobile-padding space-y-4">
           {isInviting && (
             <Card className="border-dashed">
-              <CardContent className="pt-6 space-y-4">
+              <CardContent className="pt-4 sm:pt-6 mobile-padding space-y-4">
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Email Address</label>
+                  <label className="text-xs sm:text-sm font-medium mb-2 block">Email Address</label>
                   <Input
                     type="email"
                     placeholder="colleague@company.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
+                    className="text-sm"
                   />
                 </div>
                 
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Role</label>
+                  <label className="text-xs sm:text-sm font-medium mb-2 block">Role</label>
                   <Select value={inviteRole} onValueChange={setInviteRole}>
-                    <SelectTrigger>
+                    <SelectTrigger className="text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -197,14 +198,15 @@ const SignerManagement = () => {
                   <Button 
                     onClick={handleInvite}
                     disabled={!inviteEmail.includes("@")}
-                    className="flex-1"
+                    className="flex-1 text-xs sm:text-sm"
                   >
-                    <Mail className="h-4 w-4 mr-2" />
+                    <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     Send Invite
                   </Button>
                   <Button 
                     variant="outline"
                     onClick={() => setIsInviting(false)}
+                    className="text-xs sm:text-sm"
                   >
                     Cancel
                   </Button>
@@ -213,54 +215,58 @@ const SignerManagement = () => {
             </Card>
           )}
 
-          {signers.map((signer) => (
-            <div key={signer.id} className="flex items-center justify-between p-3 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+          <div className="space-y-3">
+            {signers.map((signer) => (
+              <div key={signer.id} className="flex items-start gap-3 p-3 border rounded-lg">
+                <div className="relative flex-shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
                     {signer.name.charAt(0)}
                   </div>
                   <div 
-                    className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(signer.status)}`}
+                    className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border-2 border-white ${getStatusColor(signer.status)}`}
                   />
                 </div>
                 
-                <div>
-                  <div className="font-medium flex items-center gap-2">
-                    {signer.name}
-                    {signer.isCurrentUser && <Badge variant="secondary" className="text-xs">You</Badge>}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="font-medium text-sm sm:text-base truncate">{signer.name}</div>
+                    {signer.isCurrentUser && (
+                      <Badge variant="secondary" className="text-xs px-1.5 py-0.5 flex-shrink-0">
+                        You
+                      </Badge>
+                    )}
                   </div>
-                  <div className="text-sm text-muted-foreground">{signer.email}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground truncate mb-1">{signer.email}</div>
                   <div className="text-xs text-muted-foreground">Last active: {signer.lastActive}</div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Badge className={`${getRoleColor(signer.role)} flex items-center gap-1`}>
-                  {getRoleIcon(signer.role)}
-                  {signer.role.replace("-", " ")}
-                </Badge>
-                
-                {!signer.isCurrentUser && (
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                )}
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  <Badge className={`${getRoleColor(signer.role)} flex items-center gap-1 text-xs px-2 py-1`}>
+                    {getRoleIcon(signer.role)}
+                    <span className="capitalize">{signer.role.replace("-", " ")}</span>
+                  </Badge>
+                  
+                  {!signer.isCurrentUser && (
+                    <Button variant="ghost" size="icon" className="h-6 w-6 sm:h-8 sm:w-8">
+                      <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </CardContent>
       </Card>
 
       {/* Permission Matrix */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+        <CardHeader className="mobile-padding">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
             Permission Matrix
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mobile-padding">
           <div className="space-y-3">
             <div className="grid grid-cols-4 gap-2 text-xs font-medium text-muted-foreground">
               <div>Permission</div>
@@ -276,8 +282,8 @@ const SignerManagement = () => {
               { name: "Manage signers", admin: true, approver: false, viewOnly: false },
               { name: "Modify settings", admin: true, approver: false, viewOnly: false }
             ].map((permission, index) => (
-              <div key={index} className="grid grid-cols-4 gap-2 text-sm py-2 border-t">
-                <div>{permission.name}</div>
+              <div key={index} className="grid grid-cols-4 gap-2 text-xs sm:text-sm py-2 border-t">
+                <div className="truncate">{permission.name}</div>
                 <div className="text-center">
                   {permission.admin ? "✅" : "❌"}
                 </div>
