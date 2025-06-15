@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import EducationHeader from "@/components/EducationHeader";
 import LearningJourney from "@/components/LearningJourney";
@@ -83,7 +82,7 @@ const Education = () => {
       description: "Learn the basics of Exchange Traded Funds and how they can diversify your portfolio",
       type: "Articles" as ContentType,
       difficulty: "Beginner" as DifficultyLevel,
-      imageUrl: "https://source.unsplash.com/random/300x200?stocks",
+      imageUrl: "/lovable-uploads/716e3548-e135-4442-b34d-b3779cf8d860.png",
       duration: "7 min read"
     }
   ];
