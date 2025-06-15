@@ -118,7 +118,7 @@ const MultisigDashboard = () => {
         </Button>
       </div>
 
-      {/* Pending Approvals - Improved Layout */}
+      {/* Pending Approvals - Mobile optimized */}
       <Card>
         <CardHeader className="pb-3 sm:pb-6">
           <CardTitle className="text-base sm:text-lg flex items-center justify-between">
@@ -129,49 +129,38 @@ const MultisigDashboard = () => {
             <Badge variant="secondary" className="text-xs">{pendingApprovals.length}</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0 space-y-4">
+        <CardContent className="pt-0 space-y-3">
           {pendingApprovals.map((approval) => (
-            <div key={approval.id} className="border rounded-lg p-4 space-y-3 touch-target">
-              {/* Header with amount and urgency badge */}
+            <div key={approval.id} className="border rounded-lg p-3 space-y-2 touch-target">
               <div className="flex items-center justify-between">
-                <div className="font-semibold text-base sm:text-lg">{approval.amount}</div>
-                <Badge className={`${getUrgencyColor(approval.urgency)} text-xs px-2 py-1`}>
+                <div className="font-medium text-sm sm:text-base">{approval.amount}</div>
+                <Badge className={`${getUrgencyColor(approval.urgency)} text-xs`}>
                   {approval.urgency === "high" && <AlertTriangle className="h-3 w-3 mr-1" />}
                   {approval.urgency === "high" ? "Urgent" : "Normal"}
                 </Badge>
               </div>
-
-              {/* Recipient info */}
-              <div className="text-sm text-muted-foreground">
-                To: <span className="font-medium text-foreground">{approval.recipient}</span>
+              <div className="text-xs sm:text-sm text-muted-foreground truncate">
+                To: {approval.recipient}
               </div>
-
-              {/* Approval status and time info */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium">
-                      {approval.signers.approved}/{approval.signers.required} approved
-                    </span>
-                    <div className="flex gap-1">
-                      {Array.from({ length: approval.signers.total }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`w-2 h-2 rounded-full ${
-                            i < approval.signers.approved
-                              ? "bg-green-500"
-                              : i < approval.signers.required
-                              ? "bg-orange-300"
-                              : "bg-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span>{approval.signers.approved}/{approval.signers.required} approved</span>
+                  <div className="flex gap-1">
+                    {Array.from({ length: approval.signers.total }).map((_, i) => (
+                      <div
+                        key={i}
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                          i < approval.signers.approved
+                            ? "bg-green-500"
+                            : i < approval.signers.required
+                            ? "bg-orange-300"
+                            : "bg-gray-300"
+                        }`}
+                      />
+                    ))}
                   </div>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {approval.timeLeft} left
-                  </span>
                 </div>
+                <span className="text-muted-foreground">{approval.timeLeft} left</span>
               </div>
             </div>
           ))}
