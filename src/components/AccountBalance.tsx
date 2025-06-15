@@ -13,6 +13,7 @@ interface AccountBalanceProps {
   canNavigateNext?: boolean;
   accountType?: string;
   accountName?: string;
++  accountSection?: string;
 }
 
 const AccountBalance = ({
@@ -24,59 +25,116 @@ const AccountBalance = ({
   canNavigatePrevious = false,
   canNavigateNext = false,
   accountType = "Investments",
-  accountName = "BYBC Investments"
+  accountName = "BYBC Investments",
++  accountSection = "personal"
 }: AccountBalanceProps) => {
   const [showNavigation, setShowNavigation] = useState(false);
   const isPositive = difference >= 0;
 
   // Define colors and styles based on account type for neumorphism
-  const getAccountStyles = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'spending':
-        return {
-          bgColor: 'bg-blue-50',
-          textColor: 'text-blue-900',
-          icon: 'S',
-          iconBg: 'bg-blue-100',
-          iconText: 'text-blue-700'
-        };
-      case 'savings':
-        return {
-          bgColor: 'bg-green-50',
-          textColor: 'text-green-900',
-          icon: 'S',
-          iconBg: 'bg-green-100',
-          iconText: 'text-green-700'
-        };
-      case 'business':
-        return {
-          bgColor: 'bg-purple-50',
-          textColor: 'text-purple-900',
-          icon: 'B',
-          iconBg: 'bg-purple-100',
-          iconText: 'text-purple-700'
-        };
-      case 'nonprofit':
-        return {
-          bgColor: 'bg-orange-50',
-          textColor: 'text-orange-900',
-          icon: 'N',
-          iconBg: 'bg-orange-100',
-          iconText: 'text-orange-700'
-        };
-      case 'investments':
-      default:
-        return {
-          bgColor: 'bg-slate-100',
-          textColor: 'text-slate-900',
-          icon: 'I',
-          iconBg: 'bg-slate-200',
-          iconText: 'text-slate-700'
-        };
-    }
-  };
+-  const getAccountStyles = (type: string) => {
+-    switch (type.toLowerCase()) {
+-      case 'spending':
+-        return {
+-          bgColor: 'bg-blue-50',
+-          textColor: 'text-blue-900',
+-          icon: 'S',
+-          iconBg: 'bg-blue-100',
+-          iconText: 'text-blue-700'
+-        };
+-      case 'savings':
+-        return {
+-          bgColor: 'bg-green-50',
+-          textColor: 'text-green-900',
+-          icon: 'S',
+-          iconBg: 'bg-green-100',
+-          iconText: 'text-green-700'
+-        };
+-      case 'business':
+-        return {
+-          bgColor: 'bg-purple-50',
+-          textColor: 'text-purple-900',
+-          icon: 'B',
+-          iconBg: 'bg-purple-100',
+-          iconText: 'text-purple-700'
+-        };
+-      case 'nonprofit':
+-        return {
+-          bgColor: 'bg-orange-50',
+-          textColor: 'text-orange-900',
+-          icon: 'N',
+-          iconBg: 'bg-orange-100',
+-          iconText: 'text-orange-700'
+-        };
+-      case 'investments':
+-      default:
+-        return {
+-          bgColor: 'bg-slate-100',
+-          textColor: 'text-slate-900',
+-          icon: 'I',
+-          iconBg: 'bg-slate-200',
+-          iconText: 'text-slate-700'
+-        };
+-    }
+-  };
++  const getAccountStyles = (type: string, section: string) => {
++    const isBusinessCard = type.toLowerCase() === "business" && section === "business";
++    if (isBusinessCard) {
++      return {
++        bgColor: "bg-neutral-900 border border-neutral-800",
++        textColor: "text-neutral-100",
++        icon: "B",
++        iconBg: "bg-neutral-800",
++        iconText: "text-neutral-300"
++      };
++    }
++    switch (type.toLowerCase()) {
++      case "spending":
++        return {
++          bgColor: "bg-blue-50",
++          textColor: "text-blue-900",
++          icon: "S",
++          iconBg: "bg-blue-100",
++          iconText: "text-blue-700"
++        };
++      case "savings":
++        return {
++          bgColor: "bg-green-50",
++          textColor: "text-green-900",
++          icon: "S",
++          iconBg: "bg-green-100",
++          iconText: "text-green-700"
++        };
++      case "business":
++        return {
++          bgColor: "bg-purple-50",
++          textColor: "text-purple-900",
++          icon: "B",
++          iconBg: "bg-purple-100",
++          iconText: "text-purple-700"
++        };
++      case "nonprofit":
++        return {
++          bgColor: "bg-orange-50",
++          textColor: "text-orange-900",
++          icon: "N",
++          iconBg: "bg-orange-100",
++          iconText: "text-orange-700"
++        };
++      case "investments":
++      default:
++        return {
++          bgColor: "bg-slate-100",
++          textColor: "text-slate-900",
++          icon: "I",
++          iconBg: "bg-slate-200",
++          iconText: "text-slate-700"
++        };
++    }
++  };
 
-  const accountStyles = getAccountStyles(accountType);
+-  const accountStyles = getAccountStyles(accountType);
++  const accountStyles = getAccountStyles(accountType, accountSection);
 
   const handleTouchStart = () => {
     setShowNavigation(true);
@@ -86,62 +144,115 @@ const AccountBalance = ({
     setTimeout(() => setShowNavigation(false), 2000);
   };
 
-  return (
-    <div 
-      className={cn(
-        `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 border border-white/20`,
-        className
-      )} 
-      onTouchStart={handleTouchStart} 
-      onTouchEnd={handleTouchEnd} 
-      onMouseEnter={() => setShowNavigation(true)} 
-      onMouseLeave={() => setShowNavigation(false)}
-    >
-      {/* Navigation arrows with neumorphism style */}
-      {showNavigation && canNavigatePrevious && (
-        <button 
-          onClick={onPreviousAccount} 
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
-        >
-          <ArrowLeft className="h-5 w-5 text-slate-600" />
-        </button>
-      )}
-      
-      {showNavigation && canNavigateNext && (
-        <button 
-          onClick={onNextAccount} 
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
-        >
-          <ArrowRight className="h-5 w-5 text-slate-600" />
-        </button>
-      )}
-      
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <div className={`w-10 h-10 ${accountStyles.iconBg} rounded-full flex items-center justify-center mr-3 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)]`}>
-            <span className={`${accountStyles.iconText} font-bold text-lg`}>{accountStyles.icon}</span>
-          </div>
-          <span className={`${accountStyles.textColor} font-medium`}>{accountName}</span>
-        </div>
-      </div>
-      
-      <div className="mb-2">
-        <div className={`flex items-center ${accountStyles.textColor}/70 text-sm mb-1`}>
-          <span>••••</span>
-          <span className="ml-2">4680</span>
-        </div>
-        <div className="mb-1">
-          <span className={`${accountStyles.textColor}/80 text-sm`}>Available Balance:</span>
-        </div>
-        <h1 className={`text-3xl font-bold ${accountStyles.textColor}`}>
-          R{balance.toLocaleString('en-ZA', {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1
-          })}
-        </h1>
-      </div>
-    </div>
-  );
+-  return (
+-    <div 
+-      className={cn(
+-        `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 border border-white/20`,
+-        className
+-      )} 
+-      onTouchStart={handleTouchStart} 
+-      onTouchEnd={handleTouchEnd} 
+-      onMouseEnter={() => setShowNavigation(true)} 
+-      onMouseLeave={() => setShowNavigation(false)}
+-    >
+-      {/* Navigation arrows with neumorphism style */}
+-      {showNavigation && canNavigatePrevious && (
+-        <button 
+-          onClick={onPreviousAccount} 
+-          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
+-        >
+-          <ArrowLeft className="h-5 w-5 text-slate-600" />
+-        </button>
+-      )}
+-      
+-      {showNavigation && canNavigateNext && (
+-        <button 
+-          onClick={onNextAccount} 
+-          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
+-        >
+-          <ArrowRight className="h-5 w-5 text-slate-600" />
+-        </button>
+-      )}
+-      
+-      <div className="flex items-center justify-between mb-4">
+-        <div className="flex items-center">
+-          <div className={`w-10 h-10 ${accountStyles.iconBg} rounded-full flex items-center justify-center mr-3 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)]`}>
+-            <span className={`${accountStyles.iconText} font-bold text-lg`}>{accountStyles.icon}</span>
+-          </div>
+-          <span className={`${accountStyles.textColor} font-medium`}>{accountName}</span>
+-        </div>
+-      </div>
+-      
+-      <div className="mb-2">
+-        <div className={`flex items-center ${accountStyles.textColor}/70 text-sm mb-1`}>
+-          <span>••••</span>
+-          <span className="ml-2">4680</span>
+-        </div>
+-        <div className="mb-1">
+-          <span className={`${accountStyles.textColor}/80 text-sm`}>Available Balance:</span>
+-        </div>
+-        <h1 className={`text-3xl font-bold ${accountStyles.textColor}`}>
+-          R{balance.toLocaleString('en-ZA', {
+-            minimumFractionDigits: 1,
+-            maximumFractionDigits: 1
+-          })}
+-        </h1>
+-      </div>
+-    </div>
+-  );
++  return (
++    <div
++      className={cn(
++        `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 ${accountStyles.bgColor.includes("neutral-900") ? "border border-neutral-800" : "border border-white/20"}`,
++        className
++      )}
++      onTouchStart={handleTouchStart}
++      onTouchEnd={handleTouchEnd}
++      onMouseEnter={() => setShowNavigation(true)}
++      onMouseLeave={() => setShowNavigation(false)}
++    >
++      {/* Navigation arrows with neumorphism style */}
++      {showNavigation && canNavigatePrevious && (
++        <button
++          onClick={onPreviousAccount}
++          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
++        >
++          <ArrowLeft className="h-5 w-5 text-slate-600" />
++        </button>
++      )}
++      {showNavigation && canNavigateNext && (
++        <button
++          onClick={onNextAccount}
++          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_4px_4px_8px_rgba(0,0,0,0.1),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)] transition-all z-10"
++        >
++          <ArrowRight className="h-5 w-5 text-slate-600" />
++        </button>
++      )}
++      <div className="flex items-center justify-between mb-4">
++        <div className="flex items-center">
++          <div className={`w-10 h-10 ${accountStyles.iconBg} rounded-full flex items-center justify-center mr-3 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1),inset_-2px_-2px_4px_rgba(255,255,255,0.9)]`}>
++            <span className={`${accountStyles.iconText} font-bold text-lg`}>{accountStyles.icon}</span>
++          </div>
++          <span className={`${accountStyles.textColor} font-medium`}>{accountName}</span>
++        </div>
++      </div>
++      <div className="mb-2">
++        <div className={`flex items-center ${accountStyles.textColor}/70 text-sm mb-1`}>
++          <span>••••</span>
++          <span className="ml-2">4680</span>
++        </div>
++        <div className="mb-1">
++          <span className={`${accountStyles.textColor}/80 text-sm`}>Available Balance:</span>
++        </div>
++        <h1 className={`text-3xl font-bold ${accountStyles.textColor}`}>
++          R{balance.toLocaleString('en-ZA', {
++            minimumFractionDigits: 1,
++            maximumFractionDigits: 1
++          })}
++        </h1>
++      </div>
++    </div>
++  );
 };
 
 export default AccountBalance;

@@ -1,4 +1,3 @@
-
 import DashboardHeader from "@/components/DashboardHeader";
 import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
@@ -50,7 +49,7 @@ const Index = () => {
 
 // Component to get account balance from context
 const AccountBalanceFromContext = () => {
-  const { selectedAccount, filteredAccounts, selectedAccountId, setSelectedAccountId } = useHomePage();
+  const { selectedAccount, filteredAccounts, selectedAccountId, setSelectedAccountId, accountSection } = useHomePage();
   
   const currentIndex = filteredAccounts.findIndex(acc => acc.id === selectedAccountId);
   
@@ -76,6 +75,7 @@ const AccountBalanceFromContext = () => {
       canNavigateNext={currentIndex < filteredAccounts.length - 1}
       accountType={selectedAccount.type}
       accountName={selectedAccount.name}
+      accountSection={accountSection}
     />
   );
 };
