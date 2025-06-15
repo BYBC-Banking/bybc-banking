@@ -438,7 +438,7 @@ export const topics: Topic[] = [
     title: "Business",
     description: "Understand fundamentals of running and investing in businesses",
     levels: ["All", "Beginner", "Intermediate", "Advanced"],
-    icon: "🏢",
+    icon: "/lovable-uploads/cb2459ff-c484-446d-9e80-f61bda48c625.png",
     modules: [
       {
         id: "business-m1",
