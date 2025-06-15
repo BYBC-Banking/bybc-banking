@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import EducationHeader from "@/components/EducationHeader";
 import LearningJourney from "@/components/LearningJourney";
@@ -57,7 +55,7 @@ const Education = () => {
       description: "Discover how compound interest works and why it's called the eighth wonder of the world",
       type: "Videos" as ContentType,
       difficulty: "Beginner" as DifficultyLevel,
-      imageUrl: "https://source.unsplash.com/random/300x200?money",
+      imageUrl: "/lovable-uploads/93e2754d-e43c-4a4a-b282-de7f7bb6e0ac.png",
       duration: "3:45"
     },
     {
