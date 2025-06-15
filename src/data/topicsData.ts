@@ -382,7 +382,7 @@ export const topics: Topic[] = [
     title: "Mutual Funds",
     description: "Learn about pooled investment vehicles managed by professionals",
     levels: ["All", "Beginner", "Intermediate", "Advanced"],
-    icon: "📊",
+    icon: "/lovable-uploads/fe8e6a52-f0e8-4543-95fe-e066b01acec5.png",
     modules: [
       {
         id: "mutual-funds-m1",
