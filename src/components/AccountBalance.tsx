@@ -1,3 +1,4 @@
+
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -32,19 +33,6 @@ const AccountBalance = ({
 
   // New professional/dark color scheme for business section and business account type
   const getAccountStyles = (type: string, section: string) => {
-    // Special corporate palette for Nonprofit in business section
-    if (type.toLowerCase() === "nonprofit" && section === "business") {
-      return {
-        bgColor: "bg-[#0B0C10] border-[#23252B]",      // Rich Black bg, Charcoal border
-        textColor: "text-white",                       // White text
-        icon: "N",
-        iconBg: "bg-[#0066CC]",                        // Corporate Blue
-        iconText: "text-[#84C1FF]",                    // Sky Blue (for accent on the icon)
-        detailText: "text-[#B0B4B8]"                   // Muted Grey for details
-      };
-    }
-
-    // Business dark
     if (type.toLowerCase() === "business" && section === "business") {
       return {
         bgColor: "bg-neutral-900 border border-neutral-800",
@@ -114,8 +102,8 @@ const AccountBalance = ({
     <div
       className={cn(
         `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 ${
-          accountStyles.bgColor.includes("neutral-900") || accountStyles.bgColor.includes("#0B0C10")
-            ? accountStyles.bgColor.includes("border") ? "" : "border border-neutral-800"
+          accountStyles.bgColor.includes("neutral-900")
+            ? "border border-neutral-800"
             : "border border-white/20"
         }`,
         className
@@ -158,13 +146,13 @@ const AccountBalance = ({
       </div>
       <div className="mb-2">
         <div
-          className={`flex items-center ${(accountStyles.detailText || accountStyles.textColor + "/70")} text-sm mb-1`}
+          className={`flex items-center ${accountStyles.textColor}/70 text-sm mb-1`}
         >
           <span>••••</span>
           <span className="ml-2">4680</span>
         </div>
         <div className="mb-1">
-          <span className={`${(accountStyles.detailText || accountStyles.textColor + "/80")} text-sm`}>
+          <span className={`${accountStyles.textColor}/80 text-sm`}>
             Available Balance:
           </span>
         </div>
