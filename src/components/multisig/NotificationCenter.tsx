@@ -106,21 +106,21 @@ const NotificationCenter = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Recent Notifications */}
       <Card>
-        <CardHeader>
+        <CardHeader className="mobile-padding">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Bell className="h-5 w-5" />
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
               Recent Notifications
             </CardTitle>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="text-xs">
               Mark all read
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="mobile-padding space-y-3">
           {notifications.map((notification) => (
             <div 
               key={notification.id} 
@@ -129,21 +129,21 @@ const NotificationCenter = () => {
               <div className="flex items-start gap-3">
                 {getNotificationIcon(notification.type)}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium text-sm">{notification.title}</div>
-                    <div className="text-xs text-muted-foreground">{notification.timestamp}</div>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="font-medium text-xs sm:text-sm truncate">{notification.title}</div>
+                    <div className="text-xs text-muted-foreground flex-shrink-0 ml-2">{notification.timestamp}</div>
                   </div>
-                  <div className="text-sm text-muted-foreground mt-1">
+                  <div className="text-xs sm:text-sm text-muted-foreground mb-2">
                     {notification.message}
                   </div>
                   {notification.actionRequired && (
-                    <Button size="sm" className="mt-2">
+                    <Button size="sm" className="text-xs">
                       Take Action
                     </Button>
                   )}
                 </div>
                 {notification.unread && (
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-1" />
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 flex-shrink-0" />
                 )}
               </div>
             </div>
@@ -153,29 +153,29 @@ const NotificationCenter = () => {
 
       {/* Notification Categories */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+        <CardHeader className="mobile-padding">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
             Quick Filters
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mobile-padding">
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-red-500" />
-              Urgent (1)
+            <Button variant="outline" className="flex items-center gap-2 text-xs">
+              <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
+              <span className="truncate">Urgent (1)</span>
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-orange-500" />
-              Pending (2)
+            <Button variant="outline" className="flex items-center gap-2 text-xs">
+              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-orange-500" />
+              <span className="truncate">Pending (2)</span>
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              Completed (1)
+            <Button variant="outline" className="flex items-center gap-2 text-xs">
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
+              <span className="truncate">Completed (1)</span>
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-blue-500" />
-              Team (1)
+            <Button variant="outline" className="flex items-center gap-2 text-xs">
+              <Users className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
+              <span className="truncate">Team (1)</span>
             </Button>
           </div>
         </CardContent>
@@ -183,41 +183,41 @@ const NotificationCenter = () => {
 
       {/* Notification Settings */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Settings className="h-5 w-5" />
+        <CardHeader className="mobile-padding">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
             Notification Preferences
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="mobile-padding space-y-6">
           {notificationSettings.map((category, categoryIndex) => (
-            <div key={categoryIndex}>
-              <h3 className="font-medium mb-3">{category.category}</h3>
-              <div className="space-y-3">
+            <div key={categoryIndex} className="space-y-4">
+              <h3 className="font-semibold text-sm sm:text-base text-gray-900">{category.category}</h3>
+              <div className="space-y-4">
                 {category.settings.map((setting, settingIndex) => (
-                  <div key={settingIndex} className="space-y-2">
+                  <div key={settingIndex} className="space-y-3 p-3 bg-gray-50 rounded-lg">
                     <div className="font-medium text-sm">{setting.name}</div>
-                    <div className="grid grid-cols-3 gap-4 pl-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Smartphone className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">Push</span>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between py-2">
+                        <div className="flex items-center gap-3">
+                          <Smartphone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-sm font-medium">Push Notifications</span>
                         </div>
-                        <Switch checked={setting.push} />
+                        <Switch checked={setting.push} className="flex-shrink-0" />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">Email</span>
+                      <div className="flex items-center justify-between py-2">
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-sm font-medium">Email Alerts</span>
                         </div>
-                        <Switch checked={setting.email} />
+                        <Switch checked={setting.email} className="flex-shrink-0" />
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Bell className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">In-App</span>
+                      <div className="flex items-center justify-between py-2">
+                        <div className="flex items-center gap-3">
+                          <Bell className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-sm font-medium">In-App Notifications</span>
                         </div>
-                        <Switch checked={setting.inApp} />
+                        <Switch checked={setting.inApp} className="flex-shrink-0" />
                       </div>
                     </div>
                   </div>
@@ -230,19 +230,19 @@ const NotificationCenter = () => {
 
       {/* Business Hours */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Business Hours</CardTitle>
+        <CardHeader className="mobile-padding">
+          <CardTitle className="text-base sm:text-lg">Business Hours</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">Quiet hours</div>
-              <div className="text-sm text-muted-foreground">Reduce notifications during off-hours</div>
+        <CardContent className="mobile-padding space-y-4">
+          <div className="flex items-center justify-between py-3">
+            <div className="flex-1">
+              <div className="font-medium text-sm">Quiet hours</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Reduce notifications during off-hours</div>
             </div>
-            <Switch />
+            <Switch className="flex-shrink-0 ml-4" />
           </div>
           
-          <div className="text-sm text-muted-foreground">
+          <div className="text-xs sm:text-sm text-muted-foreground p-3 bg-gray-50 rounded-lg">
             <div>Business hours: 9:00 AM - 6:00 PM</div>
             <div>Timezone: South Africa Standard Time (SAST)</div>
           </div>
