@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 import { AuthState, SESSION_TIMEOUT } from "./types";
 
@@ -40,40 +39,62 @@ export const clearAuthState = (): void => {
   }
 };
 
-// Setup session timeout
-export const setupSessionTimeout = (): void => {
-  if (authState.expiresAt) {
-    const timeRemaining = authState.expiresAt - Date.now();
-    
-    if (timeRemaining > 0) {
-      // Clear any existing timeout
-      if (window._sessionTimeoutId) {
-        window.clearTimeout(window._sessionTimeoutId);
-      }
-      
-      // Set new timeout
-      window._sessionTimeoutId = window.setTimeout(() => {
-        logout("Your session has expired. Please login again.");
-      }, timeRemaining);
-    } else {
-      logout("Your session has expired. Please login again.");
-    }
-  }
+let activityTrackingEnabled = false;
+let activityTimeout: number | undefined;
+
+const activityEvents = ['click', 'keypress', 'mousemove', 'touchstart'];
+
+function refreshSessionOnActivity() {
+  if (!authState.user) return;
+
+  authState.expiresAt = Date.now() + SESSION_TIMEOUT;
+  persistAuthState();
+  setupSessionTimeout();
+}
+
+// Detach activity listeners
+export const removeActivityTracking = (): void => {
+  activityEvents.forEach(event =>
+    window.removeEventListener(event, refreshSessionOnActivity)
+  );
+  activityTrackingEnabled = false;
 };
 
-// Activity tracking to refresh session
+// Attach activity listeners
 export const setupActivityTracking = (): void => {
-  const refreshSession = () => {
-    if (authState.user) {
-      authState.expiresAt = Date.now() + SESSION_TIMEOUT;
-      persistAuthState();
-      setupSessionTimeout();
+  if (activityTrackingEnabled) return;
+  activityEvents.forEach(event =>
+    window.addEventListener(event, refreshSessionOnActivity)
+  );
+  activityTrackingEnabled = true;
+};
+
+// Timeout setup: logs out only *after* inactivity
+export const setupSessionTimeout = (): void => {
+  // Clear existing timeout if present
+  if (window._sessionTimeoutId) {
+    window.clearTimeout(window._sessionTimeoutId);
+    window._sessionTimeoutId = undefined;
+  }
+
+  if (authState.expiresAt) {
+    const timeRemaining = authState.expiresAt - Date.now();
+
+    if (timeRemaining > 0) {
+      // Set a new timeout for session expiry
+      window._sessionTimeoutId = window.setTimeout(() => {
+        // Only log out if user is still inactive (expiresAt not extended)
+        if (authState.expiresAt && authState.expiresAt <= Date.now()) {
+          logout("Your session has expired due to inactivity. Please login again.");
+          removeActivityTracking();
+        }
+      }, timeRemaining);
+    } else {
+      // Already expired
+      logout("Your session has expired due to inactivity. Please login again.");
+      removeActivityTracking();
     }
-  };
-  
-  // Attach event listeners
-  window.addEventListener('click', refreshSession);
-  window.addEventListener('keypress', refreshSession);
+  }
 };
 
 // Check for existing session in sessionStorage
@@ -116,12 +137,22 @@ export const getAuthState = (): AuthState => {
   return authState;
 };
 
-// Set auth state (for internal use)
-export const setAuthState = (newState: AuthState): void => {
-  authState = newState;
-};
-
 // Export for testing and debugging
 export const _getAuthState = (): AuthState => {
   return { ...authState };
+};
+
+// When setting auth, always start tracking activity & session timeout.
+export const setAuthState = (newState: AuthState): void => {
+  authState = newState;
+  if (newState.user) {
+    setupActivityTracking();
+    setupSessionTimeout();
+  } else {
+    removeActivityTracking();
+    if (window._sessionTimeoutId) {
+      window.clearTimeout(window._sessionTimeoutId);
+      window._sessionTimeoutId = undefined;
+    }
+  }
 };
