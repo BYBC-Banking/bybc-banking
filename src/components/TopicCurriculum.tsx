@@ -6,32 +6,10 @@ import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CheckCircle, ChevronDown, ChevronUp, BookOpen, Play, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface Lesson {
-  id: string;
-  title: string;
-  type: 'video' | 'reading' | 'quiz';
-  duration: string;
-  completed: boolean;
-  videoUrl?: string;
-}
-
-interface Module {
-  id: string;
-  title: string;
-  description: string;
-  progress: number;
-  lessons: Lesson[];
-}
+import { Topic, Lesson } from "@/data/topicsData";
 
 interface TopicCurriculumProps {
-  topic: {
-    id: string;
-    title: string;
-    description: string;
-    levels: string[];
-    modules: Module[];
-  };
+  topic: Topic;
   onBack: () => void;
   onLessonClick: (lesson: Lesson) => void;
 }
@@ -75,6 +53,7 @@ const TopicCurriculum = ({ topic, onBack, onLessonClick }: TopicCurriculumProps)
               key={level} 
               variant="outline" 
               className={`
+                ${level === "All" ? "border-gray-400 text-gray-600" : ""}
                 ${level === "Beginner" ? "border-green-500 text-green-700" : ""}
                 ${level === "Intermediate" ? "border-amber-500 text-amber-700" : ""}
                 ${level === "Advanced" ? "border-red-500 text-red-700" : ""}
