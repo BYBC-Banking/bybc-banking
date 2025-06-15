@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -43,6 +42,7 @@ import ComplianceCenter from "@/pages/ComplianceCenter";
 import PrivacyDashboard from "@/pages/PrivacyDashboard";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
+import CryptoTradePage from "@/pages/CryptoTradePage";
 
 const AppRoutes = () => {
   return (
@@ -262,6 +262,11 @@ const AppRoutes = () => {
       } />
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="/crypto-trade" element={
+        <ProtectedRoute>
+          <CryptoTradePage />
+        </ProtectedRoute>
+      } />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
