@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -45,6 +44,16 @@ const Accounts = () => {
         textColor: "text-neutral-100",
         iconBg: "bg-neutral-800",
         iconText: "text-neutral-300"
+      };
+    }
+
+    // NEW: Special case: BYBC Investments (Investments type) in business section uses Account Balance card color scheme (teal)
+    if (account.type === "Investments" && section === "business") {
+      return {
+        bgColor: "bg-teal-600",
+        textColor: "text-white",
+        iconBg: "bg-teal-700",
+        iconText: "text-white"
       };
     }
 
@@ -114,6 +123,7 @@ const Accounts = () => {
             const colors = getAccountColors(account);
             const isNonprofitBusiness = account.type === "Nonprofit" && section === "business";
             const isBusinessBusiness = account.type === "Business" && section === "business";
+            const isInvestmentsBusiness = account.type === "Investments" && section === "business";
             
             return (
               <div
@@ -124,11 +134,19 @@ const Accounts = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      isNonprofitBusiness || isBusinessBusiness
+                      (isNonprofitBusiness || isBusinessBusiness)
                         ? `${colors.bgColor} ${colors.iconBg} border border-slate-700`
-                        : colors.bgColor
+                        : isInvestmentsBusiness
+                          ? `${colors.bgColor} border border-teal-700`
+                          : colors.bgColor
                     } ${colors.textColor}`}>
-                      <span className={(isNonprofitBusiness || isBusinessBusiness) ? colors.iconText : ""}>
+                      <span className={
+                        (isNonprofitBusiness || isBusinessBusiness)
+                          ? colors.iconText
+                          : isInvestmentsBusiness
+                            ? colors.iconText
+                            : ""
+                      }>
                         {account.type.charAt(0)}
                       </span>
                     </div>
