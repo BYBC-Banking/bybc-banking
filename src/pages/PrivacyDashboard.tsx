@@ -82,132 +82,144 @@ export default function PrivacyDashboard() {
   ];
 
   return (
-    <div className="container mx-auto max-w-6xl py-8 px-4">
-      <header className="flex items-center gap-4 mb-6">
-        <button onClick={handleBack} className="p-2">
+    <div className="container mx-auto max-w-md px-3 py-4 sm:max-w-6xl sm:px-4 sm:py-8">
+      {/* Header - Mobile optimized */}
+      <header className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <button onClick={handleBack} className="p-2 -ml-2 touch-target">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold">Privacy & Data Dashboard</h1>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold truncate">Privacy & Data</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground truncate">Dashboard</p>
+        </div>
       </header>
 
-      {/* Overview Cards */}
-      <div className="grid md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <Shield className="h-4 w-4 text-green-600" />
-              Privacy Score
+      {/* Overview Cards - Mobile optimized grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <Card className="mobile-card">
+          <CardHeader className="pb-2 mobile-padding">
+            <CardTitle className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
+              <span className="truncate">Privacy Score</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{privacyScore}%</div>
+          <CardContent className="mobile-padding pt-0">
+            <div className="text-lg sm:text-2xl font-bold text-green-600">{privacyScore}%</div>
             <Badge variant="outline" className="text-xs mt-1 bg-green-50 text-green-700">
               Excellent
             </Badge>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <Eye className="h-4 w-4 text-blue-600" />
-              Data Usage
+        <Card className="mobile-card">
+          <CardHeader className="pb-2 mobile-padding">
+            <CardTitle className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
+              <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
+              <span className="truncate">Data Usage</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-sm font-medium">Device Only</div>
-            <div className="text-xs text-muted-foreground mt-1">
+          <CardContent className="mobile-padding pt-0">
+            <div className="text-xs sm:text-sm font-medium">Device Only</div>
+            <div className="text-xs text-muted-foreground mt-1 truncate">
               Wallet data, Session info
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <FileText className="h-4 w-4 text-purple-600" />
-              Audit Trail
+        <Card className="mobile-card">
+          <CardHeader className="pb-2 mobile-padding">
+            <CardTitle className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-purple-600" />
+              <span className="truncate">Audit Trail</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-lg font-bold">{auditEvents.length}</div>
-            <div className="text-xs text-muted-foreground mt-1">
+          <CardContent className="mobile-padding pt-0">
+            <div className="text-lg sm:text-lg font-bold">{auditEvents.length}</div>
+            <div className="text-xs text-muted-foreground mt-1 truncate">
               Recent activities
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <Users className="h-4 w-4 text-orange-600" />
-              Third Parties
+        <Card className="mobile-card">
+          <CardHeader className="pb-2 mobile-padding">
+            <CardTitle className="text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
+              <Users className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600" />
+              <span className="truncate">Third Parties</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-lg font-bold">2</div>
-            <div className="text-xs text-muted-foreground mt-1">
+          <CardContent className="mobile-padding pt-0">
+            <div className="text-lg sm:text-lg font-bold">2</div>
+            <div className="text-xs text-muted-foreground mt-1 truncate">
               Essential partners only
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <h3 className="font-semibold mb-3">Quick Actions</h3>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleExportData}>
-            <Download className="h-4 w-4 mr-2" />
-            Download My Data
+      {/* Quick Actions - Mobile optimized */}
+      <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
+        <h3 className="font-semibold text-sm sm:text-base mb-3">Quick Actions</h3>
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportData} className="mobile-button text-xs sm:text-sm">
+            <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="truncate">Download Data</span>
           </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4 mr-2" />
-            Review Settings
+          <Button variant="outline" size="sm" className="mobile-button text-xs sm:text-sm">
+            <Settings className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="truncate">Settings</span>
           </Button>
-          <Button variant="outline" size="sm">
-            <Calendar className="h-4 w-4 mr-2" />
-            View Activity
+          <Button variant="outline" size="sm" className="mobile-button text-xs sm:text-sm">
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="truncate">Activity</span>
           </Button>
-          <Button variant="outline" size="sm">
-            <FileText className="h-4 w-4 mr-2" />
-            Export Logs
+          <Button variant="outline" size="sm" className="mobile-button text-xs sm:text-sm">
+            <FileText className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="truncate">Export Logs</span>
           </Button>
         </div>
       </div>
 
-      {/* Main Content Tabs */}
+      {/* Main Content Tabs - Mobile optimized */}
       <Tabs defaultValue="transparency" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="transparency">Data Transparency</TabsTrigger>
-          <TabsTrigger value="audit">Audit Trail</TabsTrigger>
-          <TabsTrigger value="settings">Privacy Settings</TabsTrigger>
-          <TabsTrigger value="policy">Privacy Policy</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-12 sm:h-10">
+          <TabsTrigger value="transparency" className="text-xs sm:text-sm px-1 sm:px-3">
+            Data
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="text-xs sm:text-sm px-1 sm:px-3">
+            Audit
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="text-xs sm:text-sm px-1 sm:px-3">
+            Settings
+          </TabsTrigger>
+          <TabsTrigger value="policy" className="text-xs sm:text-sm px-1 sm:px-3">
+            Policy
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="transparency" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Collection Transparency</CardTitle>
+          <Card className="mobile-card">
+            <CardHeader className="mobile-padding">
+              <CardTitle className="text-base sm:text-lg">Data Collection Transparency</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="mobile-padding space-y-4 sm:space-y-6">
               {/* Essential Data */}
               <div>
                 <h4 className="font-semibold text-sm mb-3">Essential Data (Required)</h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <div className="font-medium text-sm">Wallet Address</div>
-                      <div className="text-xs text-muted-foreground">Public blockchain identifier</div>
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm truncate">Wallet Address</div>
+                      <div className="text-xs text-muted-foreground truncate">Public blockchain identifier</div>
                     </div>
-                    <Badge variant="secondary">Device Storage</Badge>
+                    <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">Device Storage</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <div className="font-medium text-sm">Device Information</div>
-                      <div className="text-xs text-muted-foreground">Security and compatibility</div>
+                  <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm truncate">Device Information</div>
+                      <div className="text-xs text-muted-foreground truncate">Security and compatibility</div>
                     </div>
-                    <Badge variant="secondary">Device Storage</Badge>
+                    <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">Device Storage</Badge>
                   </div>
                 </div>
               </div>
@@ -215,25 +227,27 @@ export default function PrivacyDashboard() {
               {/* Optional Data */}
               <div>
                 <h4 className="font-semibold text-sm mb-3">Optional Data (Your Choice)</h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 border rounded-lg">
-                    <div>
-                      <div className="font-medium text-sm">Usage Analytics</div>
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex justify-between items-center p-2 sm:p-3 border rounded-lg">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm">Usage Analytics</div>
                       <div className="text-xs text-muted-foreground">Help improve app performance</div>
                     </div>
                     <Switch 
                       checked={privacySettings.analyticsEnabled}
                       onCheckedChange={(checked) => updatePrivacySetting('analyticsEnabled', checked)}
+                      className="ml-2 flex-shrink-0"
                     />
                   </div>
-                  <div className="flex justify-between items-center p-3 border rounded-lg">
-                    <div>
-                      <div className="font-medium text-sm">Location Services</div>
+                  <div className="flex justify-between items-center p-2 sm:p-3 border rounded-lg">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm">Location Services</div>
                       <div className="text-xs text-muted-foreground">Optional convenience features</div>
                     </div>
                     <Switch 
                       checked={privacySettings.locationServices}
                       onCheckedChange={(checked) => updatePrivacySetting('locationServices', checked)}
+                      className="ml-2 flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -242,7 +256,7 @@ export default function PrivacyDashboard() {
               {/* Never Collected */}
               <div>
                 <h4 className="font-semibold text-sm mb-3">Never Collected</h4>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="p-2 bg-green-50 rounded text-xs text-green-800">
                     ✅ Private browsing history
                   </div>
@@ -262,30 +276,30 @@ export default function PrivacyDashboard() {
         </TabsContent>
 
         <TabsContent value="audit" className="space-y-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Activity Audit Trail</CardTitle>
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
+          <Card className="mobile-card">
+            <CardHeader className="mobile-padding flex flex-row items-center justify-between">
+              <CardTitle className="text-base sm:text-lg">Activity Audit Trail</CardTitle>
+              <Button variant="outline" size="sm" className="text-xs">
+                <Filter className="h-3 w-3 mr-1" />
                 Filter
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="mobile-padding">
               <div className="space-y-3">
                 {auditEvents.map((event) => (
-                  <div key={event.id} className="border rounded-lg p-4">
+                  <div key={event.id} className="border rounded-lg p-3 sm:p-4 touch-target">
                     <div className="flex justify-between items-start">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <div className="font-medium text-sm">{event.title}</div>
+                          <div className="font-medium text-xs sm:text-sm truncate">{event.title}</div>
                           <Badge 
                             variant={event.riskLevel === 'low' ? 'secondary' : 'destructive'}
-                            className="text-xs"
+                            className="text-xs flex-shrink-0"
                           >
                             {event.riskLevel}
                           </Badge>
                         </div>
-                        <div className="text-xs text-muted-foreground mb-2">{event.description}</div>
+                        <div className="text-xs text-muted-foreground mb-2 truncate">{event.description}</div>
                         <div className="text-xs text-muted-foreground">
                           {event.timestamp.toLocaleString()} • {event.device}
                         </div>
@@ -302,17 +316,17 @@ export default function PrivacyDashboard() {
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Privacy Settings</CardTitle>
+          <Card className="mobile-card">
+            <CardHeader className="mobile-padding">
+              <CardTitle className="text-base sm:text-lg">Privacy Settings</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="mobile-padding space-y-4 sm:space-y-6">
               <div>
                 <h4 className="font-semibold text-sm mb-3">Communication Preferences</h4>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-medium text-sm">Security Alerts</div>
+                  <div className="flex justify-between items-center touch-target">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm">Security Alerts</div>
                       <div className="text-xs text-muted-foreground">Important security notifications</div>
                     </div>
                     <Switch 
@@ -321,11 +335,12 @@ export default function PrivacyDashboard() {
                         ...privacySettings.communicationPrefs,
                         security: checked
                       })}
+                      className="ml-2 flex-shrink-0"
                     />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-medium text-sm">Product Updates</div>
+                  <div className="flex justify-between items-center touch-target">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm">Product Updates</div>
                       <div className="text-xs text-muted-foreground">Feature announcements and updates</div>
                     </div>
                     <Switch 
@@ -334,11 +349,12 @@ export default function PrivacyDashboard() {
                         ...privacySettings.communicationPrefs,
                         updates: checked
                       })}
+                      className="ml-2 flex-shrink-0"
                     />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-medium text-sm">Educational Content</div>
+                  <div className="flex justify-between items-center touch-target">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-xs sm:text-sm">Educational Content</div>
                       <div className="text-xs text-muted-foreground">Financial education and tips</div>
                     </div>
                     <Switch 
@@ -347,6 +363,7 @@ export default function PrivacyDashboard() {
                         ...privacySettings.communicationPrefs,
                         educational: checked
                       })}
+                      className="ml-2 flex-shrink-0"
                     />
                   </div>
                 </div>
@@ -355,7 +372,7 @@ export default function PrivacyDashboard() {
               <div>
                 <h4 className="font-semibold text-sm mb-3">Data Retention</h4>
                 <div className="p-3 border rounded-lg">
-                  <div className="font-medium text-sm">Automatic Data Cleanup</div>
+                  <div className="font-medium text-xs sm:text-sm">Automatic Data Cleanup</div>
                   <div className="text-xs text-muted-foreground mb-2">
                     Non-essential data older than {privacySettings.dataRetentionDays} days is automatically deleted
                   </div>
@@ -367,14 +384,14 @@ export default function PrivacyDashboard() {
         </TabsContent>
 
         <TabsContent value="policy" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Privacy Policy (Plain Language)</CardTitle>
+          <Card className="mobile-card">
+            <CardHeader className="mobile-padding">
+              <CardTitle className="text-base sm:text-lg">Privacy Policy (Plain Language)</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="mobile-padding space-y-4 sm:space-y-6">
               <div>
                 <h4 className="font-semibold text-sm mb-3 text-green-600">✅ What We DO</h4>
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-2 text-xs sm:text-sm">
                   <li>• Keep wallet data on YOUR device</li>
                   <li>• Encrypt any stored data</li>
                   <li>• Never sell personal information</li>
@@ -385,7 +402,7 @@ export default function PrivacyDashboard() {
 
               <div>
                 <h4 className="font-semibold text-sm mb-3 text-red-600">❌ What We DON'T Do</h4>
-                <ul className="space-y-2 text-sm">
+                <ul className="space-y-2 text-xs sm:text-sm">
                   <li>• Track location without permission</li>
                   <li>• Read personal files</li>
                   <li>• Share with advertisers</li>
@@ -398,7 +415,7 @@ export default function PrivacyDashboard() {
                 <h4 className="font-semibold text-sm mb-3">Third-Party Services</h4>
                 <div className="space-y-3">
                   <div className="border rounded-lg p-3">
-                    <div className="font-medium text-sm">AWS Cloud Infrastructure</div>
+                    <div className="font-medium text-xs sm:text-sm">AWS Cloud Infrastructure</div>
                     <div className="text-xs text-muted-foreground mt-1">
                       Purpose: App infrastructure and encrypted data backup
                     </div>
@@ -408,7 +425,7 @@ export default function PrivacyDashboard() {
                     <Badge variant="outline" className="text-xs mt-2">SOC 2 Compliant</Badge>
                   </div>
                   <div className="border rounded-lg p-3">
-                    <div className="font-medium text-sm">Blockchain Networks</div>
+                    <div className="font-medium text-xs sm:text-sm">Blockchain Networks</div>
                     <div className="text-xs text-muted-foreground mt-1">
                       Purpose: Execute cryptocurrency transactions
                     </div>
