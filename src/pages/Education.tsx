@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import EducationHeader from "@/components/EducationHeader";
 import LearningJourney from "@/components/LearningJourney";
@@ -73,7 +74,7 @@ const Education = () => {
       description: "Plan your future with our comprehensive retirement planning calculator",
       type: "Tools" as ContentType,
       difficulty: "Advanced" as DifficultyLevel,
-      imageUrl: "https://source.unsplash.com/random/300x200?calculator",
+      imageUrl: "/lovable-uploads/fe64a85f-f49f-4509-b418-825aa4a2a452.png",
       duration: "Interactive"
     },
     {
