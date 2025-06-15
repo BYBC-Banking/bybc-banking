@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import EducationHeader from "@/components/EducationHeader";
 import LearningJourney from "@/components/LearningJourney";
@@ -47,7 +48,7 @@ const Education = () => {
       description: "Learn how markets fluctuate and strategies to handle volatility in your investments",
       type: "Articles" as ContentType,
       difficulty: "Intermediate" as DifficultyLevel,
-      imageUrl: "https://source.unsplash.com/random/300x200?finance",
+      imageUrl: "/lovable-uploads/b960edc3-bdc9-479f-85d6-33e6e7acc6da.png",
       duration: "5 min read"
     },
     {
