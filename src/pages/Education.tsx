@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import EducationHeader from "@/components/EducationHeader";
 import LearningJourney from "@/components/LearningJourney";
@@ -64,7 +65,7 @@ const Education = () => {
       description: "Challenge yourself with this interactive quiz on investment fundamentals",
       type: "Quizzes" as ContentType,
       difficulty: "Intermediate" as DifficultyLevel,
-      imageUrl: "https://source.unsplash.com/random/300x200?invest",
+      imageUrl: "/lovable-uploads/e4eda22d-5bee-4a0c-ba79-cb29e0f8d7af.png",
       duration: "10 questions"
     },
     {
