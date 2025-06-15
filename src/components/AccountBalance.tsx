@@ -31,8 +31,19 @@ const AccountBalance = ({
   const [showNavigation, setShowNavigation] = useState(false);
   const isPositive = difference >= 0;
 
-  // New professional/dark color scheme for business section and business account type
+  // Professional/dark color scheme for business section and business account type
   const getAccountStyles = (type: string, section: string) => {
+    // Special case: Nonprofit in business section gets Dark Green Finance theme
+    if (type.toLowerCase() === "nonprofit" && section === "business") {
+      return {
+        bgColor: "bg-slate-900 border border-slate-700", // Dark Navy
+        textColor: "text-slate-100", // Soft White
+        icon: "N",
+        iconBg: "bg-slate-800", // Very Dark Blue-Grey
+        iconText: "text-emerald-400" // Emerald Green
+      };
+    }
+
     if (type.toLowerCase() === "business" && section === "business") {
       return {
         bgColor: "bg-neutral-900 border border-neutral-800",
@@ -102,7 +113,7 @@ const AccountBalance = ({
     <div
       className={cn(
         `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 ${
-          accountStyles.bgColor.includes("neutral-900")
+          accountStyles.bgColor.includes("neutral-900") || accountStyles.bgColor.includes("slate-900")
             ? "border border-neutral-800"
             : "border border-white/20"
         }`,
