@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -21,11 +20,6 @@ const Accounts = () => {
     }
   });
   
-  // Handle account selection - navigate to dashboard with selected account ID
-  const handleAccountSelect = (accountId: string) => {
-    navigate(`/dashboard?account=${accountId}`);
-  };
-
   // Get professional colors for business section accounts
   const getAccountColors = (account: any) => {
     // Special case: Nonprofit in business section gets Dark Green Finance theme
@@ -45,6 +39,20 @@ const Accounts = () => {
         textColor: "text-neutral-100",
         iconBg: "bg-neutral-800",
         iconText: "text-neutral-300"
+      };
+    }
+
+    // Special case: BYBC Investments in business section
+    if (
+      account.type === "Investments" &&
+      account.name === "BYBC Investments" &&
+      section === "business"
+    ) {
+      return {
+        bgColor: "bg-neutral-900", // Or choose another professional dark color
+        textColor: "text-blue-200",
+        iconBg: "bg-neutral-800",
+        iconText: "text-blue-300"
       };
     }
 
@@ -95,6 +103,17 @@ const Accounts = () => {
     }
   };
 
+  // --- Add navigation state for dots (carousel style) ---
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  // Allow for card navigation (if needed)
+  const showNavigationDots = filteredAccounts.length > 1;
+
+  const handleAccountSelect = (accountId: string, idx?: number) => {
+    navigate(`/dashboard?account=${accountId}`);
+    if (idx !== undefined) setCurrentIdx(idx);
+  };
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -110,25 +129,27 @@ const Accounts = () => {
         
         {/* Accounts List */}
         <div className="space-y-4">
-          {filteredAccounts.map((account) => {
+          {filteredAccounts.map((account, idx) => {
             const colors = getAccountColors(account);
             const isNonprofitBusiness = account.type === "Nonprofit" && section === "business";
             const isBusinessBusiness = account.type === "Business" && section === "business";
+            // BYBC Investments in business section
+            const isBYBCInvestmentsBusiness = account.type === "Investments" && account.name === "BYBC Investments" && section === "business";
             
             return (
               <div
                 key={account.id}
                 className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-slate-50 transition-colors"
-                onClick={() => handleAccountSelect(account.id)}
+                onClick={() => handleAccountSelect(account.id, idx)}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      isNonprofitBusiness || isBusinessBusiness
+                      isNonprofitBusiness || isBusinessBusiness || isBYBCInvestmentsBusiness
                         ? `${colors.bgColor} ${colors.iconBg} border border-slate-700`
                         : colors.bgColor
                     } ${colors.textColor}`}>
-                      <span className={(isNonprofitBusiness || isBusinessBusiness) ? colors.iconText : ""}>
+                      <span className={(isNonprofitBusiness || isBusinessBusiness || isBYBCInvestmentsBusiness) ? colors.iconText : ""}>
                         {account.type.charAt(0)}
                       </span>
                     </div>
@@ -145,6 +166,22 @@ const Accounts = () => {
             );
           })}
         </div>
+
+        {/* Navigation Dots for multi-account carousel (business section only) */}
+        {section === "business" && showNavigationDots && (
+          <div className="flex justify-center mt-6 gap-2">
+            {filteredAccounts.map((_, idx) => (
+              <span
+                key={idx}
+                className={`w-3 h-3 rounded-full transition-all duration-300 border
+                  ${currentIdx === idx
+                    ? "bg-neutral-900 border-neutral-600"
+                    : "bg-neutral-300 border-neutral-400"
+                  }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
