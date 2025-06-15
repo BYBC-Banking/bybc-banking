@@ -4,21 +4,28 @@ import InvestmentHeader from "@/components/InvestmentHeader";
 import PortfolioSummary from "@/components/PortfolioSummary";
 import InvestmentActionBar from "@/components/InvestmentActionBar";
 import AssetCardList from "@/components/AssetCardList";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
 
 const Investments = () => {
   const { toast } = useToast();
-  const [selectedTimeframe, setSelectedTimeframe] = useState<"1D" | "1W" | "1M" | "3M" | "1Y" | "ALL">("1W");
-  
+  const [selectedTimeframe, setSelectedTimeframe] = useState<
+    "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL"
+  >("1W");
+
+  // NEW: Add selected asset type state ("Stocks" or "Crypto")
+  const [selectedAssetType, setSelectedAssetType] = useState<"Stocks" | "Crypto">("Stocks");
+
   // Mock portfolio data
   const portfolioData = {
     totalValue: 52475.32,
     change: 1250.75,
     changePercent: 2.43,
-    isPositive: true
+    isPositive: true,
   };
-  
-  // Mock asset data - updated to only include JSE stocks
+
+  // Mock asset data - JSE stocks
   const assets = [
     {
       id: "naspers",
@@ -30,7 +37,7 @@ const Investments = () => {
       isPositive: true,
       sparklineData: [35, 40, 35, 50, 49, 60, 70, 91, 81],
       holdings: 5,
-      holdingsValue: 12378.15
+      holdingsValue: 12378.15,
     },
     {
       id: "sasol",
@@ -42,7 +49,7 @@ const Investments = () => {
       isPositive: false,
       sparklineData: [60, 65, 75, 70, 65, 60, 55, 52, 50],
       holdings: 50,
-      holdingsValue: 7923.50
+      holdingsValue: 7923.5,
     },
     {
       id: "mtn",
@@ -54,7 +61,7 @@ const Investments = () => {
       isPositive: true,
       sparklineData: [50, 55, 45, 60, 55, 65, 70, 65, 72],
       holdings: 100,
-      holdingsValue: 9522.00
+      holdingsValue: 9522.0,
     },
     {
       id: "fnb",
@@ -66,7 +73,7 @@ const Investments = () => {
       isPositive: true,
       sparklineData: [40, 42, 45, 47, 45, 50, 53, 56, 60],
       holdings: 150,
-      holdingsValue: 10581.00
+      holdingsValue: 10581.0,
     },
     {
       id: "shoprite",
@@ -78,7 +85,7 @@ const Investments = () => {
       isPositive: false,
       sparklineData: [70, 68, 65, 66, 64, 63, 65, 64, 62],
       holdings: 25,
-      holdingsValue: 6142.00
+      holdingsValue: 6142.0,
     },
     {
       id: "anglogold",
@@ -90,57 +97,158 @@ const Investments = () => {
       isPositive: true,
       sparklineData: [30, 35, 40, 45, 50, 55, 60, 65, 70],
       holdings: 18,
-      holdingsValue: 5673.96
-    }
+      holdingsValue: 5673.96,
+    },
   ];
-  
-  const handleTimeframeChange = (timeframe: "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL") => {
+
+  // Mock crypto assets data (for demonstration)
+  const cryptoAssets = [
+    {
+      id: "btc",
+      name: "Bitcoin",
+      symbol: "BTC",
+      logo: "₿",
+      currentPrice: 1250000,
+      change: 0.9,
+      isPositive: true,
+      sparklineData: [80, 85, 88, 83, 78, 82, 90, 100, 105],
+      holdings: 0.2,
+      holdingsValue: 250000,
+    },
+    {
+      id: "eth",
+      name: "Ethereum",
+      symbol: "ETH",
+      logo: "Ξ",
+      currentPrice: 45000,
+      change: -1.1,
+      isPositive: false,
+      sparklineData: [20, 25, 23, 30, 32, 34, 36, 31, 33],
+      holdings: 3,
+      holdingsValue: 135000,
+    },
+    {
+      id: "xrp",
+      name: "Ripple",
+      symbol: "XRP",
+      logo: "✕",
+      currentPrice: 8.5,
+      change: 3.0,
+      isPositive: true,
+      sparklineData: [5, 5.6, 6, 7, 7.4, 8.2, 8.1, 9, 8.5],
+      holdings: 1000,
+      holdingsValue: 8500,
+    },
+  ];
+
+  const handleTimeframeChange = (
+    timeframe: "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL"
+  ) => {
     setSelectedTimeframe(timeframe);
     toast({
       title: "Timeframe changed",
       description: `Chart updated to ${timeframe} view`,
     });
   };
-  
+
   const handleBuyClick = (assetId?: string) => {
     toast({
-      title: "Buy Stock",
-      description: `Proceeding to buy ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`,
+      title: "Buy",
+      description: `Proceeding to buy ${assetId ? (selectedAssetType === "Stocks" ? assets.find(a => a.id === assetId)?.name : cryptoAssets.find(a => a.id === assetId)?.name) : 'assets'}`,
     });
   };
 
   const handleSellClick = (assetId?: string) => {
     toast({
-      title: "Sell Stock",
-      description: `Proceeding to sell ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`,
+      title: "Sell",
+      description: `Proceeding to sell ${assetId ? (selectedAssetType === "Stocks" ? assets.find(a => a.id === assetId)?.name : cryptoAssets.find(a => a.id === assetId)?.name) : 'assets'}`,
     });
   };
-  
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header with greeting */}
         <InvestmentHeader isPositive={portfolioData.isPositive} />
-        
+
         {/* Portfolio value and chart */}
-        <PortfolioSummary 
-          data={portfolioData} 
+        <PortfolioSummary
+          data={portfolioData}
           selectedTimeframe={selectedTimeframe}
           onTimeframeChange={handleTimeframeChange}
         />
-        
+
         {/* Quick action buttons */}
-        <InvestmentActionBar 
-          onBuyClick={() => handleBuyClick()} 
-          onSellClick={() => handleSellClick()} 
+        <InvestmentActionBar
+          onBuyClick={() => handleBuyClick()}
+          onSellClick={() => handleSellClick()}
         />
-        
-        {/* Asset cards */}
-        <AssetCardList 
-          assets={assets} 
-          onBuyClick={handleBuyClick}
-          onSellClick={handleSellClick}
-        />
+
+        {/* Your Favourite - with Stocks/Crypto toggle and carousel */}
+        <div className="animate-fade-in mt-8">
+          {/* Toggle Tabs */}
+          <div className="flex gap-4 justify-center mb-2">
+            <button
+              className={`text-base font-semibold px-3 py-1 rounded-full transition-colors min-w-[80px] ${
+                selectedAssetType === "Stocks"
+                  ? "bg-finance-blue text-white shadow"
+                  : "bg-white text-gray-500 border"
+              }`}
+              onClick={() => setSelectedAssetType("Stocks")}
+            >
+              Stocks
+            </button>
+            <button
+              className={`text-base font-semibold px-3 py-1 rounded-full transition-colors min-w-[80px] ${
+                selectedAssetType === "Crypto"
+                  ? "bg-finance-blue text-white shadow"
+                  : "bg-white text-gray-500 border"
+              }`}
+              onClick={() => setSelectedAssetType("Crypto")}
+            >
+              Crypto
+            </button>
+          </div>
+
+          {/* Carousel */}
+          <div className="mt-3">
+            {selectedAssetType === "Stocks" ? (
+              <Carousel
+                opts={{ align: "start", slidesToScroll: 1 }}
+                className="w-full"
+              >
+                <CarouselContent className="snap-x snap-mandatory overflow-x-auto flex gap-4">
+                  {assets.map((asset) => (
+                    <CarouselItem key={asset.id} className="basis-2/3 snap-center">
+                      <AssetCardList
+                        assets={[asset]}
+                        onBuyClick={handleBuyClick}
+                        onSellClick={handleSellClick}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            ) : (
+              <Carousel
+                opts={{ align: "start", slidesToScroll: 1 }}
+                className="w-full"
+              >
+                <CarouselContent className="snap-x snap-mandatory overflow-x-auto flex gap-4">
+                  {cryptoAssets.map((asset) => (
+                    <CarouselItem key={asset.id} className="basis-2/3 snap-center">
+                      <AssetCardList
+                        assets={[asset]}
+                        onBuyClick={handleBuyClick}
+                        onSellClick={handleSellClick}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
