@@ -82,14 +82,23 @@ const AccountBalanceFromContext = () => {
 
 // Dot Navigation Component with dynamic colors
 const DotNavigation = () => {
-  const { filteredAccounts, selectedAccountId, setSelectedAccountId } = useHomePage();
-  
+  const { filteredAccounts, selectedAccountId, setSelectedAccountId, accountSection } = useHomePage();
+
   // Helper function to get the appropriate background color for each account
   const getAccountDotColor = (account: any, isSelected: boolean) => {
+    // If BYBC Investments (Investments type) in business section, dot is teal
+    if (
+      isSelected &&
+      account.type === "Investments" &&
+      accountSection === "business"
+    ) {
+      return "bg-teal-600 w-6 border-2 border-teal-700";
+    }
+
     if (!isSelected) {
       return 'bg-gray-300 hover:bg-gray-400 [html[data-theme="business"]_&]:bg-gray-400 [html[data-theme="business"]_&]:hover:bg-gray-500';
     }
-    
+
     switch (account.color) {
       case 'blue':
         return 'bg-finance-blue [html[data-theme="business"]_&]:bg-business-primary';
@@ -105,7 +114,7 @@ const DotNavigation = () => {
         return 'bg-teal-500 [html[data-theme="business"]_&]:bg-business-primary';
     }
   };
-  
+
   return (
     <div className="flex justify-center space-x-2 animate-fade-in" style={{animationDelay: "100ms"}}>
       {filteredAccounts.map((account) => (
@@ -114,7 +123,7 @@ const DotNavigation = () => {
           onClick={() => setSelectedAccountId(account.id)}
           className={`w-2 h-2 rounded-full transition-all duration-200 ${
             selectedAccountId === account.id 
-              ? `${getAccountDotColor(account, true)} w-6` 
+              ? getAccountDotColor(account, true)
               : getAccountDotColor(account, false)
           }`}
         />
