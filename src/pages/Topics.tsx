@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import TopicCurriculum from "@/components/TopicCurriculum";
@@ -242,10 +243,20 @@ const topics = [
 const Topics = () => {
   const [selectedTopic, setSelectedTopic] = useState<typeof topics[0] | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<any>(null);
+  const [searchParams] = useSearchParams();
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    
+    // Check if there's a topic parameter in the URL
+    const topicParam = searchParams.get('topic');
+    if (topicParam && !selectedTopic) {
+      const topic = topics.find(t => t.id === topicParam);
+      if (topic) {
+        setSelectedTopic(topic);
+      }
+    }
+  }, [searchParams, selectedTopic]);
 
   const handleTopicClick = (topic: typeof topics[0]) => {
     setSelectedTopic(topic);

@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -22,6 +22,32 @@ interface RecommendationsCarouselProps {
 }
 
 const RecommendationsCarousel = ({ recommendations }: RecommendationsCarouselProps) => {
+  const navigate = useNavigate();
+
+  // Mapping of recommendation titles to topic IDs on the Topics page
+  const getTopicIdFromRecommendation = (title: string): string | null => {
+    const titleToTopicMap: Record<string, string> = {
+      "Understanding Market Volatility": "stocks",
+      "Compound Interest Explained": "business",
+      "Test Your Investment Knowledge": "stocks",
+      "Retirement Calculator": "mutual-funds",
+      "Introduction to ETFs": "stocks"
+    };
+    
+    return titleToTopicMap[title] || null;
+  };
+
+  const handleStartLearning = (recommendation: Recommendation) => {
+    const topicId = getTopicIdFromRecommendation(recommendation.title);
+    if (topicId) {
+      // Navigate to Topics page with the specific topic
+      navigate(`/topics?topic=${topicId}`);
+    } else {
+      // Fallback to general Topics page
+      navigate('/topics');
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -65,7 +91,12 @@ const RecommendationsCarousel = ({ recommendations }: RecommendationsCarouselPro
                 <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-muted-foreground">{item.duration}</span>
-                  <Button size="sm" variant="default" className="text-xs">
+                  <Button 
+                    size="sm" 
+                    variant="default" 
+                    className="text-xs"
+                    onClick={() => handleStartLearning(item)}
+                  >
                     Start Learning
                   </Button>
                 </div>
