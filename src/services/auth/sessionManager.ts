@@ -39,62 +39,62 @@ export const clearAuthState = (): void => {
   }
 };
 
-let activityTrackingEnabled = false;
-let activityTimeout: number | undefined;
+// --- Inactivity timer logic ---
 
+let activityTrackingEnabled = false;
+let inactivityTimeout: number | undefined;
 const activityEvents = ['click', 'keypress', 'mousemove', 'touchstart'];
 
-function refreshSessionOnActivity() {
-  if (!authState.user) return;
+// Inactivity logic:
+// 1. On user activity, reset inactivity timer.
+// 2. If inactivity timer expires, log out.
 
-  authState.expiresAt = Date.now() + SESSION_TIMEOUT;
-  persistAuthState();
-  setupSessionTimeout();
+function handleUserActivity() {
+  // Only track inactivity if a user is logged in
+  if (!authState.user) return;
+  resetInactivityTimer();
+}
+
+function resetInactivityTimer() {
+  // Clear existing
+  if (window._sessionTimeoutId) {
+    window.clearTimeout(window._sessionTimeoutId);
+    window._sessionTimeoutId = undefined;
+  }
+  // Start new
+  window._sessionTimeoutId = window.setTimeout(() => {
+    logout("Your session has expired due to inactivity. Please login again.");
+    removeActivityTracking();
+  }, SESSION_TIMEOUT);
 }
 
 // Detach activity listeners
 export const removeActivityTracking = (): void => {
   activityEvents.forEach(event =>
-    window.removeEventListener(event, refreshSessionOnActivity)
+    window.removeEventListener(event, handleUserActivity)
   );
   activityTrackingEnabled = false;
-};
-
-// Attach activity listeners
-export const setupActivityTracking = (): void => {
-  if (activityTrackingEnabled) return;
-  activityEvents.forEach(event =>
-    window.addEventListener(event, refreshSessionOnActivity)
-  );
-  activityTrackingEnabled = true;
-};
-
-// Timeout setup: logs out only *after* inactivity
-export const setupSessionTimeout = (): void => {
-  // Clear existing timeout if present
+  // Clear timer
   if (window._sessionTimeoutId) {
     window.clearTimeout(window._sessionTimeoutId);
     window._sessionTimeoutId = undefined;
   }
+};
 
-  if (authState.expiresAt) {
-    const timeRemaining = authState.expiresAt - Date.now();
+// Attach activity listeners & start inactivity tracking
+export const setupActivityTracking = (): void => {
+  if (activityTrackingEnabled) return;
+  activityEvents.forEach(event =>
+    window.addEventListener(event, handleUserActivity)
+  );
+  activityTrackingEnabled = true;
+  // Start the timer right away (so if user "does nothing" after login, timer will count)
+  resetInactivityTimer();
+};
 
-    if (timeRemaining > 0) {
-      // Set a new timeout for session expiry
-      window._sessionTimeoutId = window.setTimeout(() => {
-        // Only log out if user is still inactive (expiresAt not extended)
-        if (authState.expiresAt && authState.expiresAt <= Date.now()) {
-          logout("Your session has expired due to inactivity. Please login again.");
-          removeActivityTracking();
-        }
-      }, timeRemaining);
-    } else {
-      // Already expired
-      logout("Your session has expired due to inactivity. Please login again.");
-      removeActivityTracking();
-    }
-  }
+// Legacy export for API compatibility, no need to do anything here now.
+export const setupSessionTimeout = (): void => {
+  // No-op: session timeout handled by activity/inactivity.
 };
 
 // Check for existing session in sessionStorage
@@ -104,14 +104,10 @@ export const initializeAuthState = (): void => {
     if (storedAuth) {
       const parsed = JSON.parse(storedAuth);
       
-      // Validate token expiration
-      if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
-        authState = parsed;
-        // Refresh the session timeout
-        setupSessionTimeout();
-      } else {
-        // Session expired
-        clearAuthState();
+      // Validate token expiration if present
+      authState = parsed;
+      if (authState.user && authState.token) {
+        setupActivityTracking();
       }
     }
   } catch (error) {
@@ -147,12 +143,8 @@ export const setAuthState = (newState: AuthState): void => {
   authState = newState;
   if (newState.user) {
     setupActivityTracking();
-    setupSessionTimeout();
+    // timer will be managed by activity tracking now
   } else {
     removeActivityTracking();
-    if (window._sessionTimeoutId) {
-      window.clearTimeout(window._sessionTimeoutId);
-      window._sessionTimeoutId = undefined;
-    }
   }
 };
