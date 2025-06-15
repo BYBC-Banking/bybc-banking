@@ -82,21 +82,10 @@ const AccountBalanceFromContext = () => {
 
 // Dot Navigation Component with dynamic colors
 const DotNavigation = () => {
-  const { filteredAccounts, selectedAccountId, setSelectedAccountId, accountSection } = useHomePage();
+  const { filteredAccounts, selectedAccountId, setSelectedAccountId } = useHomePage();
   
   // Helper function to get the appropriate background color for each account
   const getAccountDotColor = (account: any, isSelected: boolean) => {
-    // Professional business theme for BYBC Investments (and all Investments?) in business section
-    if (
-      accountSection === "business" &&
-      account.type === "Investments" &&
-      account.name.toLowerCase().includes("bybc")
-    ) {
-      return isSelected
-        ? 'bg-neutral-900'
-        : 'bg-neutral-300 hover:bg-neutral-400';
-    }
-
     if (!isSelected) {
       return 'bg-gray-300 hover:bg-gray-400 [html[data-theme="business"]_&]:bg-gray-400 [html[data-theme="business"]_&]:hover:bg-gray-500';
     }

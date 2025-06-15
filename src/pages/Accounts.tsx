@@ -48,20 +48,6 @@ const Accounts = () => {
       };
     }
 
-    // Special case: BYBC Investments 'B' in business section gets Professional Dark theme
-    if (
-      account.type === "Investments" &&
-      section === "business" &&
-      account.name.toLowerCase().includes("bybc")
-    ) {
-      return {
-        bgColor: "bg-neutral-900",
-        textColor: "text-neutral-100",
-        iconBg: "bg-neutral-800",
-        iconText: "text-neutral-300"
-      };
-    }
-
     // Default colors based on account.color
     switch (account.color) {
       case "blue":
@@ -165,4 +151,3 @@ const Accounts = () => {
 };
 
 export default Accounts;
-
