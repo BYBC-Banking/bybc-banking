@@ -10,6 +10,22 @@ interface TopicCardProps {
 }
 
 const TopicCard = ({ topic, onClick }: TopicCardProps) => {
+  const renderIcon = () => {
+    if (topic.icon.startsWith('/') || topic.icon.startsWith('http')) {
+      // It's an image URL
+      return (
+        <img 
+          src={topic.icon} 
+          alt={`${topic.title} icon`}
+          className="w-8 h-8 object-contain"
+        />
+      );
+    } else {
+      // It's an emoji
+      return <span className="text-2xl">{topic.icon}</span>;
+    }
+  };
+
   return (
     <Card 
       className="transition-all hover:shadow-md cursor-pointer"
@@ -18,7 +34,7 @@ const TopicCard = ({ topic, onClick }: TopicCardProps) => {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{topic.title}</CardTitle>
-          <span className="text-2xl">{topic.icon}</span>
+          {renderIcon()}
         </div>
         <CardDescription>{topic.description}</CardDescription>
       </CardHeader>

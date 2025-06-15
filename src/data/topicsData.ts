@@ -40,7 +40,7 @@ export const topics: Topic[] = [
     title: "Cryptocurrency",
     description: "Learn about digital currencies and blockchain technology",
     levels: ["All", "Beginner", "Intermediate", "Advanced"],
-    icon: "🪙",
+    icon: "/lovable-uploads/b7f8b127-3f40-4d3c-b7d0-4141502ebf20.png",
     modules: [
       {
         id: "crypto-m1",
