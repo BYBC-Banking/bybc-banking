@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LineChart, Bitcoin, BarChart3, Shield } from 'lucide-react';
+import { LineChart, Bitcoin, BarChart3, Shield, PieChart } from 'lucide-react';
 
 interface InvestmentActionBarProps {
   onBuyClick?: () => void;
@@ -36,14 +36,15 @@ const InvestmentActionBar = ({ onBuyClick, onSellClick }: InvestmentActionBarPro
           <span className="text-sm">Stocks</span>
         </Link>
         
+        {/* Changed Watchlist -> Portfolio */}
         <Link 
-          to="/watchlist" 
+          to="/portfolio" 
           className="flex flex-col items-center justify-center p-3 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
         >
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
-            <LineChart className="h-5 w-5 text-slate-600" strokeWidth={2.5} />
+          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-2">
+            <PieChart className="h-5 w-5 text-green-600" strokeWidth={2.5} />
           </div>
-          <span className="text-sm">Watchlist</span>
+          <span className="text-sm">Portfolio</span>
         </Link>
 
         <Link 

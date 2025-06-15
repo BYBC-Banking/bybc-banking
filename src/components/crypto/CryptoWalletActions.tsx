@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ArrowUp, DollarSign, ArrowDown, ArrowRightLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -81,9 +80,7 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
           // Color settings
           let btnClass =
             "flex flex-col items-center justify-center flex-1 rounded-xl mx-1 transition-all duration-150 py-2";
-          if (key === "buy" && isActive) {
-            btnClass += " bg-[#FFA726] shadow-md";
-          } else if (isActive) {
+          if (isActive) {
             btnClass += " bg-slate-700 shadow-md";
           } else {
             btnClass += " bg-transparent hover:bg-slate-700/40";
@@ -92,17 +89,13 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
           let iconClass =
             "w-6 h-6 mb-1 " +
             (isActive
-              ? key === "buy"
-                ? "text-black"
-                : "text-white"
+              ? "text-white"
               : "text-slate-300");
 
           let textClass =
             "text-sm font-medium " +
             (isActive
-              ? key === "buy"
-                ? "text-black"
-                : "text-white"
+              ? "text-white"
               : "text-slate-300");
 
           return (
@@ -132,4 +125,3 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
 };
 
 export default CryptoWalletActions;
-
