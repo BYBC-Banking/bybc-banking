@@ -42,7 +42,7 @@ const AssetCardList = ({
   return <div className="animate-fade-in" style={{
     animationDelay: "150ms"
   }}>
-      <h2 className="text-lg font-semibold mb-3 [html[data-theme='business']_&]:text-gray-900 [html[data-theme='business']_&]:font-bold">Your Assets</h2>
+      <h2 className="text-lg font-semibold mb-3 [html[data-theme='business']_&]:text-gray-900 [html[data-theme='business']_&]:font-bold">Your Favourite</h2>
       <div className="space-y-3">
         {assets.map(asset => {
         const isExpanded = expandedAssetId === asset.id;
