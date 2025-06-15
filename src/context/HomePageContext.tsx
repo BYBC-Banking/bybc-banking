@@ -1,38 +1,18 @@
 
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-interface Account {
-  id: string;
-  name: string;
-  type: string;
-  accountNumber: string;
-  balance: number;
-  color: string;
-  transactions: Transaction[];
-}
-
-interface Transaction {
-  id: string;
-  merchant: string;
-  merchantIcon: React.ReactNode;
-  date: string;
-  amount: number;
-  type: "income" | "expense";
-  category: string;
-}
-
-type AccountSection = 'personal' | 'business';
-
-interface HomePageContextType {
-  accounts: Account[];
-  filteredAccounts: Account[];
-  selectedAccountId: string;
-  setSelectedAccountId: (id: string) => void;
-  selectedAccount: Account;
-  accountSection: AccountSection;
-  setAccountSection: (section: AccountSection) => void;
-}
+import { 
+  Account, 
+  Transaction, 
+  AccountSection, 
+  HomePageContextType 
+} from "./HomePageTypes";
+import { 
+  getSectionFromRoute, 
+  getAccountSection, 
+  getStoredSection, 
+  storeSection 
+} from "./homePageUtils";
 
 const HomePageContext = createContext<HomePageContextType | undefined>(undefined);
 
@@ -52,151 +32,105 @@ interface HomePageProviderProps {
 export const HomePageProvider = ({ children, accounts }: HomePageProviderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Extract account ID from URL if present
   const params = new URLSearchParams(location.search);
-  const accountIdFromUrl = params.get('account');
-  
-  // Determine section from current route
-  const getSectionFromRoute = (): AccountSection => {
-    if (location.pathname.includes('-business')) return 'business';
-    if (location.pathname.includes('-personal')) return 'personal';
-    return null; // Don't default for routes that don't specify section
-  };
-  
-  // Determine initial section based on account type
-  const getAccountSection = (accountId: string): AccountSection => {
-    const account = accounts.find(acc => acc.id === accountId);
-    if (!account) return 'personal';
-    
-    // For Investment accounts, we need to check the current section context
-    // Since they can appear in both sections, we'll use the current section state
-    if (account.type === 'Investments') {
-      return getSectionFromRoute() || getStoredSection() || 'personal';
-    }
-    
-    const personalTypes = ['Spending'];
-    const businessTypes = ['Business', 'Nonprofit'];
-    
-    if (personalTypes.includes(account.type)) return 'personal';
-    if (businessTypes.includes(account.type)) return 'business';
-    return 'personal';
-  };
-  
-  // Get stored section from localStorage
-  const getStoredSection = (): AccountSection => {
-    const stored = localStorage.getItem('accountSection');
-    return (stored === 'business' || stored === 'personal') ? stored : 'personal';
-  };
-  
-  // Store section in localStorage
-  const storeSection = (section: AccountSection) => {
-    localStorage.setItem('accountSection', section);
-  };
-  
+  const accountIdFromUrl = params.get("account");
+
   // State for account section (P or B) - prioritize URL, then localStorage, then default
   const [accountSection, setAccountSection] = useState<AccountSection>(() => {
-    const routeSection = getSectionFromRoute();
+    const routeSection = getSectionFromRoute(location.pathname);
     if (routeSection) return routeSection;
-    
     if (accountIdFromUrl) {
-      return getAccountSection(accountIdFromUrl);
+      return getAccountSection(accountIdFromUrl, accounts, location.pathname, getStoredSection);
     }
-    
     return getStoredSection();
   });
-  
+
   // Filter accounts based on selected section
   const filteredAccounts = accounts.filter(account => {
-    if (accountSection === 'personal') {
-      return ['Spending', 'Investments'].includes(account.type);
+    if (accountSection === "personal") {
+      return ["Spending", "Investments"].includes(account.type);
     } else {
-      return ['Business', 'Nonprofit', 'Investments'].includes(account.type);
+      return ["Business", "Nonprofit", "Investments"].includes(account.type);
     }
   });
-  
+
   // State for selected account - default to first filtered account
   const [selectedAccountId, setSelectedAccountId] = useState<string>(() => {
-    // If account ID is in URL and exists in accounts list, use it
     if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
       return accountIdFromUrl;
     }
-    // Otherwise use the first filtered account
     return filteredAccounts[0]?.id || accounts[0]?.id || "";
   });
-  
+
   // Update selected account when URL changes
   useEffect(() => {
     if (accountIdFromUrl && accounts.some(account => account.id === accountIdFromUrl)) {
       setSelectedAccountId(accountIdFromUrl);
-      const newSection = getAccountSection(accountIdFromUrl);
+      const newSection = getAccountSection(accountIdFromUrl, accounts, location.pathname, getStoredSection);
       if (newSection !== accountSection) {
         setAccountSection(newSection);
         storeSection(newSection);
       }
     }
+    // eslint-disable-next-line
   }, [accountIdFromUrl, accounts]);
-  
+
   // Update section when route changes (only for routes that explicitly specify section)
   useEffect(() => {
-    const routeSection = getSectionFromRoute();
+    const routeSection = getSectionFromRoute(location.pathname);
     if (routeSection && routeSection !== accountSection) {
       setAccountSection(routeSection);
       storeSection(routeSection);
     }
+    // eslint-disable-next-line
   }, [location.pathname]);
-  
+
   // Update selected account when section changes
   useEffect(() => {
     const currentAccount = accounts.find(acc => acc.id === selectedAccountId);
     if (currentAccount) {
-      // For Investment accounts, they can stay selected in either section
-      if (currentAccount.type === 'Investments') {
-        return; // Don't change selection for Investment accounts
+      if (currentAccount.type === "Investments") {
+        return;
       }
-      
-      const currentAccountSection = getAccountSection(selectedAccountId);
+      const currentAccountSection = getAccountSection(selectedAccountId, accounts, location.pathname, getStoredSection);
       if (currentAccountSection !== accountSection) {
-        // Switch to first account in the new section
         const firstAccountInSection = filteredAccounts[0];
         if (firstAccountInSection) {
           setSelectedAccountId(firstAccountInSection.id);
         }
       }
     } else {
-      // If no current account, select first in section
       const firstAccountInSection = filteredAccounts[0];
       if (firstAccountInSection) {
         setSelectedAccountId(firstAccountInSection.id);
       }
     }
+    // eslint-disable-next-line
   }, [accountSection, filteredAccounts]);
-  
+
   // Custom setAccountSection that also handles route updates and storage
   const handleSetAccountSection = (section: AccountSection) => {
     const currentPath = location.pathname;
-    
-    // Update routes that need section-specific paths
-    if (currentPath.includes('/accounts-')) {
+    if (currentPath.includes("/accounts-")) {
       navigate(`/accounts-${section}`);
-    } else if (currentPath.includes('/investments-')) {
+    } else if (currentPath.includes("/investments-")) {
       navigate(`/investments-${section}`);
-    } else if (currentPath.includes('/education-')) {
+    } else if (currentPath.includes("/education-")) {
       navigate(`/education-${section}`);
     }
-    
     setAccountSection(section);
     storeSection(section);
   };
-  
-  // Find selected account, with fallback to first account
+
   const selectedAccount = accounts.find(account => account.id === selectedAccountId) || accounts[0];
-  
+
   return (
-    <HomePageContext.Provider value={{ 
-      accounts, 
+    <HomePageContext.Provider value={{
+      accounts,
       filteredAccounts,
-      selectedAccountId, 
+      selectedAccountId,
       setSelectedAccountId,
       selectedAccount,
       accountSection,
