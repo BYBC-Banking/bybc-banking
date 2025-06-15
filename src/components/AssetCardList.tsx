@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
@@ -103,11 +102,9 @@ const AssetCardList = ({ assets, onBuyClick, onSellClick }: AssetCardListProps) 
                   <div className="p-4 border-t pt-4 animate-fade-in [html[data-theme='business']_&]:border-gray-200">
                     <div className="flex justify-between mb-4">
                       <div>
-                        <div className="text-sm text-muted-foreground [html[data-theme='business']_&]:text-gray-600">Your Holdings</div>
                         <div className="font-medium [html[data-theme='business']_&]:text-gray-900">{asset.holdings} {asset.symbol}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-muted-foreground [html[data-theme='business']_&]:text-gray-600">Value</div>
                         <div className="font-medium [html[data-theme='business']_&]:text-gray-900">R{asset.holdingsValue.toLocaleString()}</div>
                       </div>
                     </div>
