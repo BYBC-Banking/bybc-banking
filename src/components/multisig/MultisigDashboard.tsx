@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -102,18 +101,18 @@ const MultisigDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Quick Actions - Mobile optimized */}
+      {/* Quick Actions - Professional color scheme */}
       <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target" variant="outline">
-          <Send className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200" variant="outline">
+          <Send className="h-4 w-4 sm:h-5 sm:w-5 text-slate-600" />
           <span>Send</span>
         </Button>
-        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target" variant="outline">
-          <Activity className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200" variant="outline">
+          <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
           <span>Activity</span>
         </Button>
-        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target" variant="outline">
-          <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Button className="h-14 sm:h-16 flex-col gap-1 text-xs sm:text-sm touch-target bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200" variant="outline">
+          <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-stone-600" />
           <span>Settings</span>
         </Button>
       </div>
