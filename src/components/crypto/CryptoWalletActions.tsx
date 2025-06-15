@@ -1,13 +1,9 @@
 
 import React, { useState } from "react";
-import { ArrowUp, DollarSign, ArrowDown, icons } from "lucide-react";
+import { ArrowUp, DollarSign, ArrowDown, Swap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Use Lucide's icons.swap to create a React component for Swap
-const SwapIcon: React.FC<{ className?: string }> = (props) => {
-  const IconSwap = icons.swap;
-  return <IconSwap {...props} />;
-};
+// No need for a SwapIcon wrapper anymore
 
 type ActionKey = "send" | "swap" | "buy" | "receive";
 
@@ -31,7 +27,7 @@ const ACTIONS: {
   {
     key: "swap",
     label: "Swap",
-    Icon: (props) => <SwapIcon {...props} />,
+    Icon: (props) => <Swap {...props} />,
   },
   {
     key: "buy",
@@ -134,3 +130,4 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
 };
 
 export default CryptoWalletActions;
+
