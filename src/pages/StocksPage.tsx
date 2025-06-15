@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
@@ -12,6 +12,7 @@ import { jseStocks, sectors } from "@/components/stocks/stocksData";
 const StocksPageContent = () => {
   const { toast } = useToast();
   const { selectedAccount } = useHomePage();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedStock, setSelectedStock] = useState(jseStocks[0]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,9 +46,9 @@ const StocksPageContent = () => {
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
-          <Link to="/investments" className="p-2">
+          <button onClick={() => navigate(-1)} className="p-2">
             <ArrowLeft className="h-5 w-5" />
-          </Link>
+          </button>
           <h1 className="text-2xl font-bold">JSE Stocks</h1>
         </header>
         

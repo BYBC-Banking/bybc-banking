@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,7 @@ import QrCode from "@/components/QrCode";
 
 const Receive = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // In a real app, this would be generated dynamically based on the user's account
   const [qrValue] = useState("bybc://payment/receive/user123");
@@ -35,9 +36,9 @@ const Receive = () => {
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
-          <Link to="/" className="p-2">
+          <button onClick={() => navigate(-1)} className="p-2">
             <ArrowLeft className="h-5 w-5" />
-          </Link>
+          </button>
           <h1 className="text-2xl font-bold">Receive Money</h1>
         </header>
         

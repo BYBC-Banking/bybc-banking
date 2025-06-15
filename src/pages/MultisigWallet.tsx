@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { ArrowLeft, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MultisigDashboard from "@/components/multisig/MultisigDashboard";
@@ -11,6 +11,7 @@ import NotificationCenter from "@/components/multisig/NotificationCenter";
 
 const MultisigWallet = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,9 +23,9 @@ const MultisigWallet = () => {
         {/* Header - Mobile optimized */}
         <header className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            <Link to="/dashboard" className="p-2 -ml-2 touch-target">
+            <button onClick={() => navigate(-1)} className="p-2 -ml-2 touch-target">
               <ArrowLeft className="h-5 w-5" />
-            </Link>
+            </button>
             <div className="min-w-0 flex-1">
               <h1 className="text-xl sm:text-2xl font-bold truncate">Multisig Wallet</h1>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">Secure collaborative wallet</p>
