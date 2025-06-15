@@ -1,11 +1,11 @@
-
 import { useState } from "react";
-import { ArrowLeft, Plus, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
+import CryptoWalletActions from "@/components/crypto/CryptoWalletActions";
 
 const CryptoWalletPageContent = () => {
   const { selectedAccount } = useHomePage();
@@ -21,7 +21,7 @@ const CryptoWalletPageContent = () => {
       changeAmount: 1598.30
     },
     {
-      symbol: "ETH", 
+      symbol: "ETH",
       name: "Ethereum",
       balance: 2.3456,
       value: 4234.56,
@@ -30,7 +30,7 @@ const CryptoWalletPageContent = () => {
     },
     {
       symbol: "XRP",
-      name: "Ripple", 
+      name: "Ripple",
       balance: 1000,
       value: 850.50,
       change: 5.8,
@@ -44,12 +44,18 @@ const CryptoWalletPageContent = () => {
     console.log("Asset clicked");
   };
 
+  // These can be wired as needed for full navigation/actions
   const handleBuyCrypto = () => {
     navigate("/buy");
   };
-
   const handleCryptoSwap = () => {
     navigate("/crypto-swap");
+  };
+  const handleSend = () => {
+    // Placeholder for navigation or feature
+  };
+  const handleReceive = () => {
+    // Placeholder for navigation or feature
   };
 
   return (
@@ -57,9 +63,9 @@ const CryptoWalletPageContent = () => {
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => navigate(-1)}
             className="h-10 w-10"
           >
@@ -85,31 +91,20 @@ const CryptoWalletPageContent = () => {
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <Button 
-            className="w-full h-12 bg-green-600 hover:bg-green-700"
-            onClick={handleBuyCrypto}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Buy Crypto
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full h-12"
-            onClick={handleCryptoSwap}
-          >
-            Swap
-          </Button>
-        </div>
+        {/* Custom Crypto Action Bar */}
+        <CryptoWalletActions
+          onBuy={handleBuyCrypto}
+          onSwap={handleCryptoSwap}
+          onSend={handleSend}
+          onReceive={handleReceive}
+        />
 
         {/* Assets List */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Your Assets</h2>
-          
           {cryptoAssets.map((asset) => (
-            <Card 
-              key={asset.symbol} 
+            <Card
+              key={asset.symbol}
               className="hover:shadow-md transition-shadow cursor-pointer"
               onClick={handleAssetClick}
             >
@@ -126,7 +121,6 @@ const CryptoWalletPageContent = () => {
                       </div>
                     </div>
                   </div>
-                  
                   <div className="text-right">
                     <div className="font-semibold">
                       R{asset.value.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
