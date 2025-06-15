@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import TopicCurriculum from "@/components/TopicCurriculum";
 import TopicCard from "@/components/TopicCard";
 import VideoPlayer from "@/components/VideoPlayer";
+import QuizComponent from "@/components/QuizComponent";
+import ReadingComponent from "@/components/ReadingComponent";
 import { topics, Topic, Lesson } from "@/data/topicsData";
 
 const Topics = () => {
@@ -41,9 +42,22 @@ const Topics = () => {
   };
 
   const handleLessonClick = (lesson: Lesson) => {
-    if (lesson.type === 'video' && lesson.videoUrl) {
-      setSelectedLesson(lesson);
-      window.scrollTo(0, 0);
+    setSelectedLesson(lesson);
+    window.scrollTo(0, 0);
+  };
+
+  const renderLessonContent = () => {
+    if (!selectedLesson) return null;
+
+    switch (selectedLesson.type) {
+      case 'video':
+        return <VideoPlayer lesson={selectedLesson} />;
+      case 'reading':
+        return <ReadingComponent lesson={selectedLesson} />;
+      case 'quiz':
+        return <QuizComponent lesson={selectedLesson} />;
+      default:
+        return <div>Lesson type not supported</div>;
     }
   };
 
@@ -61,7 +75,7 @@ const Topics = () => {
         </header>
         
         {selectedLesson ? (
-          <VideoPlayer lesson={selectedLesson} />
+          renderLessonContent()
         ) : selectedTopic ? (
           <TopicCurriculum topic={selectedTopic} onBack={handleBack} onLessonClick={handleLessonClick} />
         ) : (
