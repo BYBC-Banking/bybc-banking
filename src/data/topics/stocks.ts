@@ -5,7 +5,7 @@ const stocks: Topic = {
   title: "Stocks",
   description: "Master equity markets and stock trading strategies",
   levels: ["All", "Beginner", "Intermediate", "Advanced"],
-  icon: "📈",
+  icon: "/lovable-uploads/35150913-ecab-48d7-ba97-3c5a129c88d0.png",
   modules: [
     {
       id: "stocks-m1",
