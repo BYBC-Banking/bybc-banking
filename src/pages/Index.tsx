@@ -1,4 +1,3 @@
-
 import DashboardHeader from "@/components/DashboardHeader";
 import AccountBalance from "@/components/AccountBalance";
 import QuickActions from "@/components/QuickActions";
@@ -37,8 +36,8 @@ const Index = () => {
           {/* Dot Navigation */}
           <DotNavigation />
           
-          {/* Quick Actions */}
-          <QuickActions />
+          {/* Quick Actions - Professional color scheme */}
+          <ProfessionalQuickActions />
           
           {/* Transactions List */}
           <TransactionSection />
@@ -78,6 +77,11 @@ const AccountBalanceFromContext = () => {
       accountName={selectedAccount.name}
     />
   );
+};
+
+// Professional Quick Actions Component
+const ProfessionalQuickActions = () => {
+  return <QuickActions variant="professional" />;
 };
 
 // Dot Navigation Component with dynamic colors
