@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 
 interface InvestmentHeaderProps {
@@ -19,11 +18,7 @@ const InvestmentHeader = ({ isPositive }: InvestmentHeaderProps) => {
       <div>
         <h1 className="text-2xl font-bold">Investments</h1>
         <p className="text-muted-foreground">
-          {getGreeting()}, Thabo. Your investments are
-          <span className={isPositive ? "text-finance-green" : "text-destructive"}> 
-            {isPositive ? " up " : " down "} 
-          </span>
-          today.
+          Good evening, Investor. Your investments are up today.
         </p>
       </div>
     </header>
