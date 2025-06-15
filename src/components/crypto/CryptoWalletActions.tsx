@@ -1,7 +1,13 @@
 
 import React, { useState } from "react";
-import { ArrowUp, Swap, DollarSign, ArrowDown } from "lucide-react";
+import { ArrowUp, DollarSign, ArrowDown, icons } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+// Use Lucide's icons.swap to create a React component for Swap
+const SwapIcon: React.FC<{ className?: string }> = (props) => {
+  const IconSwap = icons.swap;
+  return <IconSwap {...props} />;
+};
 
 type ActionKey = "send" | "swap" | "buy" | "receive";
 
@@ -25,7 +31,7 @@ const ACTIONS: {
   {
     key: "swap",
     label: "Swap",
-    Icon: (props) => <Swap {...props} />,
+    Icon: (props) => <SwapIcon {...props} />,
   },
   {
     key: "buy",
@@ -56,6 +62,7 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
     return undefined;
   };
 
+  // Styles: use a navy background, flat buttons, active orange 'Buy / Sell'
   return (
     <div className="w-full flex justify-center items-center py-3">
       <div
@@ -72,16 +79,38 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
             const cb = getHandler(key);
             if (cb) cb();
           };
+
+          // Color settings
+          let btnClass =
+            "flex flex-col items-center justify-center flex-1 rounded-xl mx-1 transition-all duration-150 py-2";
+          if (key === "buy" && isActive) {
+            btnClass += " bg-[#FFA726] shadow-md";
+          } else if (isActive) {
+            btnClass += " bg-slate-700 shadow-md";
+          } else {
+            btnClass += " bg-transparent hover:bg-slate-700/40";
+          }
+
+          let iconClass =
+            "w-6 h-6 mb-1 " +
+            (isActive
+              ? key === "buy"
+                ? "text-black"
+                : "text-white"
+              : "text-slate-300");
+
+          let textClass =
+            "text-sm font-medium " +
+            (isActive
+              ? key === "buy"
+                ? "text-black"
+                : "text-white"
+              : "text-slate-300");
+
           return (
             <button
               key={key}
-              className={cn(
-                "flex flex-col items-center justify-center flex-1 rounded-xl mx-1 transition-all duration-150",
-                isActive
-                  ? "bg-[#FFA726] shadow-md"
-                  : "bg-transparent hover:bg-slate-700/40",
-                isActive ? "py-2" : "py-2"
-              )}
+              className={btnClass}
               style={{
                 minWidth: 72,
                 outline: "none",
@@ -92,21 +121,8 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
               onClick={handleClick}
               type="button"
             >
-              <Icon
-                className={cn(
-                  "w-6 h-6 mb-1",
-                  isActive ? "text-black" : "text-slate-300"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  isActive ? "text-black" : "text-slate-300"
-                )}
-                style={{
-                  letterSpacing: 0.3,
-                }}
-              >
+              <Icon className={iconClass} />
+              <span className={textClass} style={{ letterSpacing: 0.3 }}>
                 {label}
               </span>
             </button>
@@ -118,4 +134,3 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
 };
 
 export default CryptoWalletActions;
-
