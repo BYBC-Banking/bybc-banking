@@ -38,6 +38,16 @@ const Accounts = () => {
       };
     }
 
+    // Special case: Business in business section gets Professional Dark theme
+    if (account.type === "Business" && section === "business") {
+      return {
+        bgColor: "bg-neutral-900",
+        textColor: "text-neutral-100",
+        iconBg: "bg-neutral-800",
+        iconText: "text-neutral-300"
+      };
+    }
+
     // Default colors based on account.color
     switch (account.color) {
       case "blue":
@@ -103,6 +113,7 @@ const Accounts = () => {
           {filteredAccounts.map((account) => {
             const colors = getAccountColors(account);
             const isNonprofitBusiness = account.type === "Nonprofit" && section === "business";
+            const isBusinessBusiness = account.type === "Business" && section === "business";
             
             return (
               <div
@@ -113,11 +124,11 @@ const Accounts = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      isNonprofitBusiness 
+                      isNonprofitBusiness || isBusinessBusiness
                         ? `${colors.bgColor} ${colors.iconBg} border border-slate-700`
                         : colors.bgColor
                     } ${colors.textColor}`}>
-                      <span className={isNonprofitBusiness ? colors.iconText : ""}>
+                      <span className={(isNonprofitBusiness || isBusinessBusiness) ? colors.iconText : ""}>
                         {account.type.charAt(0)}
                       </span>
                     </div>
