@@ -1,4 +1,3 @@
-
 // Mock crypto data
 export const cryptoAssets = [
   {
@@ -88,4 +87,5 @@ export const cryptoAssets = [
   }
 ];
 
-export const categories = ["All", "Gainers", "Losers", "DeFi", "Layer 1", "Meme"];
+// Updated categories as requested: add "Favourite" between All and Gainers, remove others
+export const categories = ["All", "Favourite", "Gainers", "Losers"];
