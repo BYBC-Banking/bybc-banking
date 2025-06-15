@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
-import { ArrowUp, DollarSign, ArrowDown, Icon } from "lucide-react";
+import { ArrowUp, DollarSign, ArrowDown, ArrowRightLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Create a SwapIcon wrapper using Lucide's generic Icon
+// Use ArrowRightLeft as the swap icon
 const SwapIcon: React.FC<{ className?: string }> = (props) => (
-  <Icon name="swap" {...props} />
+  <ArrowRightLeft {...props} />
 );
 
 type ActionKey = "send" | "swap" | "buy" | "receive";
