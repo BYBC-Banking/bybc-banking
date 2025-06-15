@@ -1,4 +1,3 @@
-
 export interface Lesson {
   id: string;
   title: string;
@@ -41,7 +40,7 @@ export const topics: Topic[] = [
     title: "Cryptocurrency",
     description: "Learn about digital currencies and blockchain technology",
     levels: ["All", "Beginner", "Intermediate", "Advanced"],
-    icon: "₿",
+    icon: "🪙",
     modules: [
       {
         id: "crypto-m1",
