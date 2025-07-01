@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +7,30 @@ import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import CryptoWalletActions from "@/components/crypto/CryptoWalletActions";
 
+const CryptoLoadingScreen = () => {
+  return (
+    <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50">
+      <div className="flex flex-col items-center">
+        <img 
+          src="/lovable-uploads/6093fac6-2c85-4690-b750-573e64b3f410.png" 
+          alt="BYBC Banking Logo" 
+          className="w-48 h-48 object-contain mb-8"
+        />
+        <div className="flex space-x-2">
+          <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+          <div className="w-3 h-3 bg-amber-600 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
+          <div className="w-3 h-3 bg-amber-700 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+          <div className="w-3 h-3 bg-amber-800 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CryptoWalletPageContent = () => {
   const { selectedAccount } = useHomePage();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Hide navigation when component mounts
   useEffect(() => {
@@ -26,6 +46,11 @@ const CryptoWalletPageContent = () => {
       (topNav as HTMLElement).style.display = 'none';
     }
 
+    // Simulate loading time for assets
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // 3 seconds loading time
+
     // Cleanup function to restore navigation when leaving
     return () => {
       const bottomNav = document.querySelector('[class*="fixed bottom-0"]');
@@ -37,8 +62,15 @@ const CryptoWalletPageContent = () => {
       if (topNav) {
         (topNav as HTMLElement).style.display = '';
       }
+
+      clearTimeout(loadingTimer);
     };
   }, []);
+
+  // Show loading screen while assets are loading
+  if (isLoading) {
+    return <CryptoLoadingScreen />;
+  }
 
   const cryptoAssets = [{
     symbol: "BTC",
