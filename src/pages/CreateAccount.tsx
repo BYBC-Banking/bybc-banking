@@ -15,12 +15,32 @@ import { accountTypes } from '@/data/accountTypes';
 const CreateAccount = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [accountType, setAccountType] = useState<string>("spending");
+  const [accountSection, setAccountSection] = useState<'personal' | 'business'>('personal');
+  const [accountType, setAccountType] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoginMode, setIsLoginMode] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Account options based on section
+  const personalAccountOptions = [
+    { id: 'basic', name: 'Basic Account', description: 'Standard personal banking account', color: 'blue' },
+    { id: 'student', name: 'Student Account', description: 'Special account for students', color: 'green' },
+    { id: 'senior', name: 'Senior Citizen Account', description: 'Account for senior citizens', color: 'purple' },
+    { id: 'lifestyle', name: 'Lifestyle Account', description: 'Premium lifestyle banking', color: 'orange' },
+    { id: 'joint', name: 'Joint Account', description: 'Shared account for couples', color: 'teal' }
+  ];
+
+  const businessAccountOptions = [
+    { id: 'smb', name: 'Small and Medium Business', description: 'For growing businesses', color: 'blue' },
+    { id: 'sole', name: 'Sole Proprietor', description: 'Individual business owners', color: 'green' },
+    { id: 'nonprofit', name: 'Nonprofit Business', description: 'For charitable organizations', color: 'purple' },
+    { id: 'agricultural', name: 'Agricultural and Rural Business', description: 'For farming and rural businesses', color: 'orange' },
+    { id: 'ecommerce', name: 'E-commerce and Online Business', description: 'For online businesses', color: 'teal' }
+  ];
+
+  const currentAccountOptions = accountSection === 'personal' ? personalAccountOptions : businessAccountOptions;
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +81,11 @@ const CreateAccount = () => {
     } else {
       // For account creation
       try {
+        if (!accountType) {
+          setError("Please select an account type");
+          setIsSubmitting(false);
+          return;
+        }
         setIsSubmitting(false);
         // Redirect to the appropriate onboarding page for the selected account type
         navigate(`/account-onboarding/${accountType}`);
@@ -108,11 +133,46 @@ const CreateAccount = () => {
                   onPasswordChange={setPassword}
                 />
               ) : (
-                <AccountTypeSelector
-                  accountTypes={accountTypes}
-                  selectedType={accountType}
-                  onTypeChange={setAccountType}
-                />
+                <>
+                  {/* Account Section Toggle */}
+                  <div className="flex bg-gray-100 rounded-full p-1 mb-4">
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setAccountSection('personal');
+                        setAccountType('');
+                      }}
+                      className={`flex-1 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        accountSection === 'personal' 
+                          ? "bg-white shadow-sm text-finance-blue" 
+                          : "hover:bg-white hover:shadow-sm"
+                      }`}
+                    >
+                      Personal Account
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setAccountSection('business');
+                        setAccountType('');
+                      }}
+                      className={`flex-1 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        accountSection === 'business' 
+                          ? "bg-white shadow-sm text-finance-blue" 
+                          : "hover:bg-white hover:shadow-sm"
+                      }`}
+                    >
+                      Business Account
+                    </button>
+                  </div>
+
+                  {/* Account Type Selector */}
+                  <AccountTypeSelector
+                    accountTypes={currentAccountOptions}
+                    selectedType={accountType}
+                    onTypeChange={setAccountType}
+                  />
+                </>
               )}
               
               <div className="flex flex-col gap-3">

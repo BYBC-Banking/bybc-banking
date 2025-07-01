@@ -1,5 +1,5 @@
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -29,6 +29,7 @@ const AccountBalance = ({
   accountSection = "personal"
 }: AccountBalanceProps) => {
   const [showNavigation, setShowNavigation] = useState(false);
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const isPositive = difference >= 0;
 
   // Professional/dark color scheme for business section and business account type
@@ -109,6 +110,16 @@ const AccountBalance = ({
     setTimeout(() => setShowNavigation(false), 2000);
   };
 
+  const formatBalance = (amount: number) => {
+    if (!isBalanceVisible) {
+      return "••••••";
+    }
+    return `R${amount.toLocaleString("en-ZA", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    })}`;
+  };
+
   return (
     <div
       className={cn(
@@ -124,6 +135,18 @@ const AccountBalance = ({
       onMouseEnter={() => setShowNavigation(true)}
       onMouseLeave={() => setShowNavigation(false)}
     >
+      {/* Eye icon for balance visibility toggle */}
+      <button
+        onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
+      >
+        {isBalanceVisible ? (
+          <Eye className="h-4 w-4 text-current opacity-70" />
+        ) : (
+          <EyeOff className="h-4 w-4 text-current opacity-70" />
+        )}
+      </button>
+
       {/* Navigation arrows with neumorphism style */}
       {showNavigation && canNavigatePrevious && (
         <button
@@ -168,11 +191,7 @@ const AccountBalance = ({
           </span>
         </div>
         <h1 className={`text-3xl font-bold ${accountStyles.textColor}`}>
-          R
-          {balance.toLocaleString("en-ZA", {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          })}
+          {formatBalance(balance)}
         </h1>
       </div>
     </div>
