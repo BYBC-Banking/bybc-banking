@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,11 +7,39 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
 import CryptoWalletActions from "@/components/crypto/CryptoWalletActions";
+
 const CryptoWalletPageContent = () => {
-  const {
-    selectedAccount
-  } = useHomePage();
+  const { selectedAccount } = useHomePage();
   const navigate = useNavigate();
+
+  // Hide navigation when component mounts
+  useEffect(() => {
+    // Hide bottom navigation
+    const bottomNav = document.querySelector('[class*="fixed bottom-0"]');
+    if (bottomNav) {
+      (bottomNav as HTMLElement).style.display = 'none';
+    }
+    
+    // Hide top navigation
+    const topNav = document.querySelector('[class*="sticky top-0"]');
+    if (topNav) {
+      (topNav as HTMLElement).style.display = 'none';
+    }
+
+    // Cleanup function to restore navigation when leaving
+    return () => {
+      const bottomNav = document.querySelector('[class*="fixed bottom-0"]');
+      if (bottomNav) {
+        (bottomNav as HTMLElement).style.display = '';
+      }
+      
+      const topNav = document.querySelector('[class*="sticky top-0"]');
+      if (topNav) {
+        (topNav as HTMLElement).style.display = '';
+      }
+    };
+  }, []);
+
   const cryptoAssets = [{
     symbol: "BTC",
     name: "Bitcoin",
@@ -33,25 +62,31 @@ const CryptoWalletPageContent = () => {
     change: 5.8,
     changeAmount: 46.72
   }];
+
   const totalValue = cryptoAssets.reduce((sum, asset) => sum + asset.value, 0);
+
   const handleAssetClick = () => {
     console.log("Asset clicked");
   };
 
-  // These can be wired as needed for full navigation/actions
   const handleBuyCrypto = () => {
-    navigate("/buy");
+    navigate("/crypto-trade");
   };
+
   const handleCryptoSwap = () => {
     navigate("/crypto-swap");
   };
+
   const handleSend = () => {
-    // Placeholder for navigation or feature
+    navigate("/send");
   };
+
   const handleReceive = () => {
-    // Placeholder for navigation or feature
+    navigate("/receive");
   };
-  return <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
+
+  return (
+    <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
@@ -81,12 +116,18 @@ const CryptoWalletPageContent = () => {
         </Card>
 
         {/* Custom Crypto Action Bar */}
-        <CryptoWalletActions onBuy={handleBuyCrypto} onSwap={handleCryptoSwap} onSend={handleSend} onReceive={handleReceive} />
+        <CryptoWalletActions 
+          onBuy={handleBuyCrypto} 
+          onSwap={handleCryptoSwap} 
+          onSend={handleSend} 
+          onReceive={handleReceive} 
+        />
 
         {/* Assets List */}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Wallets</h2>
-          {cryptoAssets.map(asset => <Card key={asset.symbol} className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleAssetClick}>
+          {cryptoAssets.map(asset => 
+            <Card key={asset.symbol} className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleAssetClick}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -113,14 +154,20 @@ const CryptoWalletPageContent = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>)}
+            </Card>
+          )}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 const CryptoWalletPage = () => {
-  return <HomePageProvider accounts={accounts}>
+  return (
+    <HomePageProvider accounts={accounts}>
       <CryptoWalletPageContent />
-    </HomePageProvider>;
+    </HomePageProvider>
+  );
 };
+
 export default CryptoWalletPage;

@@ -1,10 +1,23 @@
+
 import React, { useState } from "react";
 import { ArrowUp, DollarSign, ArrowDown, ArrowRightLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Use ArrowRightLeft as the swap icon
+// Updated icons to match the provided image
+const SendIcon: React.FC<{ className?: string }> = (props) => (
+  <ArrowUp {...props} />
+);
+
 const SwapIcon: React.FC<{ className?: string }> = (props) => (
   <ArrowRightLeft {...props} />
+);
+
+const BuyIcon: React.FC<{ className?: string }> = (props) => (
+  <DollarSign {...props} />
+);
+
+const ReceiveIcon: React.FC<{ className?: string }> = (props) => (
+  <ArrowDown {...props} />
 );
 
 type ActionKey = "send" | "swap" | "buy" | "receive";
@@ -24,22 +37,22 @@ const ACTIONS: {
   {
     key: "send",
     label: "Send",
-    Icon: (props) => <ArrowUp {...props} />,
+    Icon: SendIcon,
   },
   {
     key: "swap",
     label: "Swap",
-    Icon: (props) => <SwapIcon {...props} />,
+    Icon: SwapIcon,
   },
   {
     key: "buy",
     label: "Buy / Sell",
-    Icon: (props) => <DollarSign {...props} />,
+    Icon: BuyIcon,
   },
   {
     key: "receive",
     label: "Receive",
-    Icon: (props) => <ArrowDown {...props} />,
+    Icon: ReceiveIcon,
   },
 ];
 
@@ -77,26 +90,31 @@ const CryptoWalletActions: React.FC<CryptoWalletActionsProps> = ({
             if (cb) cb();
           };
 
-          // Color settings
+          // Color settings - special styling for buy button to match image
           let btnClass =
             "flex flex-col items-center justify-center flex-1 rounded-xl mx-1 transition-all duration-150 py-2";
-          if (isActive) {
+          
+          if (key === "buy" && isActive) {
+            btnClass += " bg-amber-400 shadow-md";
+          } else if (isActive) {
             btnClass += " bg-slate-700 shadow-md";
           } else {
             btnClass += " bg-transparent hover:bg-slate-700/40";
           }
 
-          let iconClass =
-            "w-6 h-6 mb-1 " +
-            (isActive
-              ? "text-white"
-              : "text-slate-300");
+          let iconClass = "w-6 h-6 mb-1 ";
+          let textClass = "text-sm font-medium ";
 
-          let textClass =
-            "text-sm font-medium " +
-            (isActive
-              ? "text-white"
-              : "text-slate-300");
+          if (key === "buy" && isActive) {
+            iconClass += "text-black";
+            textClass += "text-black";
+          } else if (isActive) {
+            iconClass += "text-white";
+            textClass += "text-white";
+          } else {
+            iconClass += "text-slate-300";
+            textClass += "text-slate-300";
+          }
 
           return (
             <button
