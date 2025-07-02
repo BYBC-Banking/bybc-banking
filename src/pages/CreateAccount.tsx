@@ -148,7 +148,7 @@ const CreateAccount = () => {
                           : "hover:bg-white hover:shadow-sm"
                       }`}
                     >
-                      Personal Account
+                      Personal
                     </button>
                     <button 
                       type="button"
@@ -162,7 +162,7 @@ const CreateAccount = () => {
                           : "hover:bg-white hover:shadow-sm"
                       }`}
                     >
-                      Business Account
+                      Business
                     </button>
                   </div>
 
