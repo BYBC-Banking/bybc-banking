@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { TrendingUp, TrendingDown, Star, StarOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,21 @@ const CryptoChart = ({ selectedCrypto, hasInvestmentAccess, onAddToWatchlist, on
     { name: "21:00", value: 65550 },
     { name: "24:00", value: 65530 },
   ];
+
+  const chartConfig = {
+    value: {
+      label: "Price",
+      color: selectedCrypto.isPositive ? "#16a34a" : "#dc2626",
+    },
+    positive: {
+      label: "Positive",
+      color: "#16a34a",
+    },
+    negative: {
+      label: "Negative", 
+      color: "#dc2626",
+    },
+  };
 
   const timeframes = [
     { label: "1H", value: "1H" },
@@ -82,7 +98,7 @@ const CryptoChart = ({ selectedCrypto, hasInvestmentAccess, onAddToWatchlist, on
         </div>
 
         <div className="h-[200px]">
-          <ChartContainer id="crypto-chart">
+          <ChartContainer config={chartConfig} id="crypto-chart">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10 }} dy={10} />
@@ -91,7 +107,7 @@ const CryptoChart = ({ selectedCrypto, hasInvestmentAccess, onAddToWatchlist, on
                 <Line
                   type="monotone"
                   dataKey="value"
-                  stroke={selectedCrypto.isPositive ? "var(--color-positive)" : "var(--color-negative)"}
+                  stroke={selectedCrypto.isPositive ? chartConfig.positive.color : chartConfig.negative.color}
                   strokeWidth={2}
                   dot={false}
                   activeDot={{ r: 6, strokeWidth: 0 }}
