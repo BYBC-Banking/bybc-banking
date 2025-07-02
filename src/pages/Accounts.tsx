@@ -12,7 +12,6 @@ const Accounts = () => {
   const isBusinessSection = location.pathname.includes('-business');
   const section = isBusinessSection ? 'business' : 'personal';
   
-  // Filter accounts based on section
   const filteredAccounts = accounts.filter(account => {
     if (section === 'personal') {
       return ['Spending', 'Investments'].includes(account.type);
@@ -100,6 +99,10 @@ const Accounts = () => {
     }
   };
 
+  const handleAccountClick = (accountId: string) => {
+    navigate(`/dashboard?account=${accountId}`);
+  };
+
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
@@ -122,7 +125,11 @@ const Accounts = () => {
             const isInvestmentsBusiness = account.type === "Investments" && section === "business";
             
             return (
-              <div key={account.id} className="bg-white rounded-xl shadow-sm border p-4">
+              <button
+                key={account.id}
+                onClick={() => handleAccountClick(account.id)}
+                className="w-full bg-white rounded-xl shadow-sm border p-4 hover:shadow-md transition-shadow"
+              >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
@@ -142,7 +149,7 @@ const Accounts = () => {
                         {account.type.charAt(0)}
                       </span>
                     </div>
-                    <div>
+                    <div className="text-left">
                       <div className="font-medium">{account.name}</div>
                       <div className="text-xs text-muted-foreground">•••• {account.accountNumber.slice(-4)}</div>
                     </div>
@@ -151,7 +158,7 @@ const Accounts = () => {
                     <div className="font-semibold">R{account.balance.toLocaleString()}</div>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

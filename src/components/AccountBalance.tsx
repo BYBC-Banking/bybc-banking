@@ -1,4 +1,3 @@
-
 import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -115,8 +114,8 @@ const AccountBalance = ({
       return "••••••";
     }
     return `R${amount.toLocaleString("en-ZA", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     })}`;
   };
 

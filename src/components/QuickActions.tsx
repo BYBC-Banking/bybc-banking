@@ -72,21 +72,28 @@ const QuickActions = () => {
   const { accountSection } = useHomePage();
   const quickActions = accountSection === "business" ? businessActions : personalActions;
 
-  return <div className="px-4">
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">Quick Actions</h2>
+  return (
+    <div className="px-4">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">Quick Actions</h2>
+        <span className="text-sm text-gray-600">More</span>
+      </div>
       <div style={{
-      animationDelay: "200ms"
-    }} className="flex justify-between items-center gap-1 ">
-        {quickActions.map((action, index) => <Link to={action.href} key={index} className="flex flex-col items-center group">
+        animationDelay: "200ms"
+      }} className="flex justify-between items-center gap-1 ">
+        {quickActions.map((action, index) => (
+          <Link to={action.href} key={index} className="flex flex-col items-center group">
             <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
               <action.icon className={`h-6 w-6 ${action.iconColor} stroke-[1.5]`} />
             </div>
             <span className="text-xs font-medium text-gray-700 text-center leading-tight max-w-[60px]">
               {action.label}
             </span>
-          </Link>)}
+          </Link>
+        ))}
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default QuickActions;
