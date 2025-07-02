@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
@@ -8,6 +8,7 @@ import { accounts } from "@/data/accountsData";
 import CryptoChart from "@/components/crypto/CryptoChart";
 import CryptoList from "@/components/crypto/CryptoList";
 import { cryptoAssets, categories } from "@/components/crypto/cryptoData";
+import { Button } from "@/components/ui/button";
 
 const CryptoPageContent = () => {
   const { toast } = useToast();
@@ -44,11 +45,21 @@ const CryptoPageContent = () => {
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
-        <header className="flex items-center gap-4 mb-6">
-          <Link to="/investments" className="p-2">
-            <ArrowLeft className="h-5 w-5" />
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <Link to="/investments" className="p-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <h1 className="text-2xl font-bold">Crypto Market</h1>
+          </div>
+          
+          {/* Wallet Button with Icon */}
+          <Link to="/crypto-wallet">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Wallet className="h-4 w-4" />
+              Wallet
+            </Button>
           </Link>
-          <h1 className="text-2xl font-bold">Crypto Market</h1>
         </header>
         
         {/* Crypto Price Chart */}

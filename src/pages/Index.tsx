@@ -80,7 +80,7 @@ const AccountBalanceFromContext = () => {
   );
 };
 
-// Dot Navigation Component with dynamic colors
+// Dot Navigation Component with morphing pagination indicators
 const DotNavigation = () => {
   const { filteredAccounts, selectedAccountId, setSelectedAccountId, accountSection } = useHomePage();
 
@@ -92,26 +92,26 @@ const DotNavigation = () => {
       account.type === "Investments" &&
       accountSection === "business"
     ) {
-      return "bg-teal-600 w-6 border-2 border-teal-700";
+      return "bg-teal-600 w-6 border-2 border-teal-700 transform scale-125";
     }
 
     if (!isSelected) {
-      return 'bg-gray-300 hover:bg-gray-400 [html[data-theme="business"]_&]:bg-gray-400 [html[data-theme="business"]_&]:hover:bg-gray-500';
+      return 'bg-gray-300 hover:bg-gray-400 [html[data-theme="business"]_&]:bg-gray-400 [html[data-theme="business"]_&]:hover:bg-gray-500 transform scale-100';
     }
 
     switch (account.color) {
       case 'blue':
-        return 'bg-finance-blue [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-finance-blue [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
       case 'green':
-        return 'bg-finance-green [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-finance-green [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
       case 'purple':
-        return 'bg-[#7E69AB] [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-[#7E69AB] [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
       case 'orange':
-        return 'bg-orange-500 [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-orange-500 [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
       case 'teal':
-        return 'bg-teal-600 [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-teal-600 [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
       default:
-        return 'bg-teal-500 [html[data-theme="business"]_&]:bg-business-primary';
+        return 'bg-teal-500 [html[data-theme="business"]_&]:bg-business-primary w-6 transform scale-125';
     }
   };
 
@@ -121,11 +121,11 @@ const DotNavigation = () => {
         <button
           key={account.id}
           onClick={() => setSelectedAccountId(account.id)}
-          className={`w-2 h-2 rounded-full transition-all duration-200 ${
+          className={`h-2 rounded-full transition-all duration-300 ease-in-out ${
             selectedAccountId === account.id 
               ? getAccountDotColor(account, true)
               : getAccountDotColor(account, false)
-          }`}
+          } ${selectedAccountId === account.id ? '' : 'w-2'}`}
         />
       ))}
     </div>

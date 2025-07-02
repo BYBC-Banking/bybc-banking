@@ -76,7 +76,9 @@ const QuickActions = () => {
     <div className="px-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-800">Quick Actions</h2>
-        <span className="text-sm text-gray-600">More</span>
+        <Link to="/quick-actions-more" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
+          More
+        </Link>
       </div>
       <div style={{
         animationDelay: "200ms"

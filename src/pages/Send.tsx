@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { ArrowLeft, Plus, User, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -25,6 +24,7 @@ type Beneficiary = {
 
 const Send = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isAddBeneficiaryOpen, setIsAddBeneficiaryOpen] = useState(false);
   const [newBeneficiary, setNewBeneficiary] = useState({
     name: "",
@@ -61,10 +61,13 @@ const Send = () => {
   };
   
   const handleBeneficiarySelect = (beneficiary: Beneficiary) => {
-    toast({
-      title: "Send Money",
-      description: `Selected to send money to ${beneficiary.name}`,
+    // Navigate to SendMoney page with beneficiary details
+    const params = new URLSearchParams({
+      name: beneficiary.name,
+      bank: beneficiary.bankName,
+      account: beneficiary.accountNumber
     });
+    navigate(`/send-money?${params.toString()}`);
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

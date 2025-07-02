@@ -19,6 +19,8 @@ import Transactions from "@/pages/Transactions";
 import Notifications from "@/pages/Notifications";
 import Buy from "@/pages/Buy";
 import Send from "@/pages/Send";
+import SendMoney from "@/pages/SendMoney";
+import QuickActionsMore from "@/pages/QuickActionsMore";
 import Receive from "@/pages/Receive";
 import Transfer from "@/pages/Transfer";
 import Inbox from "@/pages/Inbox";
@@ -166,6 +168,16 @@ const AppRoutes = () => {
       <Route path="/send" element={
         <ProtectedRoute>
           <Send />
+        </ProtectedRoute>
+      } />
+      <Route path="/send-money" element={
+        <ProtectedRoute>
+          <SendMoney />
+        </ProtectedRoute>
+      } />
+      <Route path="/quick-actions-more" element={
+        <ProtectedRoute>
+          <QuickActionsMore />
         </ProtectedRoute>
       } />
       <Route path="/receive" element={
