@@ -149,7 +149,7 @@ const PortfolioSummary = ({
     animationDelay: "50ms"
   }}>
       <Card className="bg-white mb-6">
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 py-0">
           <div className="mb-4">
             <div className="text-3xl font-bold [html[data-theme='business']_&]:text-gray-900">
               R{data.totalValue.toLocaleString()}
