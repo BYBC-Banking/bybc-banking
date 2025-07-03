@@ -1,10 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Eye, EyeOff, Sun, Moon, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import WalletHeader from "@/components/crypto-wallet/WalletHeader";
+import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
+import PortfolioComposition from "@/components/crypto-wallet/PortfolioComposition";
 
 const portfolioData = [
   { time: '00:00', value: 68200 },
@@ -26,7 +24,6 @@ const portfolioComposition = [
 const timeframes = ['1H', '1D', '1W', '1M', '1Y'];
 
 const CryptoWalletPage = () => {
-  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [activeTimeframe, setActiveTimeframe] = useState('1D');
@@ -77,146 +74,32 @@ const CryptoWalletPage = () => {
         <div className={`absolute bottom-32 left-1/3 w-36 h-36 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-purple-500/10' : 'bg-purple-300/30'}`} style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="container mx-auto max-w-4xl px-4 py-6 relative z-10">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="hover:scale-105 transition-transform">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <h1 className={`text-xl font-bold bg-gradient-to-r ${isDarkMode ? 'from-yellow-400 to-amber-500' : 'from-yellow-600 to-amber-600'} bg-clip-text text-transparent`}>
-              Crypto Wallet
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
-            >
-              {isDarkMode ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4" />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-              className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
-            >
-              {isBalanceVisible ? <Eye className="h-4 w-4 text-yellow-400" /> : <EyeOff className="h-4 w-4 text-yellow-400" />}
-            </Button>
-          </div>
-        </header>
+      <div className="container mx-auto max-w-4xl px-4 py-4 relative z-10">
+        <WalletHeader
+          isDarkMode={isDarkMode}
+          isBalanceVisible={isBalanceVisible}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          onToggleBalanceVisibility={() => setIsBalanceVisible(!isBalanceVisible)}
+        />
 
-        {/* Main Portfolio Card */}
-        <Card className={`mb-6 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-          <CardContent className="p-6">
-            <div className="text-center mb-4">
-              <div className={`text-xs font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Total Portfolio Value
-              </div>
-              <div className={`text-3xl font-bold mb-3 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
-                {isBalanceVisible ? formatCurrency(animatedValue) : "••••••••"}
-              </div>
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <div className="flex items-center gap-1 bg-green-500/20 px-2 py-1 rounded-full">
-                  <TrendingUp className="h-3 w-3 text-green-500" />
-                  <span className="text-green-500 font-medium text-sm">+R2,594.57 (+3.8%)</span>
-                </div>
-                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>today</span>
-              </div>
-            </div>
+        <PortfolioCard
+          isDarkMode={isDarkMode}
+          isBalanceVisible={isBalanceVisible}
+          animatedValue={animatedValue}
+          formatCurrency={formatCurrency}
+          portfolioData={portfolioData}
+          timeframes={timeframes}
+          activeTimeframe={activeTimeframe}
+          onTimeframeChange={setActiveTimeframe}
+        />
 
-            {/* Chart */}
-            <div className="h-40 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={portfolioData}>
-                  <XAxis 
-                    dataKey="time" 
-                    axisLine={false}
-                    tickLine={false}
-                    className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <YAxis hide />
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#FFD700" 
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{ r: 3, stroke: '#FFD700', strokeWidth: 2, fill: '#FFD700' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Timeframe Selector */}
-            <div className="flex justify-center gap-1">
-              {timeframes.map((timeframe) => (
-                <Button
-                  key={timeframe}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setActiveTimeframe(timeframe)}
-                  className={`transition-all duration-300 hover:scale-105 rounded-lg text-xs px-3 py-1 ${
-                    activeTimeframe === timeframe 
-                      ? 'bg-yellow-400 text-black font-medium' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600'
-                  }`}
-                >
-                  {timeframe}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Portfolio Composition */}
-        <Card className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-          <CardContent className="p-6">
-            <h2 className={`text-lg font-bold mb-6 text-center ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
-              Portfolio Composition
-            </h2>
-            
-            {/* Asset List */}
-            <div className="space-y-3">
-              {portfolioComposition.map((asset, index) => (
-                <div
-                  key={asset.name}
-                  className={`flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
-                    isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                      style={{ backgroundColor: asset.color }}
-                    >
-                      {asset.symbol}
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {asset.name}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {asset.value}% of portfolio
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`font-bold text-sm ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
-                      {isBalanceVisible ? formatCurrency(asset.amount) : "••••••"}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {getHoldingLevel(asset.value)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <PortfolioComposition
+          isDarkMode={isDarkMode}
+          isBalanceVisible={isBalanceVisible}
+          portfolioComposition={portfolioComposition}
+          formatCurrency={formatCurrency}
+          getHoldingLevel={getHoldingLevel}
+        />
       </div>
     </div>
   );
