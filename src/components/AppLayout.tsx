@@ -14,16 +14,17 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   
   // Determine if we should show navigation based on the current route
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isFullscreenPage = location.pathname === '/crypto-wallet';
   
   return (
     <>
-      {!isAuthPage && (
+      {!isAuthPage && !isFullscreenPage && (
         <>
           {!isMobile && <NavBar />}
           <MobileNavigation />
         </>
       )}
-      <div className={isMobile && !isAuthPage ? "pb-16" : ""}>
+      <div className={isMobile && !isAuthPage && !isFullscreenPage ? "pb-16" : ""}>
         {children}
       </div>
     </>

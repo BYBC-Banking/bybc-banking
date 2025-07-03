@@ -6,13 +6,17 @@ import { useHomePage } from "@/context/HomePageContext";
 const QuickActionsMore = () => {
   const { accountSection } = useHomePage();
 
-  // Extended quick actions with more options
-  const allActions = [
+  // Quick actions - core banking functions
+  const quickActions = [
     { icon: Send, label: "Send", href: "/send" },
     { icon: ArrowUpDown, label: "Transfer", href: "/transfer" },
     { icon: CreditCard, label: "Card", href: "/cards" },
     { icon: Receipt, label: "Pay Bills", href: "/pay-bills" },
     { icon: User, label: "Advisor", href: "/advisor" },
+  ];
+
+  // Tools - utility and management functions
+  const toolsActions = [
     { icon: Smartphone, label: "Mobile Top Up", href: "/mobile-topup" },
     { icon: Zap, label: "Utilities", href: "/utilities" },
     { icon: DollarSign, label: "Investments", href: "/investments" },
@@ -56,21 +60,44 @@ const QuickActionsMore = () => {
           <h1 className="text-2xl font-bold">Quick Actions</h1>
         </header>
 
-        {/* Actions Grid */}
-        <div className="grid grid-cols-3 gap-6">
-          {allActions.map((action, index) => {
-            const colors = getActionColors(index);
-            return (
-              <Link to={action.href} key={index} className="flex flex-col items-center group">
-                <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
-                  <action.icon className={`h-7 w-7 ${colors.iconColor} stroke-[1.5]`} />
-                </div>
-                <span className="text-sm font-medium text-gray-700 text-center leading-tight max-w-[70px]">
-                  {action.label}
-                </span>
-              </Link>
-            );
-          })}
+        {/* Quick Actions Section */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-3 gap-6">
+            {quickActions.map((action, index) => {
+              const colors = getActionColors(index);
+              return (
+                <Link to={action.href} key={index} className="flex flex-col items-center group">
+                  <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
+                    <action.icon className={`h-7 w-7 ${colors.iconColor} stroke-[1.5]`} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 text-center leading-tight max-w-[70px]">
+                    {action.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tools Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Tools</h2>
+          <div className="grid grid-cols-3 gap-6">
+            {toolsActions.map((action, index) => {
+              const colors = getActionColors(index + quickActions.length);
+              return (
+                <Link to={action.href} key={index} className="flex flex-col items-center group">
+                  <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
+                    <action.icon className={`h-7 w-7 ${colors.iconColor} stroke-[1.5]`} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 text-center leading-tight max-w-[70px]">
+                    {action.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

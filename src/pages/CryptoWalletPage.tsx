@@ -79,12 +79,12 @@ const CryptoWalletPage = () => {
 
       <div className="container mx-auto max-w-4xl px-4 py-6 relative z-10">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="hover:scale-105 transition-transform">
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h1 className={`text-2xl font-bold bg-gradient-to-r ${isDarkMode ? 'from-yellow-400 to-amber-500' : 'from-yellow-600 to-amber-600'} bg-clip-text text-transparent`}>
+            <h1 className={`text-xl font-bold bg-gradient-to-r ${isDarkMode ? 'from-yellow-400 to-amber-500' : 'from-yellow-600 to-amber-600'} bg-clip-text text-transparent`}>
               Crypto Wallet
             </h1>
           </div>
@@ -95,7 +95,7 @@ const CryptoWalletPage = () => {
               onClick={() => setIsDarkMode(!isDarkMode)}
               className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
             >
-              {isDarkMode ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5" />}
+              {isDarkMode ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4" />}
             </Button>
             <Button
               variant="ghost"
@@ -103,32 +103,32 @@ const CryptoWalletPage = () => {
               onClick={() => setIsBalanceVisible(!isBalanceVisible)}
               className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
             >
-              {isBalanceVisible ? <Eye className="h-5 w-5 text-yellow-400" /> : <EyeOff className="h-5 w-5 text-yellow-400" />}
+              {isBalanceVisible ? <Eye className="h-4 w-4 text-yellow-400" /> : <EyeOff className="h-4 w-4 text-yellow-400" />}
             </Button>
           </div>
         </header>
 
         {/* Main Portfolio Card */}
-        <Card className={`mb-8 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-          <CardContent className="p-8">
-            <div className="text-center mb-6">
-              <div className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+        <Card className={`mb-6 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
+          <CardContent className="p-6">
+            <div className="text-center mb-4">
+              <div className={`text-xs font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 Total Portfolio Value
               </div>
-              <div className={`text-5xl font-bold mb-4 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+              <div className={`text-3xl font-bold mb-3 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                 {isBalanceVisible ? formatCurrency(animatedValue) : "••••••••"}
               </div>
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <div className="flex items-center gap-1 bg-green-500/20 px-3 py-1 rounded-full">
-                  <TrendingUp className="h-4 w-4 text-green-500" />
-                  <span className="text-green-500 font-medium">+R2,594.57 (+3.8%)</span>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="flex items-center gap-1 bg-green-500/20 px-2 py-1 rounded-full">
+                  <TrendingUp className="h-3 w-3 text-green-500" />
+                  <span className="text-green-500 font-medium text-sm">+R2,594.57 (+3.8%)</span>
                 </div>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>today</span>
+                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>today</span>
               </div>
             </div>
 
             {/* Chart */}
-            <div className="h-48 mb-6">
+            <div className="h-40 mb-4">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={portfolioData}>
                   <XAxis 
@@ -136,6 +136,7 @@ const CryptoWalletPage = () => {
                     axisLine={false}
                     tickLine={false}
                     className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}
+                    tick={{ fontSize: 10 }}
                   />
                   <YAxis hide />
                   <Line 
@@ -144,21 +145,21 @@ const CryptoWalletPage = () => {
                     stroke="#FFD700" 
                     strokeWidth={2}
                     dot={false}
-                    activeDot={{ r: 4, stroke: '#FFD700', strokeWidth: 2, fill: '#FFD700' }}
+                    activeDot={{ r: 3, stroke: '#FFD700', strokeWidth: 2, fill: '#FFD700' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
             {/* Timeframe Selector */}
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-1">
               {timeframes.map((timeframe) => (
                 <Button
                   key={timeframe}
                   variant="ghost"
                   size="sm"
                   onClick={() => setActiveTimeframe(timeframe)}
-                  className={`transition-all duration-300 hover:scale-105 rounded-lg ${
+                  className={`transition-all duration-300 hover:scale-105 rounded-lg text-xs px-3 py-1 ${
                     activeTimeframe === timeframe 
                       ? 'bg-yellow-400 text-black font-medium' 
                       : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600'
@@ -173,41 +174,41 @@ const CryptoWalletPage = () => {
 
         {/* Portfolio Composition */}
         <Card className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-          <CardContent className="p-8">
-            <h2 className={`text-2xl font-bold mb-8 text-center ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+          <CardContent className="p-6">
+            <h2 className={`text-lg font-bold mb-6 text-center ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
               Portfolio Composition
             </h2>
             
             {/* Asset List */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {portfolioComposition.map((asset, index) => (
                 <div
                   key={asset.name}
-                  className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
+                  className={`flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
                     isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
                       style={{ backgroundColor: asset.color }}
                     >
                       {asset.symbol}
                     </div>
                     <div>
-                      <div className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {asset.name}
                       </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {asset.value}% of portfolio
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-bold text-lg ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                    <div className={`font-bold text-sm ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                       {isBalanceVisible ? formatCurrency(asset.amount) : "••••••"}
                     </div>
-                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       {getHoldingLevel(asset.value)}
                     </div>
                   </div>

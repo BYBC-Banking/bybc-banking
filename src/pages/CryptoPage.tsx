@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { ArrowLeft, Wallet } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
 import { accounts } from "@/data/accountsData";
@@ -9,13 +9,16 @@ import CryptoChart from "@/components/crypto/CryptoChart";
 import CryptoList from "@/components/crypto/CryptoList";
 import { cryptoAssets, categories } from "@/components/crypto/cryptoData";
 import { Button } from "@/components/ui/button";
+import CryptoWalletLoading from "@/components/CryptoWalletLoading";
 
 const CryptoPageContent = () => {
   const { toast } = useToast();
   const { selectedAccount } = useHomePage();
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("All");
   const [selectedCrypto, setSelectedCrypto] = useState(cryptoAssets[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoadingWallet, setIsLoadingWallet] = useState(false);
   
   // Check if user has investment account access
   const hasInvestmentAccess = selectedAccount && selectedAccount.type === "Investments";
@@ -40,6 +43,18 @@ const CryptoPageContent = () => {
       description: `Redirecting to sell ${crypto.name}.`
     });
   };
+
+  const handleWalletClick = () => {
+    setIsLoadingWallet(true);
+    // Simulate loading time
+    setTimeout(() => {
+      navigate("/crypto-wallet");
+    }, 2000);
+  };
+
+  if (isLoadingWallet) {
+    return <CryptoWalletLoading />;
+  }
   
   return (
     <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
@@ -54,12 +69,10 @@ const CryptoPageContent = () => {
           </div>
           
           {/* Wallet Button with Icon */}
-          <Link to="/crypto-wallet">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Wallet className="h-4 w-4" />
-              Wallet
-            </Button>
-          </Link>
+          <Button variant="outline" className="flex items-center gap-2" onClick={handleWalletClick}>
+            <Wallet className="h-4 w-4" />
+            Wallet
+          </Button>
         </header>
         
         {/* Crypto Price Chart */}
