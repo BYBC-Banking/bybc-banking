@@ -16,23 +16,15 @@ import { accounts } from "./data/accountsData";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  console.log('AppContent: Component rendering');
-  
   const { initialCheckDone, loading } = useAppInitialization();
   
-  console.log('AppContent: initialCheckDone:', initialCheckDone, 'loading:', loading);
-  
   if (!initialCheckDone) {
-    console.log('AppContent: Initial check not done, returning null');
     return null; // Don't render until initial check is done
   }
   
   if (loading) {
-    console.log('AppContent: Still loading, showing LoadingScreen');
     return <LoadingScreen />;
   }
-  
-  console.log('AppContent: Rendering main app content');
   
   return (
     <TooltipProvider>
@@ -45,20 +37,16 @@ const AppContent = () => {
   );
 };
 
-const App = () => {
-  console.log('App: Main component rendering');
-  
-  return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <HomePageProvider accounts={accounts}>
-            <AppContent />
-          </HomePageProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </React.StrictMode>
-  );
-};
+const App = () => (
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <HomePageProvider accounts={accounts}>
+          <AppContent />
+        </HomePageProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </React.StrictMode>
+);
 
 export default App;
