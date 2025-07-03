@@ -16,11 +16,11 @@ const portfolioData = [
 ];
 
 const portfolioComposition = [
-  { name: 'Bitcoin', value: 45, amount: 31732.71, color: '#FFD700', icon: '₿' },
-  { name: 'Ethereum', value: 30, amount: 21155.15, color: '#00D4FF', icon: 'Ξ' },
-  { name: 'Cardano', value: 12, amount: 8462.06, color: '#FF6B35', icon: '₳' },
-  { name: 'Solana', value: 8, amount: 5641.37, color: '#9945FF', icon: '◎' },
-  { name: 'Others', value: 5, amount: 3525.87, color: '#10B981', icon: '⚡' }
+  { name: 'Bitcoin', value: 45, amount: 31732.71, color: '#FFD700', icon: '₿', symbol: 'B' },
+  { name: 'Ethereum', value: 30, amount: 21155.15, color: '#00D4FF', icon: 'Ξ', symbol: 'Ξ' },
+  { name: 'Cardano', value: 12, amount: 8462.06, color: '#FF6B35', icon: '₳', symbol: '₳' },
+  { name: 'Solana', value: 8, amount: 5641.37, color: '#9945FF', icon: '◎', symbol: '◎' },
+  { name: 'Others', value: 5, amount: 3525.87, color: '#10B981', icon: '⚡', symbol: '⚡' }
 ];
 
 const timeframes = ['1H', '1D', '1W', '1M', '1Y'];
@@ -36,7 +36,7 @@ const CryptoWalletPage = () => {
 
   // Animate portfolio value on page load
   useEffect(() => {
-    const duration = 2000; // 2 seconds
+    const duration = 2000;
     const steps = 60;
     const increment = targetValue / steps;
     let currentStep = 0;
@@ -55,25 +55,31 @@ const CryptoWalletPage = () => {
   }, []);
 
   const formatCurrency = (value: number) => {
-    return `R${value.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `R ${value.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
-  const themeClasses = isDarkMode 
-    ? "bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
-    : "bg-gradient-to-br from-yellow-50 via-white to-yellow-100 text-gray-900";
+  const getHoldingLevel = (percentage: number) => {
+    if (percentage >= 30) return "Major holding";
+    if (percentage >= 10) return "Moderate";
+    return "Minor holding";
+  };
 
   return (
-    <div className={`min-h-screen transition-all duration-500 ${themeClasses} relative overflow-hidden`}>
+    <div className={`min-h-screen transition-all duration-500 ${
+      isDarkMode 
+        ? "bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
+        : "bg-gradient-to-br from-yellow-50 via-white to-yellow-100 text-gray-900"
+    } relative overflow-hidden`}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-yellow-400/20' : 'bg-yellow-300/30'}`} style={{animationDelay: '0s'}}></div>
-        <div className={`absolute top-40 right-20 w-40 h-40 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-blue-500/20' : 'bg-blue-300/30'}`} style={{animationDelay: '1s'}}></div>
-        <div className={`absolute bottom-32 left-1/3 w-36 h-36 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-purple-500/20' : 'bg-purple-300/30'}`} style={{animationDelay: '2s'}}></div>
+        <div className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-yellow-400/10' : 'bg-yellow-300/30'}`} style={{animationDelay: '0s'}}></div>
+        <div className={`absolute top-40 right-20 w-40 h-40 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-blue-500/10' : 'bg-blue-300/30'}`} style={{animationDelay: '1s'}}></div>
+        <div className={`absolute bottom-32 left-1/3 w-36 h-36 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-purple-500/10' : 'bg-purple-300/30'}`} style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 py-6 relative z-10">
+      <div className="container mx-auto max-w-4xl px-4 py-6 relative z-10">
         {/* Header */}
-        <header className={`flex items-center justify-between mb-8 p-4 rounded-2xl backdrop-blur-md ${isDarkMode ? 'bg-black/20 border border-yellow-400/30' : 'bg-white/40 border border-yellow-600/30'}`}>
+        <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="hover:scale-105 transition-transform">
               <ArrowLeft className="h-5 w-5" />
@@ -87,36 +93,42 @@ const CryptoWalletPage = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="hover:scale-105 transition-transform"
+              className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
             >
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {isDarkMode ? <Sun className="h-5 w-5 text-yellow-400" /> : <Moon className="h-5 w-5" />}
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-              className="hover:scale-105 transition-transform"
+              className={`hover:scale-105 transition-transform rounded-full ${isDarkMode ? 'bg-yellow-400/20 border border-yellow-400/30' : ''}`}
             >
-              {isBalanceVisible ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+              {isBalanceVisible ? <Eye className="h-5 w-5 text-yellow-400" /> : <EyeOff className="h-5 w-5 text-yellow-400" />}
             </Button>
           </div>
         </header>
 
         {/* Main Portfolio Card */}
-        <Card className={`mb-8 backdrop-blur-md ${isDarkMode ? 'bg-black/40 border-yellow-400/50' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.02] transition-transform duration-300`}>
+        <Card className={`mb-8 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
           <CardContent className="p-8">
             <div className="text-center mb-6">
-              <div className="text-4xl md:text-5xl font-bold mb-2">
+              <div className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Total Portfolio Value
+              </div>
+              <div className={`text-5xl font-bold mb-4 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                 {isBalanceVisible ? formatCurrency(animatedValue) : "••••••••"}
               </div>
-              <div className="flex items-center justify-center gap-2 text-green-500">
-                <TrendingUp className="h-4 w-4" />
-                <span>+R2,594.57 (+3.8%) today</span>
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="flex items-center gap-1 bg-green-500/20 px-3 py-1 rounded-full">
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <span className="text-green-500 font-medium">+R2,594.57 (+3.8%)</span>
+                </div>
+                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>today</span>
               </div>
             </div>
 
             {/* Chart */}
-            <div className="h-64 mb-6">
+            <div className="h-48 mb-6">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={portfolioData}>
                   <XAxis 
@@ -129,17 +141,11 @@ const CryptoWalletPage = () => {
                   <Line 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="url(#gradient)" 
-                    strokeWidth={3}
-                    dot={{ fill: '#FFD700', strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: '#FFD700', strokeWidth: 2, fill: '#FFD700' }}
+                    stroke="#FFD700" 
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4, stroke: '#FFD700', strokeWidth: 2, fill: '#FFD700' }}
                   />
-                  <defs>
-                    <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#FFD700" />
-                      <stop offset="100%" stopColor="#FFA500" />
-                    </linearGradient>
-                  </defs>
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -149,13 +155,13 @@ const CryptoWalletPage = () => {
               {timeframes.map((timeframe) => (
                 <Button
                   key={timeframe}
-                  variant={activeTimeframe === timeframe ? "default" : "ghost"}
+                  variant="ghost"
                   size="sm"
                   onClick={() => setActiveTimeframe(timeframe)}
-                  className={`transition-all duration-300 hover:scale-105 ${
+                  className={`transition-all duration-300 hover:scale-105 rounded-lg ${
                     activeTimeframe === timeframe 
-                      ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black' 
-                      : ''
+                      ? 'bg-yellow-400 text-black font-medium' 
+                      : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600'
                   }`}
                 >
                   {timeframe}
@@ -166,61 +172,47 @@ const CryptoWalletPage = () => {
         </Card>
 
         {/* Portfolio Composition */}
-        <Card className={`backdrop-blur-md ${isDarkMode ? 'bg-black/40 border-yellow-400/50' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
+        <Card className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold mb-6 text-center">Portfolio Composition</h2>
+            <h2 className={`text-2xl font-bold mb-8 text-center ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+              Portfolio Composition
+            </h2>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Pie Chart */}
-              <div className="flex justify-center">
-                <ResponsiveContainer width={300} height={300}>
-                  <PieChart>
-                    <Pie
-                      data={portfolioComposition}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={120}
-                      paddingAngle={2}
-                      dataKey="value"
+            {/* Asset List */}
+            <div className="space-y-4">
+              {portfolioComposition.map((asset, index) => (
+                <div
+                  key={asset.name}
+                  className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
+                    isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                      style={{ backgroundColor: asset.color }}
                     >
-                      {portfolioComposition.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Asset List */}
-              <div className="space-y-4">
-                {portfolioComposition.map((asset, index) => (
-                  <div
-                    key={asset.name}
-                    className={`flex items-center justify-between p-3 rounded-lg transition-all duration-300 hover:scale-105 ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                        style={{ backgroundColor: asset.color }}
-                      >
-                        {asset.icon}
-                      </div>
-                      <div>
-                        <div className="font-medium">{asset.name}</div>
-                        <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {asset.value}%
-                        </div>
-                      </div>
+                      {asset.symbol}
                     </div>
-                    <div className="text-right">
-                      <div className="font-medium">
-                        {isBalanceVisible ? formatCurrency(asset.amount) : "••••••"}
+                    <div>
+                      <div className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {asset.name}
+                      </div>
+                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {asset.value}% of portfolio
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div className="text-right">
+                    <div className={`font-bold text-lg ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                      {isBalanceVisible ? formatCurrency(asset.amount) : "••••••"}
+                    </div>
+                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {getHoldingLevel(asset.value)}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
