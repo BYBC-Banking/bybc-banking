@@ -160,7 +160,7 @@ const PortfolioSummary = ({
             </div>
           </div>
           
-          <div className="h-[180px] w-full">
+          <div className="h-[150px] w-full">
             <ChartContainer id="portfolio-chart" config={{
             positive: {
               color: "#38A169"
