@@ -8,6 +8,10 @@ import BusinessRoutes from "./BusinessRoutes";
 import ProtectedRoutes from "./ProtectedRoutes";
 
 const AppRoutes = () => {
+  const loginStatus = isLoggedIn();
+  console.log('AppRoutes: Component rendering, login status:', loginStatus);
+  console.log('AppRoutes: Will redirect to:', loginStatus ? "/dashboard" : "/login");
+  
   return (
     <Routes>
       <Route path="/" element={<Navigate to={isLoggedIn() ? "/dashboard" : "/login"} replace />} />
