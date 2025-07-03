@@ -115,7 +115,7 @@ const CryptoChart = ({
           </div>
         </div>
 
-        <div className="h-[200px]">
+        <div className="h-[160px]">
           <ChartContainer config={chartConfig} id="crypto-chart">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
