@@ -17,6 +17,7 @@ interface PortfolioCompositionProps {
   portfolioComposition: Asset[];
   formatCurrency: (value: number) => string;
   getHoldingLevel: (percentage: number) => string;
+  onAssetClick?: (assetName: string) => void;
 }
 
 const PortfolioComposition = ({
@@ -24,7 +25,8 @@ const PortfolioComposition = ({
   isBalanceVisible,
   portfolioComposition,
   formatCurrency,
-  getHoldingLevel
+  getHoldingLevel,
+  onAssetClick
 }: PortfolioCompositionProps) => {
   return (
     <Card className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
@@ -38,9 +40,10 @@ const PortfolioComposition = ({
           {portfolioComposition.map((asset, index) => (
             <div
               key={asset.name}
-              className={`flex items-center justify-between p-2 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
+              className={`flex items-center justify-between p-2 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
                 isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
               }`}
+              onClick={() => onAssetClick && onAssetClick(asset.name)}
             >
               <div className="flex items-center gap-2">
                 <div

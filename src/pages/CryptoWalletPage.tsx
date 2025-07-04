@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import WalletHeader from "@/components/crypto-wallet/WalletHeader";
 import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
 import PortfolioComposition from "@/components/crypto-wallet/PortfolioComposition";
+import CryptoDetailDashboard from "@/components/crypto-wallet/CryptoDetailDashboard";
 
 const portfolioData = [
   { time: '00:00', value: 68200 },
@@ -28,6 +28,7 @@ const CryptoWalletPage = () => {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [activeTimeframe, setActiveTimeframe] = useState('1D');
   const [animatedValue, setAnimatedValue] = useState(0);
+  const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
 
   const targetValue = 70517.16;
 
@@ -60,6 +61,19 @@ const CryptoWalletPage = () => {
     if (percentage >= 10) return "Moderate";
     return "Minor holding";
   };
+
+  const handleAssetClick = (assetName: string) => {
+    setSelectedCrypto(assetName);
+  };
+
+  const handleBackToPortfolio = () => {
+    setSelectedCrypto(null);
+  };
+
+  // If a crypto is selected, show the detailed dashboard
+  if (selectedCrypto) {
+    return <CryptoDetailDashboard crypto={selectedCrypto} onBack={handleBackToPortfolio} />;
+  }
 
   return (
     <div className={`min-h-screen transition-all duration-500 ${
@@ -99,6 +113,7 @@ const CryptoWalletPage = () => {
           portfolioComposition={portfolioComposition}
           formatCurrency={formatCurrency}
           getHoldingLevel={getHoldingLevel}
+          onAssetClick={handleAssetClick}
         />
       </div>
     </div>
