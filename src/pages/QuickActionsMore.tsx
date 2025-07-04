@@ -1,10 +1,10 @@
 
-import { ArrowLeft, Send, ArrowUpDown, CreditCard, Receipt, User, Smartphone, Zap, DollarSign, FileText, Settings, HelpCircle } from "lucide-react";
+import { ArrowLeft, Send, ArrowUpDown, CreditCard, Receipt, User, Smartphone, Zap, DollarSign, FileText, Settings, HelpCircle, Building2, Users, TrendingUp, Calculator, PieChart, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
 
 const QuickActionsMore = () => {
-  const { accountSection } = useHomePage();
+  const { accountSection, selectedAccount } = useHomePage();
 
   // Quick actions - core banking functions
   const quickActions = [
@@ -15,15 +15,47 @@ const QuickActionsMore = () => {
     { icon: User, label: "Advisor", href: "/advisor" },
   ];
 
-  // Tools - utility and management functions
-  const toolsActions = [
-    { icon: Smartphone, label: "Mobile Top Up", href: "/mobile-topup" },
-    { icon: Zap, label: "Utilities", href: "/utilities" },
-    { icon: DollarSign, label: "Investments", href: "/investments" },
-    { icon: FileText, label: "Statements", href: "/statements" },
-    { icon: Settings, label: "Settings", href: "/settings" },
-    { icon: HelpCircle, label: "Help", href: "/help" },
-  ];
+  // Tools - utility and management functions based on account type
+  const getToolsActions = () => {
+    const commonTools = [
+      { icon: Settings, label: "Settings", href: "/settings" },
+      { icon: HelpCircle, label: "Help", href: "/help" },
+    ];
+
+    if (accountSection === "business" || selectedAccount?.type === "Business" || selectedAccount?.type === "Nonprofit") {
+      return [
+        { icon: Building2, label: "Business Hub", href: "/business" },
+        { icon: Users, label: "Team Management", href: "/team" },
+        { icon: BarChart3, label: "Analytics", href: "/analytics" },
+        { icon: Calculator, label: "Tax Tools", href: "/tax-tools" },
+        { icon: FileText, label: "Reports", href: "/reports" },
+        { icon: PieChart, label: "Budget Planning", href: "/budget" },
+        ...commonTools
+      ];
+    }
+
+    if (selectedAccount?.type === "Investments") {
+      return [
+        { icon: TrendingUp, label: "Market Analysis", href: "/market-analysis" },
+        { icon: PieChart, label: "Portfolio", href: "/portfolio" },
+        { icon: DollarSign, label: "Investments", href: "/investments" },
+        { icon: BarChart3, label: "Performance", href: "/performance" },
+        { icon: FileText, label: "Tax Documents", href: "/tax-docs" },
+        ...commonTools
+      ];
+    }
+
+    // Default personal account tools
+    return [
+      { icon: Smartphone, label: "Mobile Top Up", href: "/mobile-topup" },
+      { icon: Zap, label: "Utilities", href: "/utilities" },
+      { icon: DollarSign, label: "Investments", href: "/investments" },
+      { icon: FileText, label: "Statements", href: "/statements" },
+      ...commonTools
+    ];
+  };
+
+  const toolsActions = getToolsActions();
 
   const getActionColors = (index: number) => {
     if (accountSection === "business") {
