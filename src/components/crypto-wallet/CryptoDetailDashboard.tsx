@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Eye, EyeOff, Sun, Moon, TrendingUp, TrendingDown, ExternalLink } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Sun, Moon, TrendingUp, TrendingDown, ExternalLink, ArrowDownLeft, ArrowUpRight, ArrowRightLeft, Globe, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +21,7 @@ const cryptoData = {
     marketCap: 16800000000000,
     volume24h: 420000000000,
     supply: 19800000,
-    description: 'Bitcoin is the first decentralized cryptocurrency. It was created in 2008 by an unknown person or group of people using the name Satoshi Nakamoto.',
+    description: 'Bitcoin is the world\'s first cryptocurrency, created in 2009 by the pseudonymous Satoshi Nakamoto. It operates on a decentralized network using blockchain technology, enabling peer-to-peer transactions without intermediaries.',
     website: 'https://bitcoin.org',
     whitepaper: 'https://bitcoin.org/bitcoin.pdf'
   },
@@ -133,6 +133,60 @@ const CryptoDetailDashboard = ({ crypto, onBack }: CryptoDetailDashboardProps) =
   };
 
   const holdingValue = userHolding * currentCrypto.currentPrice;
+
+  // Activity data with proper icons and formatting
+  const activityData = [
+    { 
+      type: 'Buy', 
+      action: `Buy ${crypto}`, 
+      amount: `+0.5 ${currentCrypto.symbol}`, 
+      time: '2 hours ago', 
+      status: 'completed',
+      icon: ArrowDownLeft,
+      iconBg: 'bg-green-600',
+      amountColor: 'text-green-500'
+    },
+    { 
+      type: 'Sell', 
+      action: `Sell ${crypto}`, 
+      amount: `-0.2 ${currentCrypto.symbol}`, 
+      time: '1 day ago', 
+      status: 'completed',
+      icon: ArrowUpRight,
+      iconBg: 'bg-red-600',
+      amountColor: 'text-red-500'
+    },
+    { 
+      type: 'Buy', 
+      action: `Buy ${crypto}`, 
+      amount: `+1 ${currentCrypto.symbol}`, 
+      time: '3 days ago', 
+      status: 'completed',
+      icon: ArrowDownLeft,
+      iconBg: 'bg-green-600',
+      amountColor: 'text-green-500'
+    },
+    { 
+      type: 'Receive', 
+      action: `Receive ${crypto}`, 
+      amount: `+0.1 ${currentCrypto.symbol}`, 
+      time: '1 week ago', 
+      status: 'completed',
+      icon: ArrowDownLeft,
+      iconBg: 'bg-green-600',
+      amountColor: 'text-green-500'
+    },
+    { 
+      type: 'Send', 
+      action: `Send ${crypto}`, 
+      amount: `-0.3 ${currentCrypto.symbol}`, 
+      time: '2 weeks ago', 
+      status: 'completed',
+      icon: ArrowUpRight,
+      iconBg: 'bg-red-600',
+      amountColor: 'text-red-500'
+    }
+  ];
 
   return (
     <div className={`min-h-screen transition-all duration-500 ${
@@ -337,7 +391,10 @@ const CryptoDetailDashboard = ({ crypto, onBack }: CryptoDetailDashboardProps) =
                   className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
                     activeTab === 'activity' ? 'border-current font-medium' : 'border-transparent'
                   }`}
-                  style={{color: activeTab === 'activity' ? currentCrypto.color : undefined}}
+                  style={{
+                    backgroundColor: activeTab === 'activity' ? currentCrypto.color : 'transparent',
+                    color: activeTab === 'activity' ? '#000' : undefined
+                  }}
                 >
                   Activity
                 </TabsTrigger>
@@ -346,67 +403,119 @@ const CryptoDetailDashboard = ({ crypto, onBack }: CryptoDetailDashboardProps) =
                   className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
                     activeTab === 'about' ? 'border-current font-medium' : 'border-transparent'
                   }`}
-                  style={{color: activeTab === 'about' ? currentCrypto.color : undefined}}
+                  style={{
+                    backgroundColor: activeTab === 'about' ? currentCrypto.color : 'transparent',
+                    color: activeTab === 'about' ? '#000' : undefined
+                  }}
                 >
                   About
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="activity" className="p-4 space-y-3">
-                {[
-                  { type: 'buy', amount: '+0.05 BTC', value: '+R42,500', time: '2 hours ago', color: 'text-green-500' },
-                  { type: 'send', amount: '-0.02 BTC', value: '-R17,000', time: '1 day ago', color: 'text-red-500' },
-                  { type: 'receive', amount: '+0.1 BTC', value: '+R85,000', time: '3 days ago', color: 'text-green-500' }
-                ].map((tx, index) => (
-                  <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${
-                    isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                           style={{backgroundColor: `${currentCrypto.color}20`}}>
-                        <span className="text-xs font-bold" style={{color: currentCrypto.color}}>
-                          {tx.type.charAt(0).toUpperCase()}
-                        </span>
+              <TabsContent value="activity" className="p-4">
+                <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Recent Activity
+                </h3>
+                <div className="space-y-3">
+                  {activityData.map((activity, index) => (
+                    <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${
+                      isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${activity.iconBg}`}>
+                          <activity.icon className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {activity.action}
+                          </div>
+                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {activity.time}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium capitalize">{tx.type}</div>
-                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{tx.time}</div>
+                      <div className="text-right">
+                        <div className={`font-medium ${activity.amountColor}`}>
+                          {activity.amount}
+                        </div>
+                        <div className={`text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-500`}>
+                          {activity.status}
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className={`font-medium ${tx.color}`}>{tx.amount}</div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{tx.value}</div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </TabsContent>
 
               <TabsContent value="about" className="p-4">
-                <div className="space-y-4">
+                <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  About {crypto}
+                </h3>
+                <div className="space-y-6">
                   <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {currentCrypto.description}
                   </p>
-                  <div className="flex gap-3">
-                    <a 
-                      href={currentCrypto.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all hover:scale-105"
-                      style={{backgroundColor: `${currentCrypto.color}20`, color: currentCrypto.color}}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span className="text-sm font-medium">Website</span>
-                    </a>
-                    <a 
-                      href={currentCrypto.whitepaper} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all hover:scale-105"
-                      style={{backgroundColor: `${currentCrypto.color}20`, color: currentCrypto.color}}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      <span className="text-sm font-medium">Whitepaper</span>
-                    </a>
+                  
+                  {/* Quick Stats Section */}
+                  <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'}`}>
+                    <h4 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Quick Stats
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Symbol:</span>
+                        <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {currentCrypto.symbol}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Current Price:</span>
+                        <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {formatCurrency(currentCrypto.currentPrice)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>24h Change:</span>
+                        <span className={`text-sm font-medium ${currentCrypto.change24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {currentCrypto.change24h > 0 ? '+' : ''}{currentCrypto.change24h}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Resources Section */}
+                  <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'}`}>
+                    <h4 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Resources
+                    </h4>
+                    <div className="space-y-2">
+                      <a 
+                        href={currentCrypto.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:scale-[1.02] ${
+                          isDarkMode ? 'bg-gray-600/50 hover:bg-gray-600/70' : 'bg-gray-100/50 hover:bg-gray-100/70'
+                        }`}
+                      >
+                        <Globe className="h-4 w-4" style={{color: currentCrypto.color}} />
+                        <span className="text-sm font-medium" style={{color: currentCrypto.color}}>
+                          Official Website
+                        </span>
+                      </a>
+                      <a 
+                        href={currentCrypto.whitepaper} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:scale-[1.02] ${
+                          isDarkMode ? 'bg-gray-600/50 hover:bg-gray-600/70' : 'bg-gray-100/50 hover:bg-gray-100/70'
+                        }`}
+                      >
+                        <FileText className="h-4 w-4" style={{color: currentCrypto.color}} />
+                        <span className="text-sm font-medium" style={{color: currentCrypto.color}}>
+                          Whitepaper
+                        </span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </TabsContent>
