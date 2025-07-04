@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Eye, EyeOff, Sun, Moon, TrendingUp, TrendingDown, ExternalLink, ArrowDownLeft, ArrowUpRight, ArrowRightLeft, Globe, FileText } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from "recharts";
+import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
+import CryptoDetailHeader from "./crypto-detail/CryptoDetailHeader";
+import CryptoHoldingsCard from "./crypto-detail/CryptoHoldingsCard";
+import CryptoPriceChart from "./crypto-detail/CryptoPriceChart";
+import CryptoTabsSection from "./crypto-detail/CryptoTabsSection";
 
 interface CryptoDetailDashboardProps {
   crypto: string;
@@ -205,323 +205,48 @@ const CryptoDetailDashboard = ({ crypto, onBack }: CryptoDetailDashboardProps) =
       </div>
 
       <div className="container mx-auto max-w-4xl px-4 py-4 relative z-10">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onBack}
-              className={`hover:scale-105 transition-transform rounded-full`}
-              style={{backgroundColor: `${currentCrypto.color}20`, border: `1px solid ${currentCrypto.color}30`}}
-            >
-              <ArrowLeft className="h-4 w-4" style={{color: currentCrypto.color}} />
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-lg"
-                   style={{backgroundColor: currentCrypto.color}}>
-                {currentCrypto.icon}
-              </div>
-              <h1 className={`text-xl font-bold`} style={{color: currentCrypto.color}}>
-                {crypto}
-              </h1>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`hover:scale-105 transition-transform rounded-full`}
-              style={{backgroundColor: `${currentCrypto.color}20`, border: `1px solid ${currentCrypto.color}30`}}
-            >
-              {isDarkMode ? <Sun className="h-4 w-4" style={{color: currentCrypto.color}} /> : 
-                           <Moon className="h-4 w-4" style={{color: currentCrypto.color}} />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsBalanceVisible(!isBalanceVisible)}
-              className={`hover:scale-105 transition-transform rounded-full`}
-              style={{backgroundColor: `${currentCrypto.color}20`, border: `1px solid ${currentCrypto.color}30`}}
-            >
-              {isBalanceVisible ? <Eye className="h-4 w-4" style={{color: currentCrypto.color}} /> : 
-                                 <EyeOff className="h-4 w-4" style={{color: currentCrypto.color}} />}
-            </Button>
-          </div>
-        </header>
+        <CryptoDetailHeader
+          crypto={crypto}
+          currentCrypto={currentCrypto}
+          isDarkMode={isDarkMode}
+          isBalanceVisible={isBalanceVisible}
+          onBack={onBack}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          onToggleBalanceVisibility={() => setIsBalanceVisible(!isBalanceVisible)}
+        />
 
-        {/* Holdings Card */}
-        <Card className={`mb-6 ${isDarkMode ? 'bg-gray-800/50 backdrop-blur-md' : 'bg-white/60'} hover:scale-[1.01] transition-transform duration-300`}
-              style={{border: `1px solid ${currentCrypto.color}30`}}>
-          <CardContent className="p-6">
-            <div className="text-center">
-              <div className={`text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Your {crypto} Holdings
-              </div>
-              <div className="text-3xl font-bold mb-2" style={{color: currentCrypto.color}}>
-                {isBalanceVisible ? `${userHolding} ${currentCrypto.symbol}` : "••••••••"}
-              </div>
-              <div className="text-xl font-semibold mb-3" style={{color: currentCrypto.color}}>
-                {isBalanceVisible ? formatCurrency(holdingValue) : "••••••••"}
-              </div>
-              <div className="flex items-center justify-center gap-4 text-sm">
-                <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  24h Change: <span className={currentCrypto.change24h > 0 ? 'text-green-500' : 'text-red-500'}>
-                    {currentCrypto.change24h > 0 ? '+' : ''}{currentCrypto.change24h}%
-                  </span>
-                </div>
-                <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Avg Cost: {formatCurrency(currentCrypto.currentPrice * 0.92)}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <CryptoHoldingsCard
+          crypto={crypto}
+          currentCrypto={currentCrypto}
+          userHolding={userHolding}
+          holdingValue={holdingValue}
+          isDarkMode={isDarkMode}
+          isBalanceVisible={isBalanceVisible}
+          formatCurrency={formatCurrency}
+        />
 
-        {/* Price Section */}
-        <Card className={`mb-6 ${isDarkMode ? 'bg-gray-800/50 backdrop-blur-md' : 'bg-white/60'} hover:scale-[1.01] transition-transform duration-300`}
-              style={{border: `1px solid ${currentCrypto.color}30`}}>
-          <CardContent className="p-6">
-            <div className="text-center mb-4">
-              <div className="text-4xl font-bold mb-2" style={{color: currentCrypto.color}}>
-                {formatCurrency(animatedPrice)}
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <div className={`flex items-center gap-1 px-3 py-1 rounded-full ${
-                  currentCrypto.change24h > 0 ? 'bg-green-500/20' : 'bg-red-500/20'
-                }`}>
-                  {currentCrypto.change24h > 0 ? 
-                    <TrendingUp className="h-4 w-4 text-green-500" /> : 
-                    <TrendingDown className="h-4 w-4 text-red-500" />
-                  }
-                  <span className={`font-medium ${currentCrypto.change24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {currentCrypto.change24h > 0 ? '+' : ''}{currentCrypto.change24h}%
-                  </span>
-                </div>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>24h</span>
-              </div>
-            </div>
+        <CryptoPriceChart
+          currentCrypto={currentCrypto}
+          animatedPrice={animatedPrice}
+          chartData={chartData}
+          timeframes={timeframes}
+          activeTimeframe={activeTimeframe}
+          isDarkMode={isDarkMode}
+          crypto={crypto}
+          formatCurrency={formatCurrency}
+          formatLargeNumber={formatLargeNumber}
+          onTimeframeChange={setActiveTimeframe}
+        />
 
-            {/* Chart */}
-            <div className="h-48 mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id={`gradient-${crypto}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={currentCrypto.color} stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor={currentCrypto.color} stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey="time" 
-                    axisLine={false}
-                    tickLine={false}
-                    className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <YAxis hide />
-                  <Area 
-                    type="monotone" 
-                    dataKey="price" 
-                    stroke={currentCrypto.color}
-                    strokeWidth={2}
-                    fill={`url(#gradient-${crypto})`}
-                    dot={false}
-                    activeDot={{ r: 4, stroke: currentCrypto.color, strokeWidth: 2, fill: currentCrypto.color }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Timeframe Selector */}
-            <div className="flex justify-center gap-1 mb-4">
-              {timeframes.map((timeframe) => (
-                <Button
-                  key={timeframe}
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setActiveTimeframe(timeframe)}
-                  className={`transition-all duration-300 hover:scale-105 rounded-lg text-xs px-3 py-1 ${
-                    activeTimeframe === timeframe 
-                      ? 'font-medium text-black' 
-                      : isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600'
-                  }`}
-                  style={{
-                    backgroundColor: activeTimeframe === timeframe ? currentCrypto.color : 'transparent'
-                  }}
-                >
-                  {timeframe}
-                </Button>
-              ))}
-            </div>
-
-            {/* Market Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Market Cap</div>
-                <div className="font-semibold text-sm" style={{color: currentCrypto.color}}>
-                  {formatLargeNumber(currentCrypto.marketCap)}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>24h Volume</div>
-                <div className="font-semibold text-sm" style={{color: currentCrypto.color}}>
-                  {formatLargeNumber(currentCrypto.volume24h)}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Supply</div>
-                <div className="font-semibold text-sm" style={{color: currentCrypto.color}}>
-                  {currentCrypto.supply.toLocaleString()}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Tabs Section */}
-        <Card className={`${isDarkMode ? 'bg-gray-800/50 backdrop-blur-md' : 'bg-white/60'}`}
-              style={{border: `1px solid ${currentCrypto.color}30`}}>
-          <CardContent className="p-0">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="w-full bg-transparent p-0 h-auto">
-                <TabsTrigger 
-                  value="activity" 
-                  className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
-                    activeTab === 'activity' ? 'border-current font-medium' : 'border-transparent'
-                  }`}
-                  style={{
-                    backgroundColor: activeTab === 'activity' ? currentCrypto.color : 'transparent',
-                    color: activeTab === 'activity' ? '#000' : undefined
-                  }}
-                >
-                  Activity
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="about" 
-                  className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
-                    activeTab === 'about' ? 'border-current font-medium' : 'border-transparent'
-                  }`}
-                  style={{
-                    backgroundColor: activeTab === 'about' ? currentCrypto.color : 'transparent',
-                    color: activeTab === 'about' ? '#000' : undefined
-                  }}
-                >
-                  About
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="activity" className="p-4">
-                <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Recent Activity
-                </h3>
-                <div className="space-y-3">
-                  {activityData.map((activity, index) => (
-                    <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${
-                      isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'
-                    }`}>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${activity.iconBg}`}>
-                          <activity.icon className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                          <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {activity.action}
-                          </div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {activity.time}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className={`font-medium ${activity.amountColor}`}>
-                          {activity.amount}
-                        </div>
-                        <div className={`text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-500`}>
-                          {activity.status}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="about" className="p-4">
-                <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  About {crypto}
-                </h3>
-                <div className="space-y-6">
-                  <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {currentCrypto.description}
-                  </p>
-                  
-                  {/* Quick Stats Section */}
-                  <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'}`}>
-                    <h4 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      Quick Stats
-                    </h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Symbol:</span>
-                        <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {currentCrypto.symbol}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Current Price:</span>
-                        <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {formatCurrency(currentCrypto.currentPrice)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>24h Change:</span>
-                        <span className={`text-sm font-medium ${currentCrypto.change24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          {currentCrypto.change24h > 0 ? '+' : ''}{currentCrypto.change24h}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Resources Section */}
-                  <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50/50'}`}>
-                    <h4 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      Resources
-                    </h4>
-                    <div className="space-y-2">
-                      <a 
-                        href={currentCrypto.website} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:scale-[1.02] ${
-                          isDarkMode ? 'bg-gray-600/50 hover:bg-gray-600/70' : 'bg-gray-100/50 hover:bg-gray-100/70'
-                        }`}
-                      >
-                        <Globe className="h-4 w-4" style={{color: currentCrypto.color}} />
-                        <span className="text-sm font-medium" style={{color: currentCrypto.color}}>
-                          Official Website
-                        </span>
-                      </a>
-                      <a 
-                        href={currentCrypto.whitepaper} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:scale-[1.02] ${
-                          isDarkMode ? 'bg-gray-600/50 hover:bg-gray-600/70' : 'bg-gray-100/50 hover:bg-gray-100/70'
-                        }`}
-                      >
-                        <FileText className="h-4 w-4" style={{color: currentCrypto.color}} />
-                        <span className="text-sm font-medium" style={{color: currentCrypto.color}}>
-                          Whitepaper
-                        </span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        <CryptoTabsSection
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          currentCrypto={currentCrypto}
+          crypto={crypto}
+          isDarkMode={isDarkMode}
+          activityData={activityData}
+          formatCurrency={formatCurrency}
+        />
       </div>
     </div>
   );
