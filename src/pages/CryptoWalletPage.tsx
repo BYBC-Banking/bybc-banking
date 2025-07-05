@@ -4,6 +4,7 @@ import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
 import PortfolioComposition from "@/components/crypto-wallet/PortfolioComposition";
 import DonutChart from "@/components/crypto-wallet/DonutChart";
 import CryptoDetailDashboard from "@/components/crypto-wallet/CryptoDetailDashboard";
+import CryptoWalletActions from "@/components/crypto-wallet/CryptoWalletActions";
 
 const portfolioData = [
   { time: '00:00', value: 68200 },
@@ -81,7 +82,7 @@ const CryptoWalletPage = () => {
       isDarkMode 
         ? "bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
         : "bg-gradient-to-br from-yellow-50 via-white to-yellow-100 text-gray-900"
-    } relative overflow-hidden`}>
+    } relative overflow-hidden pb-20`}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl animate-pulse ${isDarkMode ? 'bg-yellow-400/10' : 'bg-yellow-300/30'}`} style={{animationDelay: '0s'}}></div>
@@ -157,6 +158,8 @@ const CryptoWalletPage = () => {
           </div>
         </div>
       </div>
+
+      <CryptoWalletActions />
     </div>
   );
 };
