@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WalletHeader from "@/components/crypto-wallet/WalletHeader";
 import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
 import PortfolioComposition from "@/components/crypto-wallet/PortfolioComposition";
+import DonutChart from "@/components/crypto-wallet/DonutChart";
 import CryptoDetailDashboard from "@/components/crypto-wallet/CryptoDetailDashboard";
 
 const portfolioData = [
@@ -115,6 +116,10 @@ const CryptoWalletPage = () => {
           getHoldingLevel={getHoldingLevel}
           onAssetClick={handleAssetClick}
         />
+
+        <div className="mt-6">
+          <DonutChart isDarkMode={isDarkMode} />
+        </div>
       </div>
     </div>
   );
