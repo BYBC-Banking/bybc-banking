@@ -1,515 +1,834 @@
 
-import { useState, useRef, useEffect } from "react";
-import { ArrowDown, ArrowUp, Clock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { TrendingUp, TrendingDown, ArrowUpDown, DollarSign, Bitcoin, Clock, Copy, Shield, AlertTriangle } from 'lucide-react';
 
-// Crypto asset data
-const CRYPTOS = [
-  {
-    name: "Ethereum",
-    symbol: "ETH",
-    icon: "Ξ",
-    color: "#627eea",
-    price: 45000,
-  },
-  {
-    name: "Bitcoin",
-    symbol: "BTC",
-    icon: "₿",
-    color: "#f7931a",
-    price: 1250000,
-  },
-  {
-    name: "Ripple",
-    symbol: "XRP",
-    icon: "◊",
-    color: "#23292f",
-    price: 12.5,
-  },
-  {
-    name: "Stellar",
-    symbol: "XLM",
-    icon: "⭐",
-    color: "#14b6e7",
-    price: 2.15,
-  },
-  {
-    name: "Litecoin",
-    symbol: "LTC",
-    icon: "Ł",
-    color: "#345d9d",
-    price: 1850,
-  },
-  {
-    name: "Solana",
-    symbol: "SOL",
-    icon: "◎",
-    color: "#9945ff",
-    price: 3200,
-  },
-  {
-    name: "Toncoin",
-    symbol: "TON",
-    icon: "💎",
-    color: "#0088cc",
-    price: 95.5,
-  },
-  {
-    name: "BNB",
-    symbol: "BNB",
-    icon: "🔶",
-    color: "#f3ba2f",
-    price: 8500,
-  },
-];
-
-// Slider config
-const SLIDER_MIN = 100;
-const SLIDER_MAX = 25000;
-const SLIDER_STEP = 100;
-const SLIDER_TICKS = [100, 1000, 5000, 10000, 15000, 20000, 25000];
-
-// Utility for formatting currency
-function formatCurrency(val: number) {
-  return "R" + val.toLocaleString("en-ZA", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-}
-
-export default function CryptoTradePage() {
-  // State
-  const [activeTab, setActiveTab] = useState<"buy" | "sell">("buy");
-  const [selectedCrypto, setSelectedCrypto] = useState(CRYPTOS[0]);
+const CryptoTradePage = () => {
+  const [activeTab, setActiveTab] = useState('buy');
+  const [selectedCrypto, setSelectedCrypto] = useState('ETH');
+  const [amount, setAmount] = useState('');
+  const [amountType, setAmountType] = useState('crypto');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [amountType, setAmountType] = useState<"fiat" | "crypto">("fiat");
-  const [sliderValue, setSliderValue] = useState(SLIDER_MIN);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showPreApproval, setShowPreApproval] = useState(false);
+  const [countdown, setCountdown] = useState(30);
+  const [payAmount, setPayAmount] = useState('');
+  const [receiveAmount, setReceiveAmount] = useState('');
 
-  // For closing dropdown on click outside
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const cryptos = [
+    {
+      symbol: 'ETH',
+      name: 'Ethereum',
+      price: 45000.00,
+      change: '+5.2%',
+      changePositive: true,
+      icon: 'Ξ',
+      color: '#627eea',
+      available: 2.4567
+    },
+    {
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      price: 1250000.00,
+      change: '+2.5%',
+      changePositive: true,
+      icon: '₿',
+      color: '#f7931a',
+      available: 0.08945
+    },
+    {
+      symbol: 'XRP',
+      name: 'Ripple',
+      price: 12.50,
+      change: '+3.8%',
+      changePositive: true,
+      icon: '◊',
+      color: '#23292f',
+      available: 1250.75
+    },
+    {
+      symbol: 'XLM',
+      name: 'Stellar',
+      price: 2.15,
+      change: '+1.9%',
+      changePositive: true,
+      icon: '⭐',
+      color: '#14b6e7',
+      available: 850.25
+    },
+    {
+      symbol: 'LTC',
+      name: 'Litecoin',
+      price: 1850.00,
+      change: '-1.5%',
+      changePositive: false,
+      icon: 'Ł',
+      color: '#345d9d',
+      available: 5.7823
+    },
+    {
+      symbol: 'SOL',
+      name: 'Solana',
+      price: 3200.00,
+      change: '+7.2%',
+      changePositive: true,
+      icon: '◎',
+      color: '#9945ff',
+      available: 12.346
+    },
+    {
+      symbol: 'TON',
+      name: 'Toncoin',
+      price: 95.50,
+      change: '+4.1%',
+      changePositive: true,
+      icon: '💎',
+      color: '#0088cc',
+      available: 45.125
+    },
+    {
+      symbol: 'BNB',
+      name: 'BNB',
+      price: 8500.00,
+      change: '+2.8%',
+      changePositive: true,
+      icon: '🔶',
+      color: '#f3ba2f',
+      available: 3.2456
+    }
+  ];
 
-  // Conversion calculations
-  const price = selectedCrypto.price;
-  const amountNum = parseFloat(amount) || 0;
-  let cryptoAmount = amountType === "fiat" ? amountNum / price : amountNum;
-  let fiatAmount = amountType === "fiat" ? amountNum : amountNum * price;
+  const selectedCryptoData = cryptos.find(crypto => crypto.symbol === selectedCrypto);
 
-  // Input field logic: limit to 8 decimals for crypto, 2 for fiat, update slider sync
-  useEffect(() => {
-    if (amountType === "fiat") {
-      // Sync slider if changed in input and value in range
-      if (
-        Math.abs(fiatAmount - sliderValue) > 0.5 &&
-        fiatAmount >= SLIDER_MIN &&
-        fiatAmount <= SLIDER_MAX
-      ) {
-        setSliderValue(fiatAmount);
+  const calculateConversion = () => {
+    if (!amount || !selectedCryptoData) return { crypto: '0', fiat: 'R0.00' };
+    
+    const numAmount = parseFloat(amount);
+    if (amountType === 'crypto') {
+      const fiatValue = numAmount * selectedCryptoData.price;
+      const cryptoVal = numAmount.toString();
+      const fiatVal = `R${fiatValue.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}`;
+      
+      // Update pay/receive amounts if they're empty
+      if (!payAmount && !receiveAmount) {
+        setPayAmount(activeTab === 'buy' ? fiatVal : cryptoVal);
+        setReceiveAmount(activeTab === 'buy' ? cryptoVal : fiatVal);
       }
+      
+      return {
+        crypto: cryptoVal,
+        fiat: fiatVal
+      };
+    } else {
+      const cryptoValue = numAmount / selectedCryptoData.price;
+      const cryptoVal = cryptoValue.toFixed(8);
+      const fiatVal = `R${numAmount.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}`;
+      
+      // Update pay/receive amounts if they're empty
+      if (!payAmount && !receiveAmount) {
+        setPayAmount(activeTab === 'buy' ? fiatVal : cryptoVal);
+        setReceiveAmount(activeTab === 'buy' ? cryptoVal : fiatVal);
+      }
+      
+      return {
+        crypto: cryptoVal,
+        fiat: fiatVal
+      };
     }
-    // eslint-disable-next-line
-  }, [amount, amountType, selectedCrypto]);
+  };
 
+  const conversion = calculateConversion();
+
+  // Countdown timer effect for pre-approval modal
   useEffect(() => {
-    // if dropdown open, setup click outside
-    if (!showDropdown) return;
-    function handle(e: MouseEvent) {
-      if (!dropdownRef.current?.contains(e.target as Node)) setShowDropdown(false);
+    let timer;
+    if (showPreApproval && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else if (countdown === 0) {
+      setShowPreApproval(false);
+      setCountdown(30);
     }
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, [showDropdown]);
+    return () => clearTimeout(timer);
+  }, [showPreApproval, countdown]);
 
-  // When slider moves, set amount in fiat (if type==fiat)
-  function handleSlider(val: number) {
-    setSliderValue(val);
-    if (amountType === "fiat") setAmount(val.toString());
-    else setAmount((val / price).toFixed(8).replace(/\.?0+$/, "")); // to max 8 decimals
-  }
+  // Generate mock wallet address
+  const generateWalletAddress = () => {
+    const cryptoAddresses = {
+      'BTC': '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+      'ETH': '0x742d35Cc6634C0532925a3b8D92d2463FD5e2384',
+      'XRP': 'rN7n7otQDd6FczFgLdSqtcsAUxDkw6fzRH',
+      'XLM': 'GDQP2KPQGKIHYJGXNUIYOMHARUARCA7DJT5FO2FFOOKY3B2WSQHG4W37',
+      'LTC': 'LdP8Qox1VAhCzLJNqrr74YovaWYyNBUWvL',
+      'SOL': '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
+      'TON': 'EQD7wjQKLLiLT7QYhTdp7xPJfmwHlQMYGqHT8PhTxRJf8cFm',
+      'BNB': 'bnb1grpf0955h0ykzq3ar5nmum7y6gdfl6lxfn46h2'
+    };
+    return cryptoAddresses[selectedCrypto] || cryptoAddresses['BTC'];
+  };
 
-  // Handle input
-  function handleInput(val: string) {
-    // validate: allow decimals, prevent negatives, limit length
-    if (!/^(\d+(\.\d{0,8})?)?$/.test(val)) return;
-    setAmount(val);
-    if (amountType === "fiat" && val) setSliderValue(Math.max(SLIDER_MIN, Math.min(SLIDER_MAX, parseFloat(val))));
-  }
+  const getNetworkName = () => {
+    const networks = {
+      'BTC': 'Bitcoin Mainnet',
+      'ETH': 'Ethereum Mainnet',
+      'XRP': 'XRP Ledger',
+      'XLM': 'Stellar Network',
+      'LTC': 'Litecoin Network',
+      'SOL': 'Solana Mainnet',
+      'TON': 'TON Blockchain',
+      'BNB': 'BNB Smart Chain'
+    };
+    return networks[selectedCrypto] || 'Bitcoin Mainnet';
+  };
 
-  // Handle type toggle
-  function toggleAmountType(tp: "fiat" | "crypto") {
-    if (amount === "") {
-      setAmountType(tp);
-      return;
-    }
-    // Convert value on switch
-    if (tp === "fiat" && amountType === "crypto") {
-      setAmount((cryptoAmount * price).toFixed(2));
-      setSliderValue(Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, cryptoAmount * price)));
-    }
-    if (tp === "crypto" && amountType === "fiat") {
-      setAmount((fiatAmount / price).toFixed(8).replace(/\.?0+$/, ""));
-    }
-    setAmountType(tp);
-  }
-
-  // Header Action button disabled if invalid
-  const isActionDisabled = !amountNum || fiatAmount < SLIDER_MIN || fiatAmount > SLIDER_MAX;
-
-  // Main colors
-  const buyActive = activeTab === "buy";
-  const actionColor = buyActive ? "bg-green-600 hover:bg-green-700 focus:bg-green-700" : "bg-red-600 hover:bg-red-700 focus:bg-red-700";
-  const actionText = buyActive ? `Buy ${selectedCrypto.symbol}` : `Sell ${selectedCrypto.symbol}`;
-  const tabBg = buyActive ? "bg-green-600" : "bg-red-600";
-  const sliderAmber =
-    "bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500";
+  const copyToClipboard = (text) => {
+    navigator.clipboard?.writeText(text);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-6 px-2 sm:px-0">
-      {/* --- Buy/Sell Toggle Section --- */}
-      <div className="w-full max-w-md px-2 mb-6">
-        <div className="flex relative bg-slate-700 rounded-full p-1 h-14 transition-all shadow">
-          <div
-            className={cn(
-              "absolute left-0 top-0 h-full w-1/2 rounded-full transition-transform duration-300",
-              buyActive
-                ? "translate-x-0 bg-green-600"
-                : "translate-x-full bg-red-600"
-            )}
-            style={{
-              width: "50%",
-              boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
-              transform: buyActive
-                ? "translateX(0%)"
-                : "translateX(100%)",
-            }}
-          />
+    <div className="min-h-screen bg-gray-50">
+      <style>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #f59e0b;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .slider::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #f59e0b;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+      `}</style>
+      
+      {/* Buy/Sell Toggle */}
+      <div className="px-6 py-4">
+        <div className="bg-slate-700 rounded-full p-1 flex relative">
           <button
-            className={cn(
-              "relative w-1/2 z-10 text-center text-base font-semibold transition-colors duration-300 px-2 py-2 rounded-full",
-              buyActive ? "text-white" : "text-gray-400"
-            )}
-            onClick={() => setActiveTab("buy")}
+            onClick={() => setActiveTab('buy')}
+            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all duration-300 relative z-10 ${
+              activeTab === 'buy'
+                ? 'text-white'
+                : 'text-gray-400'
+            }`}
           >
             Buy
           </button>
           <button
-            className={cn(
-              "relative w-1/2 z-10 text-center text-base font-semibold transition-colors duration-300 px-2 py-2 rounded-full",
-              !buyActive ? "text-white" : "text-gray-400"
-            )}
-            onClick={() => setActiveTab("sell")}
+            onClick={() => setActiveTab('sell')}
+            className={`flex-1 py-3 px-6 rounded-full font-medium transition-all duration-300 relative z-10 ${
+              activeTab === 'sell'
+                ? 'text-white'
+                : 'text-gray-400'
+            }`}
           >
             Sell
           </button>
+          <div
+            className={`absolute top-1 bottom-1 w-1/2 rounded-full transition-all duration-300 ease-in-out ${
+              activeTab === 'buy' 
+                ? 'left-1 bg-green-500' 
+                : 'left-1/2 bg-red-500'
+            }`}
+            style={{ 
+              transform: activeTab === 'buy' ? 'translateX(0)' : 'translateX(-1px)'
+            }}
+          />
         </div>
       </div>
-      {/* --- Available Assets Dropdown --- */}
-      <div className="w-full max-w-md px-2 mb-3">
-        <h2 className="font-medium text-sm mb-2 text-gray-700">Available Assets</h2>
-        <div ref={dropdownRef} className="relative">
+
+      {/* Available Assets Dropdown */}
+      <div className="px-6 mb-4">
+        <div className="relative">
+          <h3 className="text-md font-medium text-slate-800 mb-3">Available Assets</h3>
+          
+          {/* Dropdown Trigger */}
           <button
-            type="button"
-            className={cn(
-              "w-full flex items-center justify-between px-4 py-4 bg-slate-700 rounded-xl cursor-pointer shadow text-white hover:bg-slate-800 focus:outline-none transition"
-            )}
-            onClick={() => setShowDropdown((o) => !o)}
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="w-full bg-slate-700 rounded-2xl p-4 flex items-center justify-between text-white hover:bg-slate-600 transition-colors"
           >
-            <span className="flex items-center gap-3">
-              <span
-                className="text-lg font-bold"
-                style={{
-                  color: selectedCrypto.color,
-                  background: "#fff",
-                  borderRadius: "50%",
-                  width: 38,
-                  height: 38,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 8px 0 rgba(62,62,62,.11)"
-                }}
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                style={{ backgroundColor: selectedCryptoData?.color }}
               >
-                {selectedCrypto.icon}
-              </span>
-              <span>
-                <span className="block font-medium">{selectedCrypto.name}</span>
-                <span className="text-xs font-normal text-gray-200">Available</span>
-              </span>
-            </span>
-            <span className="flex flex-col items-end gap-0.5">
-              <span className="text-sm text-gray-100 font-semibold">
-                {selectedCrypto.symbol}
-              </span>
-              <span className="text-xs text-gray-400">
-                {formatCurrency(selectedCrypto.price)}
-              </span>
-            </span>
-            {/* Arrow, rotates */}
-            <ArrowDown
-              className={cn(
-                "ml-2 w-5 h-5 text-gray-300 transition-transform duration-300",
-                showDropdown && "rotate-180"
-              )}
-              strokeWidth={2}
-            />
+                {selectedCryptoData?.icon}
+              </div>
+              <div className="text-left">
+                <p className="text-white font-medium">{selectedCryptoData?.name}</p>
+                <p className="text-gray-300 text-sm">
+                  Available: {selectedCryptoData?.available} {selectedCryptoData?.symbol}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="text-amber-400 font-semibold text-sm">{selectedCryptoData?.symbol}</p>
+              <div className={`transform transition-transform ${showDropdown ? 'rotate-180' : ''}`}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
           </button>
+
+          {/* Dropdown Content */}
           {showDropdown && (
-            <div className="absolute z-30 top-full left-0 right-0 mt-1 max-h-72 bg-slate-800 border border-slate-900 shadow-xl rounded-xl overflow-y-auto animate-fade-in">
-              {CRYPTOS.map((c) => (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-slate-700 rounded-2xl p-2 shadow-xl z-10 max-h-64 overflow-y-auto">
+              {cryptos.filter(crypto => crypto.symbol !== selectedCrypto).map((crypto) => (
                 <button
-                  key={c.symbol}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 px-4 py-3 focus:bg-slate-700 hover:bg-slate-700 text-white transition rounded-lg",
-                    selectedCrypto.symbol === c.symbol && "bg-slate-700"
-                  )}
+                  key={crypto.symbol}
                   onClick={() => {
-                    setSelectedCrypto(c);
+                    setSelectedCrypto(crypto.symbol);
                     setShowDropdown(false);
-                    setAmount("");
-                    setSliderValue(SLIDER_MIN);
                   }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-600 transition-all duration-200"
                 >
-                  <span className="flex items-center gap-3">
-                    <span
-                      className="text-lg font-bold"
-                      style={{
-                        color: c.color,
-                        background: "#fff",
-                        borderRadius: "50%",
-                        width: 32,
-                        height: 32,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: "0 2px 8px 0 rgba(62,62,62,.11)"
-                      }}
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                      style={{ backgroundColor: crypto.color }}
                     >
-                      {c.icon}
-                    </span>
-                    <span>
-                      <span className="block font-medium">{c.name}</span>
-                      <span className="text-xs text-gray-300">{c.symbol}</span>
-                    </span>
-                  </span>
-                  <span className="flex flex-col items-end gap-0.5">
-                    <span className="text-sm text-gray-100 font-semibold">
-                      {formatCurrency(c.price)}
-                    </span>
-                  </span>
+                      {crypto.icon}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-medium">{crypto.name}</p>
+                      <p className="text-gray-300 text-sm">
+                        Available: {crypto.available} {crypto.symbol}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-amber-400 font-semibold text-sm">{crypto.symbol}</p>
                 </button>
               ))}
             </div>
           )}
         </div>
       </div>
-      {/* --- Trading Card --- */}
-      <div className="w-full max-w-md px-2 mb-5">
-        <div className="bg-white rounded-xl shadow-xl px-4 pt-4 pb-3">
-          {/* Card Header */}
+
+      {/* Trading Interface */}
+      <div className="px-6 mb-6">
+        <div className="bg-white rounded-2xl p-6 shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                {buyActive ? "Buy" : "Sell"} {selectedCrypto.name}
-              </div>
-              <div className="flex items-center text-xs text-amber-600 gap-1 mt-0.5">
-                <Clock className="w-3.5 h-3.5" />
-                <span className="font-medium">Live Price</span>
-              </div>
+            <h3 className="font-semibold text-slate-800">
+              {activeTab === 'buy' ? 'Buy' : 'Sell'} {selectedCryptoData?.name}
+            </h3>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Clock size={16} />
+              Live Price
             </div>
-            <div className="flex flex-col items-end">
-              <span className="text-sm font-bold text-gray-800">
-                {selectedCrypto.symbol}
+          </div>
+
+          <div className="mb-4">
+            <div className="flex rounded-2xl border-2 border-gray-200 overflow-hidden">
+              <button
+                onClick={() => setAmountType('fiat')}
+                className={`px-4 py-3 font-medium transition-colors ${
+                  amountType === 'fiat'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                ZAR
+              </button>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder={`Enter ${amountType === 'crypto' ? selectedCrypto : 'ZAR'} amount`}
+                className="flex-1 px-4 py-3 border-none outline-none text-lg font-semibold"
+              />
+              <button
+                onClick={() => setAmountType('crypto')}
+                className={`px-4 py-3 font-medium transition-colors ${
+                  amountType === 'crypto'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {selectedCrypto}
+              </button>
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <p className="text-gray-600 text-sm mb-1">Available Balance:</p>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600 text-sm">
+                {activeTab === 'buy' ? 'Cash:' : `${selectedCrypto}:`}
               </span>
-              <span className="text-xs text-gray-500">
-                {formatCurrency(selectedCrypto.price)}
+              <span className="font-semibold text-slate-800">
+                {activeTab === 'buy' ? 'R25,430.50' : `${selectedCryptoData?.available} ${selectedCrypto}`}
               </span>
             </div>
           </div>
-          {/* Dual-Input: Crypto/ZAR toggle */}
-          <div className="flex mb-3 gap-2">
-            <button
-              className={cn(
-                "flex-1 text-sm font-medium px-3 py-2 rounded-lg border border-amber-300 transition-colors duration-200",
-                amountType === "fiat"
-                  ? "bg-amber-500 text-white border-amber-500 shadow"
-                  : "bg-gray-50 text-amber-500 hover:bg-amber-100"
-              )}
-              onClick={() => toggleAmountType("fiat")}
-            >
-              ZAR
-            </button>
-            <button
-              className={cn(
-                "flex-1 text-sm font-medium px-3 py-2 rounded-lg border border-amber-300 transition-colors duration-200",
-                amountType === "crypto"
-                  ? "bg-amber-500 text-white border-amber-500 shadow"
-                  : "bg-gray-50 text-amber-500 hover:bg-amber-100"
-              )}
-              onClick={() => toggleAmountType("crypto")}
-            >
-              {selectedCrypto.symbol}
-            </button>
-          </div>
-          <div>
-            <input
-              value={amount}
-              onChange={(e) => handleInput(e.target.value)}
-              type="text"
-              placeholder={
-                amountType === "fiat"
-                  ? "Enter amount (ZAR)"
-                  : `Enter amount (${selectedCrypto.symbol})`
-              }
-              className="w-full rounded-lg border border-slate-200 bg-gray-50 px-4 py-3 text-xl font-semibold mb-2 focus:outline-none focus:ring-2 focus:ring-amber-300 transition"
-              min="0"
-              inputMode="decimal"
-            />
+
+          <div className="bg-gray-50 rounded-xl p-4 mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-gray-500">
-                Cash: <span className="font-medium text-gray-700">R25,430.50</span>
-              </span>
-              <span className="text-xs text-gray-400">
-                Min R100 • Max R25,000
-              </span>
+              <span className="text-gray-600">You {activeTab === 'buy' ? 'pay' : 'receive'}:</span>
+              <input
+                type="text"
+                value={payAmount || (activeTab === 'buy' ? conversion.fiat : conversion.crypto + ' ' + selectedCrypto)}
+                onChange={(e) => setPayAmount(e.target.value)}
+                className="text-right font-bold text-slate-800 bg-transparent border-none outline-none"
+                placeholder="0"
+              />
             </div>
-            {/* Conversion Box */}
-            {(amountNum > 0) && (
-              <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-2 transition-all duration-300">
-                <span className="text-sm font-medium text-gray-700">
-                  You {buyActive ? "pay" : "receive"}
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="text-lg font-bold text-gray-800">
-                    {amountType === "fiat"
-                      ? (cryptoAmount > 0.0000001 ? `${cryptoAmount.toFixed(8).replace(/\.?0+$/, "")}` : "0") 
-                      : formatCurrency(fiatAmount)
-                    }
-                  </span>
-                  <span className="ml-0.5 text-base">
-                    {amountType === "fiat" ? selectedCrypto.symbol : "ZAR"}
-                  </span>
-                  <ArrowRightIcon />
-                </span>
-              </div>
-            )}
+            <div className="flex items-center justify-center my-2">
+              <ArrowUpDown size={16} className="text-gray-400" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-600">You {activeTab === 'buy' ? 'receive' : 'pay'}:</span>
+              <input
+                type="text"
+                value={receiveAmount || (activeTab === 'buy' ? conversion.crypto + ' ' + selectedCrypto : conversion.fiat)}
+                onChange={(e) => setReceiveAmount(e.target.value)}
+                className="text-right font-bold text-slate-800 bg-transparent border-none outline-none"
+                placeholder="0"
+              />
+            </div>
           </div>
-          {/* Slider section */}
-          <div className="my-4 pb-1 px-1">
-            <label className="block text-xs text-gray-700 mb-2 ml-1">
-              Amount ({amountType === "fiat" ? "ZAR" : selectedCrypto.symbol})
-            </label>
-            <div className="w-full relative">
-              {/* Custom slider bar */}
+
+          {/* Amount Range with Slider */}
+          <div className="relative mb-6">
+            <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+              <span>R100</span>
+              <span>R2,500</span>
+              <span>R5,000</span>
+              <span>R7,500</span>
+              <span>R10,000</span>
+            </div>
+            <div className="relative">
               <input
                 type="range"
-                min={SLIDER_MIN}
-                max={SLIDER_MAX}
-                step={SLIDER_STEP}
-                value={amountType === "fiat" ? sliderValue : Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, fiatAmount))}
-                onChange={(e) => handleSlider(parseInt(e.target.value))}
-                className="w-full appearance-none bg-transparent slider-thumb-amber"
-                style={{ height: 36 }}
+                min="100"
+                max="10000"
+                step="100"
+                value={(() => {
+                  if (amountType === 'fiat' && amount) {
+                    return Math.min(amount, 10000);
+                  } else if (amountType === 'crypto' && amount && selectedCryptoData) {
+                    return Math.min(parseFloat(amount) * selectedCryptoData.price, 10000).toString();
+                  }
+                  return '2500';
+                })()}
+                onChange={(e) => {
+                  const fiatValue = e.target.value;
+                  
+                  // Always switch to ZAR amount type when slider is used
+                  setAmountType('fiat');
+                  setAmount(fiatValue);
+                }}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: (() => {
+                    let currentValue;
+                    if (amountType === 'fiat' && amount) {
+                      currentValue = Math.min(amount, 10000);
+                    } else if (amountType === 'crypto' && amount && selectedCryptoData) {
+                      currentValue = Math.min(parseFloat(amount) * selectedCryptoData.price, 10000);
+                    } else {
+                      currentValue = 2500;
+                    }
+                    const percentage = ((currentValue - 100) / (10000 - 100)) * 100;
+                    return `linear-gradient(to right, #f59e0b 0%, #f59e0b ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+                  })()
+                }}
               />
-              {/* Amber slider BG */}
-              <div className="pointer-events-none absolute top-1/2 left-0 w-full h-2 rounded-full -translate-y-1/2 z-[-1] bg-gray-200 overflow-hidden">
-                <div
-                  className={sliderAmber}
-                  style={{
-                    width: `${
-                      ((amountType === "fiat" ? sliderValue : Math.min(SLIDER_MAX, Math.max(SLIDER_MIN, fiatAmount))) -
-                        SLIDER_MIN) /
-                        (SLIDER_MAX - SLIDER_MIN) *
-                      100
-                    }%`,
-                    height: "100%",
-                  }}
-                ></div>
+              <div className="flex items-center justify-between mt-1">
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
               </div>
             </div>
-            <div className="flex justify-between mt-2 px-1">
-              {SLIDER_TICKS.map((tick) => (
-                <span key={tick} className="text-[11px] text-gray-400 font-medium">
-                  {tick === SLIDER_MIN || tick === SLIDER_MAX ? formatCurrency(tick) : `${tick >= 1000 ? `R${tick / 1000}k` : formatCurrency(tick)}`}
-                </span>
-              ))}
-            </div>
           </div>
-          {/* Action Button */}
+
           <button
-            type="button"
-            className={cn(
-              "mt-2 w-full py-3 rounded-lg font-semibold text-lg shadow transition-colors duration-300 focus:outline-none",
-              isActionDisabled
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : actionColor
-            )}
-            disabled={isActionDisabled}
-            style={{ letterSpacing: 0.2 }}
-            tabIndex={0}
+            disabled={!amount}
+            onClick={() => setShowPreApproval(true)}
+            className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
+              amount
+                ? activeTab === 'buy' 
+                  ? 'bg-green-500 text-white shadow-lg hover:bg-green-600'
+                  : 'bg-red-500 text-white shadow-lg hover:bg-red-600'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
           >
-            {actionText}
+            {activeTab === 'buy' ? `Buy ${selectedCrypto}` : `Sell ${selectedCrypto}`}
           </button>
         </div>
       </div>
-      {/* --- Disclaimer Footer --- */}
-      <footer className="w-full max-w-md px-2 mt-auto">
-        <div className="bg-amber-50 border-l-4 border-amber-300 rounded-xl px-4 py-3 text-xs text-amber-700 mb-6">
-          Trading cryptocurrency carries market risk. Prices may fluctuate. Ensure you understand our&nbsp;
-          <a href="#" className="underline hover:text-amber-800">terms</a> before placing trades.
+
+      {/* Pre-Approval Confirmation Modal */}
+      {showPreApproval && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-0 w-full max-w-md max-h-[95vh] overflow-y-auto shadow-2xl transform transition-all duration-300 scale-100">
+            
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-6 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-amber-400/10 to-transparent"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center shadow-lg">
+                  <div 
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                    style={{ backgroundColor: selectedCryptoData?.color }}
+                  >
+                    {selectedCryptoData?.icon}
+                  </div>
+                </div>
+                <h2 className="text-xl font-bold text-white mb-1">
+                  Confirm Your {activeTab === 'buy' ? 'Purchase' : 'Sale'}
+                </h2>
+                <p className="text-slate-300 text-sm">
+                  {selectedCryptoData?.name} ({selectedCrypto})
+                </p>
+                
+                {/* Countdown Timer */}
+                <div className="mt-4 bg-white bg-opacity-15 rounded-lg p-3 backdrop-blur-sm">
+                  <div className="flex items-center justify-center gap-2 text-white">
+                    <Clock size={16} className="text-amber-300" />
+                    <span className="text-sm">Offer valid for</span>
+                    <span className="font-bold text-amber-300">{countdown}s</span>
+                  </div>
+                  <div className="w-full bg-white bg-opacity-20 rounded-full h-1 mt-2">
+                    <div 
+                      className="bg-amber-400 h-1 rounded-full transition-all duration-1000 ease-linear"
+                      style={{ width: `${(countdown / 30) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Receipt Body */}
+            <div className="p-6 bg-white">
+              
+              {/* Transaction Summary */}
+              <div className="bg-slate-50 rounded-2xl p-4 mb-6 border border-slate-200">
+                <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  Transaction Summary
+                </h3>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-600">Amount to {activeTab === 'buy' ? 'Buy' : 'Sell'}</span>
+                    <span className="font-bold text-slate-800">
+                      {activeTab === 'buy' 
+                        ? (receiveAmount || conversion.crypto + ' ' + selectedCrypto)
+                        : (payAmount || conversion.crypto + ' ' + selectedCrypto)
+                      }
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-600">Amount to {activeTab === 'buy' ? 'Pay' : 'Receive'}</span>
+                    <span className="font-bold text-lg text-slate-800">
+                      {activeTab === 'buy' 
+                        ? (payAmount || conversion.fiat)
+                        : (receiveAmount || conversion.fiat)
+                      }
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detailed Breakdown */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-slate-800 mb-4 border-b border-dashed border-slate-300 pb-2">
+                  Detailed Breakdown
+                </h4>
+                
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600">Exchange Rate</span>
+                    <span className="font-semibold text-slate-800">
+                      1 {selectedCrypto} = R{selectedCryptoData?.price.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600">Platform/Service Fee</span>
+                    <span className="font-semibold text-slate-800">R60.00</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600">Network Fee</span>
+                    <span className="font-semibold text-slate-800">R50.00</span>
+                  </div>
+                  
+                  <div className="border-t border-dashed border-slate-300 pt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-slate-700">Total Fees</span>
+                      <span className="font-bold text-slate-800">R110.00</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-amber-800">Final {activeTab === 'buy' ? 'Crypto' : 'Fiat'} to Receive</span>
+                      <span className="font-bold text-amber-800">
+                        {activeTab === 'buy' 
+                          ? ((parseFloat(conversion.crypto) * 0.99).toFixed(8) + ' ' + selectedCrypto)
+                          : ('R' + (parseFloat(conversion.fiat.replace('R', '').replace(',', '')) * 0.95).toLocaleString('en-ZA', { minimumFractionDigits: 2 }))
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Receiving Wallet Information */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-slate-800 mb-4 border-b border-dashed border-slate-300 pb-2">
+                  {activeTab === 'buy' ? 'Receiving' : 'From'} Wallet Information
+                </h4>
+                
+                <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+                  <div>
+                    <span className="text-xs text-slate-600 block mb-1">Wallet Address</span>
+                    <div className="flex items-center justify-between bg-white rounded-lg p-3 border">
+                      <span className="font-mono text-sm text-slate-800 truncate mr-2">
+                        {generateWalletAddress().substring(0, 20)}...{generateWalletAddress().slice(-6)}
+                      </span>
+                      <button 
+                        onClick={() => copyToClipboard(generateWalletAddress())}
+                        className="text-amber-600 hover:text-amber-700 transition-colors p-1"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <span className="text-xs text-slate-600 block mb-1">Network</span>
+                    <div className="bg-white rounded-lg p-3 border">
+                      <span className="text-sm font-medium text-slate-800">{getNetworkName()}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compliance Warnings */}
+              <div className="mb-6">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <AlertTriangle size={20} className="text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-amber-800 text-sm mb-2">Important Notices</h4>
+                      <div className="space-y-2 text-xs text-amber-800">
+                        <p>• Crypto purchases are final. Ensure wallet address is correct.</p>
+                        <p>• Crypto markets are volatile. Rates may fluctuate during processing.</p>
+                        <p>• Network fees may adjust due to blockchain congestion.</p>
+                        <p>• This transaction may be subject to tax obligations.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Badge */}
+              <div className="flex items-center justify-center gap-2 mb-6 text-slate-600">
+                <Shield size={16} className="text-green-600" />
+                <span className="text-sm font-medium">Secure Transaction</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    setShowPreApproval(false);
+                    setShowConfirmation(true);
+                    setCountdown(30);
+                  }}
+                  className={`w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
+                    activeTab === 'buy' 
+                      ? 'bg-green-500 text-white shadow-lg hover:bg-green-600'
+                      : 'bg-red-500 text-white shadow-lg hover:bg-red-600'
+                  }`}
+                >
+                  ✅ Confirm {activeTab === 'buy' ? 'Purchase' : 'Sale'}
+                </button>
+                
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowPreApproval(false);
+                      setCountdown(30);
+                    }}
+                    className="flex-1 py-3 px-4 rounded-xl bg-slate-100 text-slate-700 font-medium hover:bg-slate-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowPreApproval(false);
+                      setCountdown(30);
+                    }}
+                    className="flex-1 py-3 px-4 rounded-xl border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                  >
+                    Edit Amount
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </footer>
-      {/* slider css */}
-      <style>{`
-        .slider-thumb-amber::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 26px;
-          height: 26px;
-          border-radius: 50%;
-          background: #f59e0b;
-          border: 3px solid #fff;
-          box-shadow: 0 2px 8px rgba(245,158,11,0.22);
-          cursor: pointer;
-          transition: box-shadow 0.2s;
-        }
-        .slider-thumb-amber:focus::-webkit-slider-thumb {
-          box-shadow: 0 0 0 4px #fde68a;
-        }
-        /* Firefox */
-        .slider-thumb-amber::-moz-range-thumb {
-          width: 26px;
-          height: 26px;
-          border-radius: 50%;
-          background: #f59e0b;
-          border: 3px solid #fff;
-          box-shadow: 0 2px 8px rgba(245,158,11,0.22);
-          cursor: pointer;
-          transition: box-shadow 0.2s;
-        }
-        .slider-thumb-amber:focus::-moz-range-thumb {
-          box-shadow: 0 0 0 4px #fde68a;
-        }
-        /* track */
-        .slider-thumb-amber::-webkit-slider-runnable-track {
-          height: 8px;
-          border-radius: 4px;
-          background: transparent;
-        }
-        .slider-thumb-amber::-moz-range-track {
-          height: 8px;
-          border-radius: 4px;
-          background: transparent;
-        }
-        .slider-thumb-amber {
-          outline: none;
-        }
-      `}</style>
+      )}
+
+      {/* Receipt-Style Confirmation Modal */}
+      {showConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl p-0 w-full sm:max-w-md sm:w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all duration-300 scale-100">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-4 sm:p-6 text-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full mx-auto mb-2 sm:mb-3 flex items-center justify-center">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-white mb-1">Transaction Successful</h2>
+              <p className="text-amber-100 text-sm">Order Completed</p>
+              <div className="mt-2 sm:mt-3 bg-white bg-opacity-20 rounded-lg p-2">
+                <p className="text-xs text-white opacity-90">Transaction Reference</p>
+                <p className="text-xs sm:text-sm font-mono text-white">#TX{Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+              </div>
+            </div>
+
+            {/* Receipt Body */}
+            <div className="p-4 sm:p-6 bg-white">
+              {/* BYBC Header */}
+              <div className="text-center mb-4 sm:mb-6 border-b border-dashed border-gray-300 pb-3 sm:pb-4">
+                <h3 className="text-base sm:text-lg font-bold text-slate-800">BYBC</h3>
+                <p className="text-xs text-gray-500">Digital Asset Exchange</p>
+                <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleString()}</p>
+              </div>
+
+              {/* Transaction Details */}
+              <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-gray-600">Transaction Reference</span>
+                  <span className="font-mono text-xs text-slate-800">#TX{Math.random().toString(36).substr(2, 9).toUpperCase()}</span>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-gray-600">Status</span>
+                  <span className="font-semibold text-green-600 text-sm">Completed</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-gray-600">Date</span>
+                  <span className="font-semibold text-slate-800 text-sm">
+                    {new Date().toLocaleDateString('en-ZA')}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-gray-600">Purchased</span>
+                  <span className="font-semibold text-slate-800 text-sm">
+                    {activeTab === 'buy' 
+                      ? (receiveAmount || conversion.crypto + ' ' + selectedCrypto)
+                      : (payAmount || conversion.crypto + ' ' + selectedCrypto)
+                    }
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-gray-600">Amount Paid (ZAR)</span>
+                  <span className="font-bold text-slate-800 text-base sm:text-lg">
+                    {activeTab === 'buy' 
+                      ? (payAmount || conversion.fiat)
+                      : (receiveAmount || conversion.fiat)
+                    }
+                  </span>
+                </div>
+              </div>
+
+              {/* Fees & Charges Section */}
+              <div className="mb-4 sm:mb-6">
+                <h4 className="text-sm sm:text-md font-semibold text-slate-800 mb-2 sm:mb-3 border-b border-dashed border-gray-300 pb-2">
+                  Fees & Charges
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-gray-600">Platform/Exchange Fee</span>
+                    <span className="font-semibold text-slate-800 text-sm">R25.00</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-gray-600">Network/Gas Fee</span>
+                    <span className="font-semibold text-slate-800 text-sm">R8.50</span>
+                  </div>
+                  <div className="border-t border-dashed border-gray-300 pt-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs sm:text-sm font-semibold text-gray-700">Total Fees</span>
+                      <span className="font-bold text-slate-800 text-sm">R33.50</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Compliance Notes */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 sm:mb-6">
+                <div className="text-xs text-amber-800 space-y-1">
+                  <p><strong>Important:</strong> Cryptocurrency is volatile. Ensure wallet details are correct.</p>
+                  <p><strong>Tax Note:</strong> Capital gains may apply. Consult a tax professional.</p>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="text-center border-t border-dashed border-gray-300 pt-3 sm:pt-4">
+                <p className="text-xs text-gray-500 mb-2">BYBC Ltd. FSCA Reg: XYZ123</p>
+                <p className="text-xs text-gray-400">Thank you for using BYBC</p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-6">
+                <button
+                  onClick={() => setShowConfirmation(false)}
+                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-colors text-sm"
+                >
+                  Save Receipt
+                </button>
+                <button
+                  onClick={() => {
+                    setShowConfirmation(false);
+                    // Here you would typically handle the transaction completion
+                  }}
+                  className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-amber-500 text-white font-bold hover:bg-amber-600 transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowConfirmation(false)}
+                className="w-full mt-2 py-2 px-4 text-xs text-gray-500 hover:text-amber-600 transition-colors"
+              >
+                View on Blockchain →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Disclaimer */}
+      <div className="px-6 pb-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <p className="text-xs text-amber-800">
+            <strong>Disclaimer:</strong> Cryptocurrency investments are subject to market risks. 
+            Please read all terms and conditions carefully before trading.
+          </p>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
-// ArrowRight icon as an inline SVG (for better style control)
-function ArrowRightIcon() {
-  return (
-    <svg width="20" height="18" viewBox="0 0 18 18" fill="none" className="inline-block -mx-2" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 9H15M15 9L11 5M15 9L11 13" stroke="#a16207" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
+export default CryptoTradePage;
