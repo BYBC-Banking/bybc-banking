@@ -14,7 +14,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   
   // Determine if we should show navigation based on the current route
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
-  const isFullscreenPage = location.pathname === '/crypto-wallet';
+  const isFullscreenPage = location.pathname === '/crypto-wallet' || location.pathname === '/crypto-trade';
   
   return (
     <>
