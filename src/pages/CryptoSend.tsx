@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, TrendingUp, Delete } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
 const CryptoSend = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState('0');
@@ -9,7 +8,6 @@ const CryptoSend = () => {
   const xrpPrice = 2.19; // USD per XRP
   const networkFee = 0.2; // XRP
   const networkFeeUSD = networkFee * xrpPrice;
-
   const formatAmount = (value: string) => {
     // Remove leading zeros but keep single zero before decimal
     if (value === '0' || value === '') return '0';
@@ -18,55 +16,45 @@ const CryptoSend = () => {
     }
     return value;
   };
-
   const handleNumberPress = (num: number) => {
     setAmount(prev => {
       const newAmount = prev === '0' ? num.toString() : prev + num;
       return formatAmount(newAmount);
     });
   };
-
   const handleDecimalPress = () => {
     setAmount(prev => {
       if (prev.includes('.')) return prev;
       return prev + '.';
     });
   };
-
   const handleBackspace = () => {
     setAmount(prev => {
       if (prev.length <= 1) return '0';
       return prev.slice(0, -1);
     });
   };
-
   const handleAllPress = () => {
     const maxAmount = Math.max(0, balance - networkFee);
     setAmount(maxAmount.toString());
   };
-
   const currentAmountNum = parseFloat(amount || '0');
   const usdValue = currentAmountNum * xrpPrice;
   const remaining = balance - currentAmountNum;
   const remainingUSD = remaining * xrpPrice;
-
   interface NumberButtonProps {
     children: React.ReactNode;
     onClick: () => void;
     className?: string;
   }
-
-  const NumberButton: React.FC<NumberButtonProps> = ({ children, onClick, className = "" }) => (
-    <button
-      onClick={onClick}
-      className={`w-16 h-16 rounded-full bg-gray-800/50 border border-gray-700/50 text-white text-xl font-medium hover:bg-gray-700/50 active:bg-gray-600/50 transition-all duration-150 active:scale-95 ${className}`}
-    >
+  const NumberButton: React.FC<NumberButtonProps> = ({
+    children,
+    onClick,
+    className = ""
+  }) => <button onClick={onClick} className={`w-16 h-16 rounded-full bg-gray-800/50 border border-gray-700/50 text-white text-xl font-medium hover:bg-gray-700/50 active:bg-gray-600/50 transition-all duration-150 active:scale-95 ${className}`}>
       {children}
-    </button>
-  );
-
-  return (
-    <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
+    </button>;
+  return <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-6 pt-12">
         <button onClick={() => navigate(-1)}>
@@ -100,10 +88,7 @@ const CryptoSend = () => {
                 <div className="text-gray-400 text-sm">{balance} XRP</div>
               </div>
             </div>
-            <button
-              onClick={handleAllPress}
-              className="bg-gray-700/50 px-4 py-2 rounded-full text-sm text-gray-300 hover:bg-gray-600/50 transition-colors"
-            >
+            <button onClick={handleAllPress} className="bg-gray-700/50 px-4 py-2 rounded-full text-sm text-gray-300 hover:bg-gray-600/50 transition-colors">
               All
             </button>
           </div>
@@ -131,11 +116,9 @@ const CryptoSend = () => {
       {/* Number Pad */}
       <div className="px-4 mb-6">
         <div className="grid grid-cols-3 gap-4 justify-items-center max-w-xs mx-auto">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-            <NumberButton key={num} onClick={() => handleNumberPress(num)}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => <NumberButton key={num} onClick={() => handleNumberPress(num)}>
               {num}
-            </NumberButton>
-          ))}
+            </NumberButton>)}
           <NumberButton onClick={handleDecimalPress}>
             .
           </NumberButton>
@@ -143,26 +126,17 @@ const CryptoSend = () => {
             0
           </NumberButton>
           <NumberButton onClick={handleBackspace}>
-            <Delete className="w-5 h-5" />
+            <Delete className="w-5 h-5 mx-[20px]" />
           </NumberButton>
         </div>
       </div>
 
       {/* Continue Button */}
       <div className="px-4 pb-8">
-        <button 
-          className={`w-full py-4 rounded-2xl text-white font-medium text-lg transition-all duration-200 ${
-            currentAmountNum > 0 && currentAmountNum <= (balance - networkFee)
-              ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 active:scale-[0.98]'
-              : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'
-          }`}
-          disabled={currentAmountNum <= 0 || currentAmountNum > (balance - networkFee)}
-        >
+        <button className={`w-full py-4 rounded-2xl text-white font-medium text-lg transition-all duration-200 ${currentAmountNum > 0 && currentAmountNum <= balance - networkFee ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 active:scale-[0.98]' : 'bg-gray-700/50 text-gray-400 cursor-not-allowed'}`} disabled={currentAmountNum <= 0 || currentAmountNum > balance - networkFee}>
           Continue
         </button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default CryptoSend;
