@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, ArrowUpDown, DollarSign, Bitcoin, Clock, Copy, Shield, AlertTriangle } from 'lucide-react';
 
@@ -411,27 +410,27 @@ const CryptoTradePage = () => {
                 step="100"
                 value={(() => {
                   if (amountType === 'fiat' && amount) {
-                    return Math.min(amount, 10000);
+                    return Math.min(parseFloat(amount) || 0, 10000);
                   } else if (amountType === 'crypto' && amount && selectedCryptoData) {
-                    return Math.min(parseFloat(amount) * selectedCryptoData.price, 10000).toString();
+                    return Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
                   }
-                  return '2500';
+                  return 2500;
                 })()}
                 onChange={(e) => {
-                  const fiatValue = e.target.value;
+                  const fiatValue = parseFloat(e.target.value);
                   
                   // Always switch to ZAR amount type when slider is used
                   setAmountType('fiat');
-                  setAmount(fiatValue);
+                  setAmount(fiatValue.toString());
                 }}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: (() => {
                     let currentValue;
                     if (amountType === 'fiat' && amount) {
-                      currentValue = Math.min(amount, 10000);
+                      currentValue = Math.min(parseFloat(amount) || 0, 10000);
                     } else if (amountType === 'crypto' && amount && selectedCryptoData) {
-                      currentValue = Math.min(parseFloat(amount) * selectedCryptoData.price, 10000);
+                      currentValue = Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
                     } else {
                       currentValue = 2500;
                     }
