@@ -14,11 +14,22 @@ const CryptoWalletActions = () => {
     navigate("/crypto-swap");
   };
 
+  const handleSendClick = () => {
+    navigate("/crypto-send");
+  };
+
+  const handleReceiveClick = () => {
+    navigate("/crypto-receive");
+  };
+
   return (
     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
       <div className={`bg-gray-700 rounded-2xl p-2 flex items-center gap-1 shadow-lg`}>
         {/* Send */}
-        <button className="flex flex-col items-center justify-center px-4 py-3 rounded-xl hover:bg-gray-600 transition-colors">
+        <button 
+          onClick={handleSendClick}
+          className="flex flex-col items-center justify-center px-4 py-3 rounded-xl hover:bg-gray-600 transition-colors"
+        >
           <ArrowUp className="h-5 w-5 text-gray-300 mb-1" />
           <span className="text-xs text-gray-300 font-medium">Send</span>
         </button>
@@ -42,7 +53,10 @@ const CryptoWalletActions = () => {
         </button>
         
         {/* Receive */}
-        <button className="flex flex-col items-center justify-center px-4 py-3 rounded-xl hover:bg-gray-600 transition-colors">
+        <button 
+          onClick={handleReceiveClick}
+          className="flex flex-col items-center justify-center px-4 py-3 rounded-xl hover:bg-gray-600 transition-colors"
+        >
           <ArrowDown className="h-5 w-5 text-gray-300 mb-1" />
           <span className="text-xs text-gray-300 font-medium">Receive</span>
         </button>
