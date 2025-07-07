@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -47,6 +46,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { isLoggedIn } from "@/utils/auth";
 import CryptoTradePage from "@/pages/CryptoTradePage";
 import CryptoReceive from "@/pages/CryptoReceive";
+import CryptoSend from "@/pages/CryptoSend";
 
 const AppRoutes = () => {
   return (
@@ -284,6 +284,11 @@ const AppRoutes = () => {
       <Route path="/crypto-receive" element={
         <ProtectedRoute>
           <CryptoReceive />
+        </ProtectedRoute>
+      } />
+      <Route path="/crypto-send" element={
+        <ProtectedRoute>
+          <CryptoSend />
         </ProtectedRoute>
       } />
       <Route path="*" element={<NotFound />} />
