@@ -1,5 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import CryptoBuySellToggle from '../components/crypto-trade/CryptoBuySellToggle';
 import CryptoAssetDropdown from '../components/crypto-trade/CryptoAssetDropdown';
 import CryptoTradingInterface from '../components/crypto-trade/CryptoTradingInterface';
@@ -10,6 +11,7 @@ import { cryptoAssets } from '../components/crypto-trade/cryptoData';
 import { calculateConversion } from '../components/crypto-trade/cryptoUtils';
 
 const CryptoTradePage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
   const [selectedCrypto, setSelectedCrypto] = useState('ETH');
   const [amount, setAmount] = useState('');
@@ -46,6 +48,18 @@ const CryptoTradePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Back Button Header */}
+      <div className="flex items-center justify-between px-4 py-4 bg-white shadow-sm">
+        <button 
+          onClick={() => navigate(-1)}
+          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <ArrowLeft className="w-6 h-6 text-gray-700" />
+        </button>
+        <h1 className="text-lg font-semibold text-gray-900">Trade</h1>
+        <div className="w-10 h-10"></div> {/* Spacer for centering */}
+      </div>
+
       <CryptoBuySellToggle activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <CryptoAssetDropdown
