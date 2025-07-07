@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -146,7 +145,7 @@ const Accounts = () => {
                             ? colors.iconText
                             : ""
                       }>
-                        {account.type.charAt(0)}
+                        {account.name.charAt(0)}
                       </span>
                     </div>
                     <div className="text-left">
