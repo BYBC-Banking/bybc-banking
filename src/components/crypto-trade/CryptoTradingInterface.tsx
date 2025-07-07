@@ -83,7 +83,7 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder={`Enter ${amountType === 'crypto' ? selectedCryptoData?.symbol : 'ZAR'} amount`}
+              placeholder={`Enter ${amountType === 'crypto' ? selectedCryptoData?.symbol : 'ETH'} amount`}
               className="flex-1 px-4 py-3 border-none outline-none text-lg font-semibold"
             />
             <button
@@ -111,29 +111,25 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-4 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-600">You {activeTab === 'buy' ? 'pay' : 'receive'}:</span>
+        <div className="space-y-3 mb-4">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-600 text-base">You pay:</span>
             <input
               type="text"
               value={payAmount || (activeTab === 'buy' ? conversion.fiat : conversion.crypto + ' ' + selectedCryptoData?.symbol)}
               onChange={(e) => setPayAmount(e.target.value)}
-              className="text-right font-bold text-slate-800 bg-transparent border-none outline-none"
-              placeholder="0"
+              className="text-right font-bold text-slate-800 bg-transparent border-none outline-none text-lg"
+              placeholder="R0.00"
             />
           </div>
-          <div className="flex items-center justify-center my-2">
+          <div className="flex items-center justify-center">
             <ArrowUpDown size={16} className="text-gray-400" />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-gray-600">You {activeTab === 'buy' ? 'receive' : 'pay'}:</span>
-            <input
-              type="text"
-              value={receiveAmount || (activeTab === 'buy' ? conversion.crypto + ' ' + selectedCryptoData?.symbol : conversion.fiat)}
-              onChange={(e) => setReceiveAmount(e.target.value)}
-              className="text-right font-bold text-slate-800 bg-transparent border-none outline-none"
-              placeholder="0"
-            />
+            <span className="text-gray-600 text-base">You receive:</span>
+            <span className="text-right font-bold text-slate-800 text-lg">
+              {receiveAmount || (activeTab === 'buy' ? conversion.crypto + ' ' + selectedCryptoData?.symbol : conversion.fiat)}
+            </span>
           </div>
         </div>
 
