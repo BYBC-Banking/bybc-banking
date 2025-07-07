@@ -29,12 +29,12 @@ const CryptoTabsSection = ({
           style={{border: `1px solid ${currentCrypto.color}30`}}>
       <CardContent className="p-0">
         <Tabs value={activeTab} onValueChange={onTabChange}>
-          <TabsList className="w-full bg-transparent p-0 h-auto">
+          <TabsList className="w-full bg-transparent p-0 h-auto rounded-t-lg overflow-hidden">
             <TabsTrigger 
               value="activity" 
-              className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
+              className={`flex-1 py-3 border-b-2 transition-all ${
                 activeTab === 'activity' ? 'border-current font-medium' : 'border-transparent'
-              }`}
+              } ${activeTab === 'activity' ? 'rounded-tl-lg' : ''}`}
               style={{
                 backgroundColor: activeTab === 'activity' ? currentCrypto.color : 'transparent',
                 color: activeTab === 'activity' ? '#000' : undefined
@@ -44,9 +44,9 @@ const CryptoTabsSection = ({
             </TabsTrigger>
             <TabsTrigger 
               value="about" 
-              className={`flex-1 py-3 rounded-none border-b-2 transition-all ${
+              className={`flex-1 py-3 border-b-2 transition-all ${
                 activeTab === 'about' ? 'border-current font-medium' : 'border-transparent'
-              }`}
+              } ${activeTab === 'about' ? 'rounded-tr-lg' : ''}`}
               style={{
                 backgroundColor: activeTab === 'about' ? currentCrypto.color : 'transparent',
                 color: activeTab === 'about' ? '#000' : undefined
