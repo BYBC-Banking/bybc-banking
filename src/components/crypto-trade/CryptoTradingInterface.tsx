@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Clock, ArrowUpDown } from 'lucide-react';
 import { CryptoAsset } from './cryptoData';
@@ -111,24 +110,24 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
           </div>
         </div>
 
-        <div className="space-y-3 mb-4">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-base">You pay:</span>
-            <input
-              type="text"
-              value={payAmount || (activeTab === 'buy' ? conversion.fiat : conversion.crypto + ' ' + selectedCryptoData?.symbol)}
-              onChange={(e) => setPayAmount(e.target.value)}
-              className="text-right font-bold text-slate-800 bg-transparent border-none outline-none text-lg"
-              placeholder="R0.00"
-            />
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center justify-between py-2">
+            <span className="text-gray-600 text-base font-medium">You pay:</span>
+            <span className="text-right font-bold text-slate-800 text-xl">
+              {payAmount || (activeTab === 'buy' ? 'R0.00' : `0 ${selectedCryptoData?.symbol}`)}
+            </span>
           </div>
-          <div className="flex items-center justify-center">
-            <ArrowUpDown size={16} className="text-gray-400" />
+          
+          <div className="flex items-center justify-center py-1">
+            <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
+              <ArrowUpDown size={12} className="text-gray-400" />
+            </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600 text-base">You receive:</span>
-            <span className="text-right font-bold text-slate-800 text-lg">
-              {receiveAmount || (activeTab === 'buy' ? conversion.crypto + ' ' + selectedCryptoData?.symbol : conversion.fiat)}
+          
+          <div className="flex items-center justify-between py-2">
+            <span className="text-gray-600 text-base font-medium">You receive:</span>
+            <span className="text-right font-bold text-slate-800 text-xl">
+              {receiveAmount || (activeTab === 'buy' ? `0 ${selectedCryptoData?.symbol}` : 'R0.00')}
             </span>
           </div>
         </div>
