@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InvestmentHeader from "@/components/InvestmentHeader";
 import PortfolioSummary from "@/components/PortfolioSummary";
 import InvestmentActionBar from "@/components/InvestmentActionBar";
@@ -30,9 +31,8 @@ const cryptoAssets = [{
   holdingsValue: 61692.9
 }];
 const Investments = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedTimeframe, setSelectedTimeframe] = useState<"1D" | "1W" | "1M" | "3M" | "1Y" | "ALL">("1W");
   const [favType, setFavType] = useState<"Stocks" | "Crypto">("Stocks");
 
@@ -112,6 +112,7 @@ const Investments = () => {
     holdings: 18,
     holdingsValue: 5673.96
   }];
+
   const handleTimeframeChange = (timeframe: "1D" | "1W" | "1M" | "3M" | "1Y" | "ALL") => {
     setSelectedTimeframe(timeframe);
     toast({
@@ -119,19 +120,31 @@ const Investments = () => {
       description: `Chart updated to ${timeframe} view`
     });
   };
+
   const handleBuyClick = (assetId?: string) => {
     toast({
       title: "Buy Stock",
       description: `Proceeding to buy ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`
     });
   };
+
   const handleSellClick = (assetId?: string) => {
     toast({
       title: "Sell Stock",
       description: `Proceeding to sell ${assetId ? assets.find(a => a.id === assetId)?.name : 'assets'}`
     });
   };
-  return <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
+
+  const handleCryptoBuyClick = (assetId?: string) => {
+    navigate("/crypto-send");
+  };
+
+  const handleCryptoSellClick = (assetId?: string) => {
+    navigate("/crypto-receive");
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header with greeting */}
         <InvestmentHeader isPositive={portfolioData.isPositive} />
@@ -144,8 +157,8 @@ const Investments = () => {
 
         {/* Favourites selector and assets */}
         <div className="animate-fade-in" style={{
-        animationDelay: "150ms"
-      }}>
+          animationDelay: "150ms"
+        }}>
           <h2 className="text-lg font-semibold mb-3 [html[data-theme='business']_&]:text-gray-900 [html[data-theme='business']_&]:font-bold">Favourite</h2>
           <div className="flex gap-6 mb-2">
             <button className={`text-base font-medium transition-colors pb-1 border-b-2 ${favType === "Stocks" ? "text-black border-finance-green" : "text-gray-400 border-transparent"} focus:outline-none`} onClick={() => setFavType("Stocks")} aria-selected={favType === "Stocks"}>
@@ -155,15 +168,19 @@ const Investments = () => {
               Crypto
             </button>
           </div>
-          {favType === "Stocks" ? <AssetCardList assets={assets} onBuyClick={handleBuyClick} onSellClick={handleSellClick} /> : <AssetCardList assets={cryptoAssets} onBuyClick={assetId => toast({
-          title: "Buy Crypto",
-          description: `Proceeding to buy ${cryptoAssets.find(a => a.id === assetId)?.name}`
-        })} onSellClick={assetId => toast({
-          title: "Sell Crypto",
-          description: `Proceeding to sell ${cryptoAssets.find(a => a.id === assetId)?.name}`
-        })} />}
+          {favType === "Stocks" ? (
+            <AssetCardList assets={assets} onBuyClick={handleBuyClick} onSellClick={handleSellClick} />
+          ) : (
+            <AssetCardList 
+              assets={cryptoAssets} 
+              onBuyClick={handleCryptoBuyClick} 
+              onSellClick={handleCryptoSellClick} 
+            />
+          )}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Investments;
