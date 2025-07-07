@@ -9,7 +9,6 @@ import CryptoReceiptModal from '../components/crypto-trade/CryptoReceiptModal';
 import CryptoDisclaimer from '../components/crypto-trade/CryptoDisclaimer';
 import { cryptoAssets } from '../components/crypto-trade/cryptoData';
 import { calculateConversion } from '../components/crypto-trade/cryptoUtils';
-
 const CryptoTradePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
@@ -22,7 +21,6 @@ const CryptoTradePage = () => {
   const [countdown, setCountdown] = useState(30);
   const [payAmount, setPayAmount] = useState('');
   const [receiveAmount, setReceiveAmount] = useState('');
-
   const selectedCryptoData = cryptoAssets.find(crypto => crypto.symbol === selectedCrypto);
   const conversion = calculateConversion(amount, amountType, selectedCryptoData);
 
@@ -45,73 +43,27 @@ const CryptoTradePage = () => {
     }
     return () => clearTimeout(timer);
   }, [showPreApproval, countdown]);
-
-  return (
-    <div className="min-h-screen bg-gray-50">
+  return <div className="min-h-screen bg-gray-50">
       {/* Back Button Header */}
       <div className="flex items-center justify-between px-4 py-4 bg-white shadow-sm">
-        <button 
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-        >
+        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
           <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
-        <h1 className="text-lg font-semibold text-gray-900">Trade</h1>
+        
         <div className="w-10 h-10"></div> {/* Spacer for centering */}
       </div>
 
       <CryptoBuySellToggle activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <CryptoAssetDropdown
-        cryptos={cryptoAssets}
-        selectedCrypto={selectedCrypto}
-        setSelectedCrypto={setSelectedCrypto}
-        showDropdown={showDropdown}
-        setShowDropdown={setShowDropdown}
-      />
+      <CryptoAssetDropdown cryptos={cryptoAssets} selectedCrypto={selectedCrypto} setSelectedCrypto={setSelectedCrypto} showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
 
-      <CryptoTradingInterface
-        activeTab={activeTab}
-        selectedCryptoData={selectedCryptoData}
-        amount={amount}
-        setAmount={setAmount}
-        amountType={amountType}
-        setAmountType={setAmountType}
-        payAmount={payAmount}
-        setPayAmount={setPayAmount}
-        receiveAmount={receiveAmount}
-        setReceiveAmount={setReceiveAmount}
-        conversion={conversion}
-        onBuyClick={() => setShowPreApproval(true)}
-      />
+      <CryptoTradingInterface activeTab={activeTab} selectedCryptoData={selectedCryptoData} amount={amount} setAmount={setAmount} amountType={amountType} setAmountType={setAmountType} payAmount={payAmount} setPayAmount={setPayAmount} receiveAmount={receiveAmount} setReceiveAmount={setReceiveAmount} conversion={conversion} onBuyClick={() => setShowPreApproval(true)} />
 
-      <CryptoPreApprovalModal
-        showPreApproval={showPreApproval}
-        setShowPreApproval={setShowPreApproval}
-        setShowConfirmation={setShowConfirmation}
-        activeTab={activeTab}
-        selectedCryptoData={selectedCryptoData}
-        selectedCrypto={selectedCrypto}
-        countdown={countdown}
-        setCountdown={setCountdown}
-        payAmount={payAmount}
-        receiveAmount={receiveAmount}
-        conversion={conversion}
-      />
+      <CryptoPreApprovalModal showPreApproval={showPreApproval} setShowPreApproval={setShowPreApproval} setShowConfirmation={setShowConfirmation} activeTab={activeTab} selectedCryptoData={selectedCryptoData} selectedCrypto={selectedCrypto} countdown={countdown} setCountdown={setCountdown} payAmount={payAmount} receiveAmount={receiveAmount} conversion={conversion} />
 
-      <CryptoReceiptModal
-        showConfirmation={showConfirmation}
-        setShowConfirmation={setShowConfirmation}
-        activeTab={activeTab}
-        receiveAmount={receiveAmount}
-        payAmount={payAmount}
-        conversion={conversion}
-        selectedCrypto={selectedCrypto}
-      />
+      <CryptoReceiptModal showConfirmation={showConfirmation} setShowConfirmation={setShowConfirmation} activeTab={activeTab} receiveAmount={receiveAmount} payAmount={payAmount} conversion={conversion} selectedCrypto={selectedCrypto} />
 
       <CryptoDisclaimer />
-    </div>
-  );
+    </div>;
 };
-
 export default CryptoTradePage;
