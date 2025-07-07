@@ -138,61 +138,63 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
           </div>
         </div>
 
-        {/* Amount Range with Slider */}
-        <div className="relative mb-6">
-          <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
-            <span>R100</span>
-            <span>R2,500</span>
-            <span>R5,000</span>
-            <span>R7,500</span>
-            <span>R10,000</span>
-          </div>
-          <div className="relative">
-            <input
-              type="range"
-              min="100"
-              max="10000"
-              step="100"
-              value={(() => {
-                if (amountType === 'fiat' && amount) {
-                  return Math.min(parseFloat(amount) || 0, 10000);
-                } else if (amountType === 'crypto' && amount && selectedCryptoData) {
-                  return Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
-                }
-                return 2500;
-              })()}
-              onChange={(e) => {
-                const fiatValue = parseFloat(e.target.value);
-                
-                // Always switch to ZAR amount type when slider is used
-                setAmountType('fiat');
-                setAmount(fiatValue.toString());
-              }}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-              style={{
-                background: (() => {
-                  let currentValue;
+        {/* Amount Range with Slider - only show on buy tab */}
+        {activeTab === 'buy' && (
+          <div className="relative mb-6">
+            <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+              <span>R100</span>
+              <span>R2,500</span>
+              <span>R5,000</span>
+              <span>R7,500</span>
+              <span>R10,000</span>
+            </div>
+            <div className="relative">
+              <input
+                type="range"
+                min="100"
+                max="10000"
+                step="100"
+                value={(() => {
                   if (amountType === 'fiat' && amount) {
-                    currentValue = Math.min(parseFloat(amount) || 0, 10000);
+                    return Math.min(parseFloat(amount) || 0, 10000);
                   } else if (amountType === 'crypto' && amount && selectedCryptoData) {
-                    currentValue = Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
-                  } else {
-                    currentValue = 2500;
+                    return Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
                   }
-                  const percentage = ((currentValue - 100) / (10000 - 100)) * 100;
-                  return `linear-gradient(to right, #f59e0b 0%, #f59e0b ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
-                })()
-              }}
-            />
-            <div className="flex items-center justify-between mt-1">
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  return 2500;
+                })()}
+                onChange={(e) => {
+                  const fiatValue = parseFloat(e.target.value);
+                  
+                  // Always switch to ZAR amount type when slider is used
+                  setAmountType('fiat');
+                  setAmount(fiatValue.toString());
+                }}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: (() => {
+                    let currentValue;
+                    if (amountType === 'fiat' && amount) {
+                      currentValue = Math.min(parseFloat(amount) || 0, 10000);
+                    } else if (amountType === 'crypto' && amount && selectedCryptoData) {
+                      currentValue = Math.min((parseFloat(amount) || 0) * selectedCryptoData.price, 10000);
+                    } else {
+                      currentValue = 2500;
+                    }
+                    const percentage = ((currentValue - 100) / (10000 - 100)) * 100;
+                    return `linear-gradient(to right, #f59e0b 0%, #f59e0b ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+                  })()
+                }}
+              />
+              <div className="flex items-center justify-between mt-1">
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <button
           disabled={!amount}
