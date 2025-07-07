@@ -126,9 +126,13 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
           
           <div className="flex items-center justify-between py-2">
             <span className="text-gray-600 text-base font-medium">You receive:</span>
-            <span className="text-right font-bold text-slate-800 text-xl">
-              {receiveAmount || (activeTab === 'buy' ? `0 ${selectedCryptoData?.symbol}` : 'R0.00')}
-            </span>
+            <input
+              type="text"
+              value={receiveAmount || (activeTab === 'buy' ? `0 ${selectedCryptoData?.symbol}` : 'R0.00')}
+              onChange={(e) => setReceiveAmount(e.target.value)}
+              placeholder={activeTab === 'buy' ? `0 ${selectedCryptoData?.symbol}` : 'R0.00'}
+              className="text-right font-bold text-slate-800 text-xl bg-transparent border-none outline-none"
+            />
           </div>
         </div>
 
