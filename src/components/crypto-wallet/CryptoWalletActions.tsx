@@ -21,7 +21,7 @@ const CryptoWalletActions = () => {
         {/* Buy / Sell */}
         <button className="flex flex-col items-center justify-center px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 transition-colors">
           <DollarSign className="h-5 w-5 text-black mb-1" />
-          <span className="text-xs text-black font-medium">Buy / Sell</span>
+          <span className="text-xs text-black font-medium whitespace-nowrap">Buy/Sell</span>
         </button>
         
         {/* Receive */}
