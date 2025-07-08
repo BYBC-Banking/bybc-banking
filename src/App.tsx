@@ -1,52 +1,26 @@
 
-import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import AppLayout from "./components/AppLayout";
-import AppRoutes from "./routes/AppRoutes";
-import LoadingScreen from "./components/LoadingScreen";
-import { useAppInitialization } from "./hooks/useAppInitialization";
-import { HomePageProvider } from "./context/HomePageContext";
-import { accounts } from "./data/accountsData";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import AppRoutes from "@/routes/AppRoutes";
 
-// Create a new QueryClient instance outside of component
 const queryClient = new QueryClient();
 
-const AppContent = () => {
-  const { initialCheckDone, loading } = useAppInitialization();
-  
-  if (!initialCheckDone) {
-    return null; // Don't render until initial check is done
-  }
-  
-  if (loading) {
-    return <LoadingScreen />;
-  }
-  
-  return (
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AppLayout>
-        <AppRoutes />
-      </AppLayout>
-    </TooltipProvider>
-  );
-};
-
 const App = () => (
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <HomePageProvider accounts={accounts}>
-          <AppContent />
-        </HomePageProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
+  </QueryClientProvider>
 );
 
 export default App;

@@ -1,23 +1,122 @@
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import LoginForm from "@/components/auth/LoginForm";
 import BiometricButton from "@/components/auth/BiometricButton";
 import LoginLinks from "@/components/auth/LoginLinks";
-import { useLoginValidation } from "@/hooks/useLoginValidation";
-import { useLoginSubmit } from "@/hooks/useLoginSubmit";
+import { useToast } from "@/hooks/use-toast";
+import { loginUser } from "@/services/supabase/authService";
+import { useAuth } from "@/contexts/AuthContext";
+import { isValidEmail, sanitizeInput } from "@/utils/security";
 
 const Login = () => {
-  const { formData, validation, handleChange } = useLoginValidation();
-  const { isSubmitting, error, handleSubmit, clearError } = useLoginSubmit(formData, validation);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
+  const { user, loading } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    identifier: "",
+    password: "",
+  });
+  
+  const [validation, setValidation] = useState({
+    identifier: false,
+    password: false,
+  });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Get the redirect URL from query params
+  const params = new URLSearchParams(location.search);
+  const redirectTo = params.get('redirect') || "/dashboard";
 
-  // Clear error when user types
+  // Redirect if already logged in
   useEffect(() => {
-    if (error) {
-      clearError();
+    if (!loading && user) {
+      navigate(redirectTo);
     }
-  }, [formData.identifier, formData.password]);
+  }, [user, loading, navigate, redirectTo]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear error when user types
+    setError(null);
+    
+    // Basic validation
+    if (name === "identifier") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^(\+27|0)[0-9]{9}$/; // South African phone format
+      setValidation((prev) => ({
+        ...prev,
+        identifier: emailRegex.test(value) || phoneRegex.test(value),
+      }));
+    } else if (name === "password") {
+      setValidation((prev) => ({
+        ...prev,
+        password: value.length >= 8,
+      }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate inputs
+    if (!validation.identifier || !validation.password) {
+      setError("Please ensure all fields are valid before submitting");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      // Sanitize inputs to prevent XSS
+      const sanitizedIdentifier = sanitizeInput(formData.identifier.trim());
+      
+      // Determine if input is email or phone
+      const isEmail = isValidEmail(sanitizedIdentifier);
+      
+      // Attempt login with the sanitized email
+      if (isEmail) {
+        const result = await loginUser(sanitizedIdentifier, formData.password);
+        
+        if (result.success) {
+          toast({
+            title: "Login successful",
+            description: "Welcome to BYBC Banking",
+          });
+          
+          // Redirect to intended destination
+          navigate(redirectTo);
+        } else {
+          setError(result.error || "Invalid email or password");
+        }
+      } else {
+        // For demo purposes, phone login isn't implemented yet
+        setError("Please use your email address to login");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-b from-[#1A1F2C] to-[#7E69AB] flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#1A1F2C] to-[#7E69AB] flex flex-col justify-center px-4 py-12">
