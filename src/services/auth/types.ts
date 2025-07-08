@@ -5,6 +5,7 @@ export interface User {
   email: string;
   name: string;
   role: "admin" | "user";
+  mobile?: string;
 }
 
 export interface AuthState {
@@ -19,10 +20,12 @@ export interface MockUser {
   password: string;
   name: string;
   role: "admin" | "user";
+  mobile?: string;
 }
 
 // Constants
 export const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+export const MAX_REGISTRATION_USERS = 100;
 
 // Mock user database - in a real app, this would be on the backend
 export const USERS: MockUser[] = [
@@ -41,6 +44,49 @@ export const USERS: MockUser[] = [
     role: "admin" as const
   }
 ];
+
+// Storage keys
+export const STORAGE_KEYS = {
+  REGISTERED_USERS: 'bybc_registered_users',
+  USER_COUNT: 'bybc_user_count'
+} as const;
+
+// Helper functions for user storage
+export const getRegisteredUsers = (): MockUser[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.REGISTERED_USERS);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error reading registered users:', error);
+    return [];
+  }
+};
+
+export const saveRegisteredUsers = (users: MockUser[]): void => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.REGISTERED_USERS, JSON.stringify(users));
+  } catch (error) {
+    console.error('Error saving registered users:', error);
+  }
+};
+
+export const getUserCount = (): number => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.USER_COUNT);
+    return stored ? parseInt(stored, 10) : 0;
+  } catch (error) {
+    console.error('Error reading user count:', error);
+    return 0;
+  }
+};
+
+export const setUserCount = (count: number): void => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.USER_COUNT, count.toString());
+  } catch (error) {
+    console.error('Error saving user count:', error);
+  }
+};
 
 // Extend Window interface to allow for session timeout ID
 declare global {

@@ -1,6 +1,6 @@
 
 import { toast } from "sonner";
-import { USERS, User, SESSION_TIMEOUT } from "./types";
+import { USERS, User, SESSION_TIMEOUT, getRegisteredUsers } from "./types";
 import { setAuthState, persistAuthState, setupSessionTimeout, setupActivityTracking } from "./sessionManager";
 
 // Login function
@@ -15,11 +15,12 @@ export const authenticateUser = async (email: string, password: string): Promise
     // Sanitize inputs
     email = email.trim().toLowerCase();
     
-    // In a real app, this would be an API call with proper password hashing
-    // For now, we'll use a simple mock authentication
+    // Get all users (predefined admins + registered users)
+    const registeredUsers = getRegisteredUsers();
+    const allUsers = [...USERS, ...registeredUsers];
     
     // Find user by email (case insensitive)
-    const user = USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const user = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
     
     // Basic security check - this would be replaced by proper password verification
     if (user && (password === "adminbybc" || password === user.password)) {
@@ -33,7 +34,8 @@ export const authenticateUser = async (email: string, password: string): Promise
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role
+          role: user.role,
+          mobile: user.mobile
         },
         token,
         expiresAt

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, AlertTriangle } from "lucide-react";
+import { Eye, EyeOff, AlertTriangle, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { login } from "@/utils/auth";
 import { isValidEmail, isValidPhone, sanitizeInput, isStrongPassword } from "@/utils/security";
+import { registerUser, canRegisterNewUser, getRemainingSlots } from "@/services/auth/userRegistration";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ const Register = () => {
     password: false,
     confirmPassword: false,
   });
+
+  const remainingSlots = getRemainingSlots();
+  const canRegister = canRegisterNewUser();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -86,6 +90,11 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!canRegister) {
+      setError("Registration is currently closed. We've reached our limit of 100 users.");
+      return;
+    }
+    
     // Check if all fields are valid
     const isFormValid = Object.values(validation).every(valid => valid);
     
@@ -98,34 +107,31 @@ const Register = () => {
     setError(null);
     
     try {
-      // Sanitize inputs to prevent XSS
-      const sanitizedEmail = sanitizeInput(formData.email.trim());
-      const sanitizedName = sanitizeInput(formData.fullName.trim());
-      const sanitizedMobile = sanitizeInput(formData.mobile.trim());
-      
-      // In a real app, this would make an API call to register the user
-      console.log("Registration attempt with:", {
-        email: sanitizedEmail,
-        name: sanitizedName,
-        mobile: sanitizedMobile,
-        // Password would be hashed on the server, not logged
+      // Register the user
+      const registrationSuccess = await registerUser({
+        fullName: formData.fullName,
+        email: formData.email,
+        mobile: formData.mobile,
+        password: formData.password
       });
       
-      // Simulate successful registration and login
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created.",
-      });
-      
-      // Auto-login after registration
-      const loginSuccess = await login(sanitizedEmail, formData.password);
-      
-      if (loginSuccess) {
-        // Navigate to dashboard on successful registration
-        navigate("/dashboard");
-      } else {
-        // This should rarely happen as we just registered
-        setError("Account created but login failed. Please try logging in manually.");
+      if (registrationSuccess) {
+        // Auto-login after successful registration
+        const loginSuccess = await login(formData.email, formData.password);
+        
+        if (loginSuccess) {
+          toast({
+            title: "Welcome to BYBC Banking!",
+            description: "Your account has been created and you're now logged in.",
+          });
+          navigate("/dashboard");
+        } else {
+          toast({
+            title: "Registration successful",
+            description: "Please log in with your new credentials.",
+          });
+          navigate("/login");
+        }
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -143,6 +149,22 @@ const Register = () => {
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-finance-blue">Create Account</h1>
           <p className="text-muted-foreground">Start your financial journey with us</p>
+          
+          {/* Registration slots indicator */}
+          {canRegister ? (
+            <div className="flex items-center justify-center gap-2 text-sm text-finance-green">
+              <Users className="h-4 w-4" />
+              <span>{remainingSlots} registration slots remaining</span>
+            </div>
+          ) : (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Registration Closed</AlertTitle>
+              <AlertDescription>
+                We've reached our limit of 100 users. Registration is currently closed.
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
 
         {error && (
@@ -167,6 +189,7 @@ const Register = () => {
                 "transition-all duration-200",
                 validation.fullName && "border-finance-green"
               )}
+              disabled={!canRegister}
             />
           </div>
           
@@ -185,6 +208,7 @@ const Register = () => {
                 validation.email && "border-finance-green"
               )}
               autoComplete="email"
+              disabled={!canRegister}
             />
           </div>
           
@@ -202,6 +226,7 @@ const Register = () => {
                 validation.mobile && "border-finance-green"
               )}
               autoComplete="tel"
+              disabled={!canRegister}
             />
           </div>
           
@@ -221,11 +246,13 @@ const Register = () => {
                   validation.password && "border-finance-green"
                 )}
                 autoComplete="new-password"
+                disabled={!canRegister}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                disabled={!canRegister}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -248,11 +275,13 @@ const Register = () => {
                   validation.confirmPassword && "border-finance-green"
                 )}
                 autoComplete="new-password"
+                disabled={!canRegister}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                disabled={!canRegister}
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -261,10 +290,10 @@ const Register = () => {
 
           <Button
             type="submit"
-            disabled={!isFormValid || isSubmitting}
+            disabled={!isFormValid || isSubmitting || !canRegister}
             className={cn(
               "w-full mt-4 transition-all duration-200 hover:scale-[1.02]",
-              isFormValid && !isSubmitting ? "bg-finance-blue hover:bg-finance-blue-light" : "opacity-70"
+              isFormValid && !isSubmitting && canRegister ? "bg-finance-blue hover:bg-finance-blue-light" : "opacity-70"
             )}
           >
             {isSubmitting ? "Creating Account..." : "Create Account"}
