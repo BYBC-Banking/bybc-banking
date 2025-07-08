@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -5,11 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { login } from '@/utils/auth';
+import { loginUser } from '@/services/supabase/authService';
 import { isValidEmail, sanitizeInput } from '@/utils/security';
 import AccountTypeSelector from '@/components/auth/AccountTypeSelector';
 import CreateAccountLoginForm from '@/components/auth/CreateAccountLoginForm';
-import { accountTypes } from '@/data/accountTypes';
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -59,17 +59,17 @@ const CreateAccount = () => {
         // Sanitize input to prevent XSS
         const sanitizedEmail = sanitizeInput(email);
         
-        // Attempt login
-        const loginSuccess = await login(sanitizedEmail, password);
+        // Attempt login using Supabase
+        const result = await loginUser(sanitizedEmail, password);
         
-        if (loginSuccess) {
+        if (result.success) {
           toast({
             title: "Login Successful",
             description: "Welcome back to BYBC Banking",
           });
           navigate("/dashboard");
         } else {
-          setError("Invalid email or password");
+          setError(result.error || "Invalid email or password");
         }
       } catch (err) {
         console.error("Login error:", err);

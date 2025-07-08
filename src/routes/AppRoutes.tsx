@@ -43,15 +43,26 @@ import Recovery from "@/pages/Recovery";
 import ComplianceCenter from "@/pages/ComplianceCenter";
 import PrivacyDashboard from "@/pages/PrivacyDashboard";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { isLoggedIn } from "@/utils/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import CryptoTradePage from "@/pages/CryptoTradePage";
 import CryptoReceive from "@/pages/CryptoReceive";
 import CryptoSend from "@/pages/CryptoSend";
 
 const AppRoutes = () => {
+  const { user, loading } = useAuth();
+  
+  // Show loading while checking auth status
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Navigate to={isLoggedIn() ? "/dashboard" : "/login"} replace />} />
+      <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/account-recovery" element={<AccountRecovery />} />

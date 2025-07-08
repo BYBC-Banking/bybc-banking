@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { login } from "@/utils/auth";
+import { loginUser } from "@/services/supabase/authService";
 import { isValidEmail, sanitizeInput } from "@/utils/security";
 
 interface FormData {
@@ -47,9 +47,9 @@ export const useLoginSubmit = (formData: FormData, validation: Validation) => {
       
       // Attempt login with the sanitized email
       if (isEmail) {
-        const loginSuccess = await login(sanitizedIdentifier, formData.password);
+        const result = await loginUser(sanitizedIdentifier, formData.password);
         
-        if (loginSuccess) {
+        if (result.success) {
           toast({
             title: "Login successful",
             description: "Welcome to BYBC Banking",
@@ -58,7 +58,7 @@ export const useLoginSubmit = (formData: FormData, validation: Validation) => {
           // Redirect to intended destination
           navigate(redirectTo);
         } else {
-          setError("Invalid email or password");
+          setError(result.error || "Invalid email or password");
         }
       } else {
         // For demo purposes, phone login isn't implemented yet
