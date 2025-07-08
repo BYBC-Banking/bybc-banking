@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import CryptoReceiptModal from '../components/crypto-trade/CryptoReceiptModal';
 import CryptoDisclaimer from '../components/crypto-trade/CryptoDisclaimer';
 import { cryptoAssets } from '../components/crypto-trade/cryptoData';
 import { calculateConversion } from '../components/crypto-trade/cryptoUtils';
+
 const CryptoTradePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
@@ -43,17 +45,21 @@ const CryptoTradePage = () => {
     }
     return () => clearTimeout(timer);
   }, [showPreApproval, countdown]);
-  return <div className="min-h-screen bg-gray-50">
-      {/* Back Button Header */}
+  
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Back Button and Buy/Sell Toggle */}
       <div className="flex items-center justify-between px-4 py-4 bg-white shadow-sm">
         <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
           <ArrowLeft className="w-6 h-6 text-gray-700" />
         </button>
         
+        <div className="flex-1 max-w-xs mx-4">
+          <CryptoBuySellToggle activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
+        
         <div className="w-10 h-10"></div> {/* Spacer for centering */}
       </div>
-
-      <CryptoBuySellToggle activeTab={activeTab} setActiveTab={setActiveTab} />
       
       <CryptoAssetDropdown cryptos={cryptoAssets} selectedCrypto={selectedCrypto} setSelectedCrypto={setSelectedCrypto} showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
 
@@ -64,6 +70,8 @@ const CryptoTradePage = () => {
       <CryptoReceiptModal showConfirmation={showConfirmation} setShowConfirmation={setShowConfirmation} activeTab={activeTab} receiveAmount={receiveAmount} payAmount={payAmount} conversion={conversion} selectedCrypto={selectedCrypto} />
 
       <CryptoDisclaimer />
-    </div>;
+    </div>
+  );
 };
+
 export default CryptoTradePage;

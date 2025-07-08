@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { ShoppingCart, ArrowDownLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import CryptoFilterTabs from "./CryptoFilterTabs";
 
 interface CryptoAsset {
@@ -42,6 +43,7 @@ const CryptoList = ({
   onCryptoSelect
 }: CryptoListProps) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // Filter crypto based on search and selected tab
   const filteredCryptos = cryptoAssets.filter(crypto => {
@@ -55,6 +57,14 @@ const CryptoList = ({
     
     return matchesSearch && matchesTab;
   });
+
+  const handleBuyClick = (crypto: CryptoAsset) => {
+    navigate("/crypto-trade");
+  };
+
+  const handleSellClick = (crypto: CryptoAsset) => {
+    if (onCryptoSelect) onCryptoSelect(crypto);
+  };
 
   return (
     <Card className="bg-white">
@@ -148,7 +158,7 @@ const CryptoList = ({
                           className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (onCryptoSelect) onCryptoSelect(crypto);
+                            handleBuyClick(crypto);
                           }}
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" /> Buy
@@ -158,7 +168,7 @@ const CryptoList = ({
                           className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (onCryptoSelect) onCryptoSelect(crypto);
+                            handleSellClick(crypto);
                           }}
                         >
                           <ArrowDownLeft className="h-4 w-4 mr-2" /> Sell

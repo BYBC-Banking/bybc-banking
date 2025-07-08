@@ -8,11 +8,11 @@ interface CryptoBuySellToggleProps {
 
 const CryptoBuySellToggle: React.FC<CryptoBuySellToggleProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="px-6 py-4">
+    <div className="w-full">
       <div className="bg-slate-700 rounded-full p-1 flex relative">
         <button
           onClick={() => setActiveTab('buy')}
-          className={`flex-1 py-3 px-6 rounded-full font-medium transition-all duration-300 relative z-10 ${
+          className={`flex-1 py-2 px-4 rounded-full font-medium transition-all duration-300 relative z-10 text-sm ${
             activeTab === 'buy'
               ? 'text-white'
               : 'text-gray-400'
@@ -22,7 +22,7 @@ const CryptoBuySellToggle: React.FC<CryptoBuySellToggleProps> = ({ activeTab, se
         </button>
         <button
           onClick={() => setActiveTab('sell')}
-          className={`flex-1 py-3 px-6 rounded-full font-medium transition-all duration-300 relative z-10 ${
+          className={`flex-1 py-2 px-4 rounded-full font-medium transition-all duration-300 relative z-10 text-sm ${
             activeTab === 'sell'
               ? 'text-white'
               : 'text-gray-400'

@@ -31,10 +31,7 @@ const CryptoPageContent = () => {
   };
 
   const handleBuy = (crypto: any) => {
-    toast({
-      title: "Buy Crypto",
-      description: `Redirecting to buy ${crypto.name}.`
-    });
+    navigate("/crypto-trade");
   };
   
   const handleSell = (crypto: any) => {

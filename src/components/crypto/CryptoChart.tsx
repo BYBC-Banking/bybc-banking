@@ -1,9 +1,12 @@
+
 import { useState } from "react";
 import { TrendingUp, TrendingDown, BookmarkPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useNavigate } from "react-router-dom";
+
 interface CryptoChartProps {
   selectedCrypto: any;
   hasInvestmentAccess: boolean;
@@ -11,6 +14,7 @@ interface CryptoChartProps {
   onBuy: (crypto: any) => void;
   onSell: (crypto: any) => void;
 }
+
 const CryptoChart = ({
   selectedCrypto,
   hasInvestmentAccess,
@@ -20,10 +24,17 @@ const CryptoChart = ({
 }: CryptoChartProps) => {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState<"1H" | "1D" | "1W" | "1M" | "3M" | "1Y">("1D");
+  const navigate = useNavigate();
+
   const handleWatchlistToggle = () => {
     setIsInWatchlist(!isInWatchlist);
     onAddToWatchlist(selectedCrypto);
   };
+
+  const handleBuyClick = () => {
+    navigate("/crypto-trade");
+  };
+
   const chartData = [{
     name: "10:00",
     value: 65400
@@ -40,12 +51,14 @@ const CryptoChart = ({
     name: "14:00",
     value: 65530
   }];
+
   const chartConfig = {
     value: {
       label: "Price",
       color: selectedCrypto.isPositive ? "#16a34a" : "#dc2626"
     }
   };
+
   const timeframes = [{
     label: "1H",
     value: "1H"
@@ -65,7 +78,9 @@ const CryptoChart = ({
     label: "1Y",
     value: "1Y"
   }];
-  return <Card className="mb-6 bg-white border-0 shadow-none">
+
+  return (
+    <Card className="mb-6 bg-white border-0 shadow-none">
       <CardContent className="p-6 py-[5px]">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
@@ -113,15 +128,19 @@ const CryptoChart = ({
         </div>
 
         {/* Action Buttons */}
-        {hasInvestmentAccess && <div className="flex gap-3">
-            <Button onClick={() => onBuy(selectedCrypto)} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg">
+        {hasInvestmentAccess && (
+          <div className="flex gap-3">
+            <Button onClick={handleBuyClick} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg">
               Buy
             </Button>
             <Button onClick={() => onSell(selectedCrypto)} variant="outline" className="flex-1 border-blue-500 text-blue-600 hover:bg-blue-50 font-medium py-3 rounded-lg">
               Sell
             </Button>
-          </div>}
+          </div>
+        )}
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default CryptoChart;
