@@ -6,7 +6,7 @@ import BottomNav from "./BottomNav";
 export default function MobileNavigation() {
   const isMobile = useIsMobile();
   
-  // Only render on mobile
+  // On desktop, only render the top nav
   if (!isMobile) {
     return null;
   }

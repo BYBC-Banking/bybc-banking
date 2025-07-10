@@ -179,16 +179,13 @@ const Register = () => {
               name="mobile"
               value={formData.mobile}
               onChange={handleChange}
-              placeholder="Enter your SA mobile number (e.g., 0712345678)"
+              placeholder="Enter your mobile number"
               className={cn(
                 "transition-all duration-200",
                 validation.mobile && "border-finance-green"
               )}
               autoComplete="tel"
             />
-            <p className="text-xs text-muted-foreground">
-              Only South African mobile numbers are accepted (06x, 07x, 08x format)
-            </p>
           </div>
           
           <div className="space-y-2">
