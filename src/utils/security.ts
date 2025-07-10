@@ -7,10 +7,21 @@ export const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-// Validate phone format (South African)
+// Validate phone format (South African only)
 export const isValidPhone = (phone: string): boolean => {
-  const phoneRegex = /^(\+27|0)[0-9]{9}$/;
-  return phoneRegex.test(phone);
+  // Remove all spaces, dashes, and parentheses
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+  
+  // South African phone number patterns:
+  // +27 followed by 9 digits (mobile: +27 6x, 7x, 8x, 1x, 2x, 3x, 4x, 5x)
+  // 0 followed by 9 digits (mobile: 06x, 07x, 08x, 01x, 02x, 03x, 04x, 05x)
+  const saPhoneRegex = /^(\+27|0)[0-9]{9}$/;
+  
+  // Additional validation for mobile numbers (most common in SA)
+  const saMobileRegex = /^(\+27|0)[6-8][0-9]{8}$/;
+  
+  // Check if it matches SA format and is a valid mobile number
+  return saPhoneRegex.test(cleanPhone) && saMobileRegex.test(cleanPhone);
 };
 
 // Validate password strength
@@ -68,4 +79,18 @@ export const validateTransaction = (transaction: any, expectedAmount?: number): 
   if (expectedAmount !== undefined && transaction.amount !== expectedAmount) return false;
   
   return true;
+};
+
+// Format South African phone number for display
+export const formatSAPhoneNumber = (phone: string): string => {
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+  
+  if (cleanPhone.startsWith('+27')) {
+    const number = cleanPhone.substring(3);
+    return `+27 ${number.substring(0, 2)} ${number.substring(2, 5)} ${number.substring(5)}`;
+  } else if (cleanPhone.startsWith('0')) {
+    return `${cleanPhone.substring(0, 3)} ${cleanPhone.substring(3, 6)} ${cleanPhone.substring(6)}`;
+  }
+  
+  return phone;
 };
