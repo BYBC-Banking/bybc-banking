@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { isValidEmail, isValidPhone } from "@/utils/security";
 
 interface FormData {
   identifier: string;
@@ -28,11 +29,13 @@ export const useLoginValidation = () => {
     
     // Basic validation
     if (name === "identifier") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const phoneRegex = /^(\+27|0)[0-9]{9}$/; // South African phone format
+      // Use the updated security utils for validation
+      const isValidEmailFormat = isValidEmail(value);
+      const isValidSAPhone = isValidPhone(value);
+      
       setValidation((prev) => ({
         ...prev,
-        identifier: emailRegex.test(value) || phoneRegex.test(value),
+        identifier: isValidEmailFormat || isValidSAPhone,
       }));
     } else if (name === "password") {
       setValidation((prev) => ({
