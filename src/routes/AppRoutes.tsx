@@ -56,9 +56,11 @@ const AppRoutes = () => {
   // Show loading while checking auth status
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
+      <AppLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-gray-600">Loading...</div>
+        </div>
+      </AppLayout>
     );
   }
 
