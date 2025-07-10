@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { HomePageProvider } from "@/context/HomePageContext";
+import { accounts } from "@/data/accountsData";
 import AppRoutes from "@/routes/AppRoutes";
 
 const queryClient = new QueryClient();
@@ -13,7 +14,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <HomePageProvider>
+      <HomePageProvider accounts={accounts}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
