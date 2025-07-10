@@ -14,15 +14,15 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <HomePageProvider accounts={accounts}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <HomePageProvider accounts={accounts}>
             <AppRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
-      </HomePageProvider>
+          </HomePageProvider>
+        </BrowserRouter>
+      </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
