@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -50,7 +49,7 @@ import CryptoTradePage from "@/pages/CryptoTradePage";
 import CryptoReceive from "@/pages/CryptoReceive";
 import CryptoSend from "@/pages/CryptoSend";
 
-const AppRoutes = () => {
+function AppRoutes() {
   const { user, loading } = useAuth();
   
   // Show loading while checking auth status
@@ -311,6 +310,6 @@ const AppRoutes = () => {
       </Routes>
     </AppLayout>
   );
-};
+}
 
 export default AppRoutes;

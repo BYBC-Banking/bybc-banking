@@ -8,12 +8,19 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { HomePageWrapper } from "@/components/HomePageWrapper";
 import AppRoutes from "@/routes/AppRoutes";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
-const App = () => {
+function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>
             <HomePageWrapper>
@@ -23,9 +30,9 @@ const App = () => {
             </HomePageWrapper>
           </TooltipProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
