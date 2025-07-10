@@ -17,7 +17,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   const isFullscreenPage = location.pathname === '/crypto-wallet' || 
                            location.pathname === '/crypto-trade' || 
                            location.pathname === '/crypto-receive' || 
-                           location.pathname === '/crypto-send';
+                           location.pathname === '/crypto-send' ||
+                           location.pathname === '/crypto-swap';
   
   return (
     <>
