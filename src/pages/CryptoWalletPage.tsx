@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import WalletHeader from "@/components/crypto-wallet/WalletHeader";
 import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
@@ -31,6 +32,8 @@ const CryptoWalletPage = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('1D');
   const [animatedValue, setAnimatedValue] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
+  const [selectedSegment, setSelectedSegment] = useState<string | null>(null);
+  const [reorderedComposition, setReorderedComposition] = useState(portfolioComposition);
 
   const targetValue = 70517.16;
 
@@ -70,6 +73,24 @@ const CryptoWalletPage = () => {
 
   const handleBackToPortfolio = () => {
     setSelectedCrypto(null);
+  };
+
+  const handleSegmentClick = (assetName: string) => {
+    setSelectedSegment(assetName);
+    
+    // Move the selected asset to the top
+    const selectedAsset = portfolioComposition.find(asset => asset.name === assetName);
+    const otherAssets = portfolioComposition.filter(asset => asset.name !== assetName);
+    
+    if (selectedAsset) {
+      setReorderedComposition([selectedAsset, ...otherAssets]);
+    }
+
+    // Reset after 3 seconds
+    setTimeout(() => {
+      setSelectedSegment(null);
+      setReorderedComposition(portfolioComposition);
+    }, 3000);
   };
 
   // If a crypto is selected, show the detailed dashboard
@@ -117,16 +138,18 @@ const CryptoWalletPage = () => {
           <DonutChart 
             isDarkMode={isDarkMode}
             portfolioComposition={portfolioComposition}
+            onSegmentClick={handleSegmentClick}
+            selectedAsset={selectedSegment}
           />
           
           {/* Asset List */}
           <div className="space-y-2">
-            {portfolioComposition.map((asset, index) => (
+            {reorderedComposition.map((asset, index) => (
               <div
                 key={asset.name}
                 className={`flex items-center justify-between p-2 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
                   isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
-                }`}
+                } ${selectedSegment === asset.name ? 'ring-2 ring-yellow-400 bg-yellow-400/10' : ''}`}
                 onClick={() => handleAssetClick(asset.name)}
               >
                 <div className="flex items-center gap-2">

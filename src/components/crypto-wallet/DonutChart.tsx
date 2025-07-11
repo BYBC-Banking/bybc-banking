@@ -8,9 +8,11 @@ interface DonutChartProps {
     value: number;
     color: string;
   }>;
+  onSegmentClick?: (assetName: string) => void;
+  selectedAsset?: string | null;
 }
 
-const DonutChart = ({ isDarkMode, portfolioComposition }: DonutChartProps) => {
+const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, selectedAsset }: DonutChartProps) => {
   // Calculate the total value for percentage calculations
   const total = portfolioComposition.reduce((sum, item) => sum + item.value, 0);
   
@@ -43,13 +45,15 @@ const DonutChart = ({ isDarkMode, portfolioComposition }: DonutChartProps) => {
   let currentAngle = 0;
   const segments = portfolioComposition.map((item) => {
     const angle = (item.value / total) * 360;
-    const path = createPath(currentAngle, currentAngle + angle, 15, 35);
+    const isSelected = selectedAsset === item.name;
+    const path = createPath(currentAngle, currentAngle + angle, 15, isSelected ? 37 : 35);
     currentAngle += angle;
     
     return {
       ...item,
       path,
-      angle
+      angle,
+      isSelected
     };
   });
 
@@ -64,6 +68,11 @@ const DonutChart = ({ isDarkMode, portfolioComposition }: DonutChartProps) => {
               fill={segment.color}
               stroke={isDarkMode ? "#1f2937" : "#ffffff"}
               strokeWidth="0.5"
+              className="cursor-pointer transition-all duration-300 hover:opacity-80"
+              onClick={() => onSegmentClick && onSegmentClick(segment.name)}
+              style={{
+                filter: segment.isSelected ? 'brightness(1.2) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' : 'none'
+              }}
             />
           ))}
         </svg>
