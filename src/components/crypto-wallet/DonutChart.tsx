@@ -8,11 +8,9 @@ interface DonutChartProps {
     value: number;
     color: string;
   }>;
-  onColorClick?: (colorName: string) => void;
-  selectedColor?: string | null;
 }
 
-const DonutChart = ({ isDarkMode, portfolioComposition, onColorClick, selectedColor }: DonutChartProps) => {
+const DonutChart = ({ isDarkMode, portfolioComposition }: DonutChartProps) => {
   // Calculate the total value for percentage calculations
   const total = portfolioComposition.reduce((sum, item) => sum + item.value, 0);
   
@@ -55,37 +53,19 @@ const DonutChart = ({ isDarkMode, portfolioComposition, onColorClick, selectedCo
     };
   });
 
-  const handleSegmentClick = (segmentName: string) => {
-    if (onColorClick) {
-      onColorClick(segmentName);
-    }
-  };
-
   return (
     <div className="flex justify-center mb-6">
       <div className="relative">
         <svg width="200" height="200" viewBox="0 0 100 100" className="transform -rotate-90">
-          {segments.map((segment, index) => {
-            const isSelected = selectedColor === segment.name;
-            return (
-              <path
-                key={index}
-                d={segment.path}
-                fill={segment.color}
-                stroke={isDarkMode ? "#1f2937" : "#ffffff"}
-                strokeWidth={isSelected ? "1.5" : "0.5"}
-                className={`cursor-pointer transition-all duration-300 ${
-                  isSelected ? 'drop-shadow-lg' : 'hover:drop-shadow-md'
-                }`}
-                style={{
-                  filter: isSelected ? 'brightness(1.2)' : undefined,
-                  transform: isSelected ? 'scale(1.05)' : undefined,
-                  transformOrigin: '50% 50%'
-                }}
-                onClick={() => handleSegmentClick(segment.name)}
-              />
-            );
-          })}
+          {segments.map((segment, index) => (
+            <path
+              key={index}
+              d={segment.path}
+              fill={segment.color}
+              stroke={isDarkMode ? "#1f2937" : "#ffffff"}
+              strokeWidth="0.5"
+            />
+          ))}
         </svg>
       </div>
     </div>

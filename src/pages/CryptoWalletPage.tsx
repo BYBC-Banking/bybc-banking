@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import WalletHeader from "@/components/crypto-wallet/WalletHeader";
 import PortfolioCard from "@/components/crypto-wallet/PortfolioCard";
@@ -16,7 +15,7 @@ const portfolioData = [
   { time: '20:00', value: 70517 }
 ];
 
-const originalPortfolioComposition = [
+const portfolioComposition = [
   { name: 'Bitcoin', value: 45, amount: 31732.71, color: '#FFD700', icon: '₿', symbol: 'B' },
   { name: 'Ethereum', value: 30, amount: 21155.15, color: '#00D4FF', icon: 'Ξ', symbol: 'Ξ' },
   { name: 'Cardano', value: 12, amount: 8462.06, color: '#FF6B35', icon: '₳', symbol: '₳' },
@@ -32,8 +31,6 @@ const CryptoWalletPage = () => {
   const [activeTimeframe, setActiveTimeframe] = useState('1D');
   const [animatedValue, setAnimatedValue] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [portfolioComposition, setPortfolioComposition] = useState(originalPortfolioComposition);
 
   const targetValue = 70517.16;
 
@@ -57,27 +54,6 @@ const CryptoWalletPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Handle color selection and reorder portfolio
-  useEffect(() => {
-    if (selectedColor) {
-      const selectedItem = originalPortfolioComposition.find(item => item.name === selectedColor);
-      if (selectedItem) {
-        const otherItems = originalPortfolioComposition.filter(item => item.name !== selectedColor);
-        setPortfolioComposition([selectedItem, ...otherItems]);
-      }
-
-      // Clear selection after 3 seconds
-      const timer = setTimeout(() => {
-        setSelectedColor(null);
-        setPortfolioComposition(originalPortfolioComposition);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    } else {
-      setPortfolioComposition(originalPortfolioComposition);
-    }
-  }, [selectedColor]);
-
   const formatCurrency = (value: number) => {
     return `R ${value.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
@@ -94,10 +70,6 @@ const CryptoWalletPage = () => {
 
   const handleBackToPortfolio = () => {
     setSelectedCrypto(null);
-  };
-
-  const handleColorClick = (colorName: string) => {
-    setSelectedColor(colorName);
   };
 
   // If a crypto is selected, show the detailed dashboard
@@ -145,8 +117,6 @@ const CryptoWalletPage = () => {
           <DonutChart 
             isDarkMode={isDarkMode}
             portfolioComposition={portfolioComposition}
-            onColorClick={handleColorClick}
-            selectedColor={selectedColor}
           />
           
           {/* Asset List */}
@@ -156,8 +126,6 @@ const CryptoWalletPage = () => {
                 key={asset.name}
                 className={`flex items-center justify-between p-2 rounded-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
                   isDarkMode ? 'bg-gray-700/30 hover:bg-gray-700/50' : 'bg-gray-50/50 hover:bg-gray-100/50'
-                } ${
-                  selectedColor === asset.name ? 'ring-2 ring-yellow-400 bg-yellow-400/10' : ''
                 }`}
                 onClick={() => handleAssetClick(asset.name)}
               >
