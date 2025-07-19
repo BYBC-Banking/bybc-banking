@@ -31,13 +31,12 @@ const SendMoney = () => {
     }
     setShowConfirmation(true);
   };
-
   const getCurrentDate = () => {
     const now = new Date();
-    return now.toLocaleDateString('en-ZA', { 
-      day: '2-digit', 
-      month: 'short', 
-      year: 'numeric' 
+    return now.toLocaleDateString('en-ZA', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
     });
   };
   return <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
@@ -77,7 +76,7 @@ const SendMoney = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount (R)</Label>
+              <Label htmlFor="amount">Amount</Label>
               <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} min="0" step="0.01" />
             </div>
 
@@ -120,24 +119,17 @@ const SendMoney = () => {
               </div>
 
               <div className="space-y-3 pt-4">
-                <Button 
-                  onClick={() => setShowConfirmation(false)} 
-                  className="w-full"
-                >
+                <Button onClick={() => setShowConfirmation(false)} className="w-full">
                   Done
                 </Button>
                 
-                <Button 
-                  variant="ghost" 
-                  className="w-full flex items-center gap-2"
-                  onClick={() => {
-                    // Share functionality would go here
-                    toast({
-                      title: "Share functionality coming soon",
-                      description: "This feature will be available in the next update"
-                    });
-                  }}
-                >
+                <Button variant="ghost" className="w-full flex items-center gap-2" onClick={() => {
+                // Share functionality would go here
+                toast({
+                  title: "Share functionality coming soon",
+                  description: "This feature will be available in the next update"
+                });
+              }}>
                   <Share className="h-4 w-4" />
                   Share Payment Notification
                 </Button>
