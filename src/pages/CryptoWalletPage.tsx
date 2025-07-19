@@ -33,6 +33,7 @@ const CryptoWalletPage = () => {
   const [animatedValue, setAnimatedValue] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
   const [selectedSegment, setSelectedSegment] = useState<string | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [reorderedComposition, setReorderedComposition] = useState(portfolioComposition);
 
   const targetValue = 70517.16;
@@ -93,6 +94,23 @@ const CryptoWalletPage = () => {
     }, 3000);
   };
 
+  const handleSegmentHover = (assetName: string | null) => {
+    setHoveredSegment(assetName);
+    
+    if (assetName) {
+      // Move the hovered asset to the top
+      const hoveredAsset = portfolioComposition.find(asset => asset.name === assetName);
+      const otherAssets = portfolioComposition.filter(asset => asset.name !== assetName);
+      
+      if (hoveredAsset) {
+        setReorderedComposition([hoveredAsset, ...otherAssets]);
+      }
+    } else {
+      // Reset to original order when hover ends
+      setReorderedComposition(portfolioComposition);
+    }
+  };
+
   // If a crypto is selected, show the detailed dashboard
   if (selectedCrypto) {
     return <CryptoDetailDashboard crypto={selectedCrypto} onBack={handleBackToPortfolio} />;
@@ -139,6 +157,7 @@ const CryptoWalletPage = () => {
             isDarkMode={isDarkMode}
             portfolioComposition={portfolioComposition}
             onSegmentClick={handleSegmentClick}
+            onSegmentHover={handleSegmentHover}
             selectedAsset={selectedSegment}
           />
           

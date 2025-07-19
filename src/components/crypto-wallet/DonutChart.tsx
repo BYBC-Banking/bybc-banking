@@ -9,10 +9,11 @@ interface DonutChartProps {
     color: string;
   }>;
   onSegmentClick?: (assetName: string) => void;
+  onSegmentHover?: (assetName: string | null) => void;
   selectedAsset?: string | null;
 }
 
-const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, selectedAsset }: DonutChartProps) => {
+const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, onSegmentHover, selectedAsset }: DonutChartProps) => {
   // Calculate the total value for percentage calculations
   const total = portfolioComposition.reduce((sum, item) => sum + item.value, 0);
   
@@ -70,6 +71,8 @@ const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, selected
               strokeWidth="0.5"
               className="cursor-pointer transition-all duration-300 hover:opacity-80"
               onClick={() => onSegmentClick && onSegmentClick(segment.name)}
+              onMouseEnter={() => onSegmentHover && onSegmentHover(segment.name)}
+              onMouseLeave={() => onSegmentHover && onSegmentHover(null)}
               style={{
                 filter: segment.isSelected ? 'brightness(1.2) drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' : 'none'
               }}
