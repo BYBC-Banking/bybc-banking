@@ -77,7 +77,7 @@ const SendMoney = () => {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
-              <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} min="0" step="0.01" />
+              <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={e => setAmount(e.target.value)} min="0" step="0.01" className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&[type=number]]:[-moz-appearance:textfield]" />
             </div>
 
             <div className="space-y-2">
