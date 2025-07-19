@@ -47,7 +47,7 @@ const CryptoTradePage = () => {
   }, [showPreApproval, countdown]);
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header with Back Button and Buy/Sell Toggle */}
       <div className="flex items-center justify-between px-4 py-4 bg-white shadow-sm">
         <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
