@@ -87,7 +87,7 @@ const SendMoney = () => {
             </div>
 
             <Button onClick={handleSendMoney} className="w-full mt-6" disabled={!amount || parseFloat(amount) <= 0}>
-              Send R{amount || "0.00"}
+              Send Money
             </Button>
           </CardContent>
         </Card>
