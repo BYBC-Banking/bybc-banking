@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { HomePageProvider, useHomePage } from "@/context/HomePageContext";
@@ -49,7 +49,13 @@ const StocksPageContent = () => {
           <button onClick={() => navigate(-1)} className="p-2">
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-2xl font-bold">JSE Stocks</h1>
+          <div className="flex items-center gap-3 flex-1">
+            <h1 className="text-2xl font-bold">JSE Stocks</h1>
+            <button className="flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors">
+              <Briefcase className="h-4 w-4" />
+              <span className="text-sm font-medium">Holdings</span>
+            </button>
+          </div>
         </header>
         
         {/* Stock Price Chart */}
