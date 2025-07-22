@@ -34,7 +34,7 @@ const CryptoAmountInput: React.FC<CryptoAmountInputProps> = ({
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder={`Enter ${amountType === 'crypto' ? selectedCryptoData?.symbol : 'ZAR'} amount`}
+          placeholder={`Enter ${amountType === 'crypto' ? (selectedCryptoData?.symbol || 'ZAR') : 'ZAR'} amount`}
           className="flex-1 px-4 py-3 border-none outline-none text-lg font-semibold"
         />
         <button
