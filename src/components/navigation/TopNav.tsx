@@ -112,7 +112,7 @@ export default function TopNav() {
           </SheetContent>
         </Sheet>
         
-        <Link to="/dashboard" className="flex items-center space-x-2">
+        <Link to="/dashboard" className="flex items-center space-x-1">
           <img src="/lovable-uploads/9b582461-f327-43f4-991f-e50e68817084.png" alt="BYBC Banking" className="h-16 w-16" />
           <span className="text-white font-bold text-lg">BYBC</span>
         </Link>
