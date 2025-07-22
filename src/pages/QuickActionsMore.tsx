@@ -394,9 +394,18 @@ const QuickActionsMore = () => {
           
           <div className="grid grid-cols-4 gap-4">
             {quickActions.map((action, index) => {
-            const colors = getActionColors(index);
-            return;
-          })}
+              const colors = getActionColors(index);
+              return (
+                <Link to={action.href} key={index} className="flex flex-col items-center group">
+                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center mb-2 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
+                    <action.icon className={`h-5 w-5 ${colors.iconColor} stroke-[1.5]`} />
+                  </div>
+                  <span className="text-xs font-medium text-gray-700 text-center leading-tight max-w-[60px]">
+                    {action.label}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
