@@ -112,8 +112,9 @@ export default function TopNav() {
           </SheetContent>
         </Sheet>
         
-        <Link to="/dashboard" className="flex items-center">
+        <Link to="/dashboard" className="flex items-center space-x-2">
           <img src="/lovable-uploads/9b582461-f327-43f4-991f-e50e68817084.png" alt="BYBC Banking" className="h-16 w-16" />
+          <span className="text-white font-bold text-lg">BYBC</span>
         </Link>
         
         <Link to="/notifications" className="p-2 rounded-md hover:bg-white/10 transition-colors">
