@@ -25,22 +25,41 @@ const Index = () => {
 
   return (
     <div className={backgroundClass}>
-      <div className="container mx-auto max-w-md px-4 py-6">
-        {/* Header */}
-        <DashboardHeader />
-        
-        <div className="space-y-6">
-          {/* Account Balance Section - Now using context */}
-          <AccountBalanceFromContext />
+      {/* Mobile Layout */}
+      <div className="block lg:hidden">
+        <div className="container mx-auto max-w-md px-4 py-6">
+          <DashboardHeader />
           
-          {/* Dot Navigation */}
-          <DotNavigation />
-          
-          {/* Quick Actions */}
-          <QuickActions />
-          
-          {/* Transactions List */}
-          <TransactionSection />
+          <div className="space-y-6">
+            <AccountBalanceFromContext />
+            <DotNavigation />
+            <QuickActions />
+            <TransactionSection />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:block">
+        <div className="container mx-auto max-w-7xl px-6 py-8">
+          <div className="grid grid-cols-12 gap-8">
+            {/* Left Column - Account Balance & Navigation */}
+            <div className="col-span-4 space-y-6">
+              <DashboardHeader />
+              <AccountBalanceFromContext />
+              <DotNavigation />
+            </div>
+            
+            {/* Center Column - Quick Actions */}
+            <div className="col-span-4">
+              <QuickActions />
+            </div>
+            
+            {/* Right Column - Transactions */}
+            <div className="col-span-4">
+              <TransactionSection />
+            </div>
+          </div>
         </div>
       </div>
     </div>

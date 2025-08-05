@@ -73,22 +73,22 @@ const QuickActions = () => {
   const quickActions = accountSection === "business" ? businessActions : personalActions;
 
   return (
-    <div className="px-4">
+    <div className="px-4 lg:px-0">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Quick Actions</h2>
+        <h2 className="text-lg lg:text-xl font-semibold text-gray-800">Quick Actions</h2>
         <Link to="/quick-actions-more" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
           More
         </Link>
       </div>
       <div style={{
         animationDelay: "200ms"
-      }} className="flex justify-between items-center gap-1 ">
+      }} className="grid grid-cols-5 lg:grid-cols-3 xl:grid-cols-5 gap-3 lg:gap-6">
         {quickActions.map((action, index) => (
           <Link to={action.href} key={index} className="flex flex-col items-center group">
-            <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
-              <action.icon className={`h-6 w-6 ${action.iconColor} stroke-[1.5]`} />
+            <div className={`w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200 ease-out`}>
+              <action.icon className={`h-6 w-6 lg:h-7 lg:w-7 ${action.iconColor} stroke-[1.5]`} />
             </div>
-            <span className="text-xs font-medium text-gray-700 text-center leading-tight max-w-[60px]">
+            <span className="text-xs lg:text-sm font-medium text-gray-700 text-center leading-tight max-w-[60px] lg:max-w-[80px]">
               {action.label}
             </span>
           </Link>

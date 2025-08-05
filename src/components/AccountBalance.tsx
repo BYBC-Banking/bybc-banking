@@ -122,7 +122,7 @@ const AccountBalance = ({
   return (
     <div
       className={cn(
-        `${accountStyles.bgColor} p-6 rounded-2xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 ${
+        `${accountStyles.bgColor} p-6 lg:p-8 rounded-2xl lg:rounded-3xl shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.7)] animate-fade-in ${accountStyles.textColor} relative overflow-hidden mx-4 lg:mx-0 ${
           accountStyles.bgColor.includes("neutral-900") || accountStyles.bgColor.includes("slate-900")
             ? "border border-neutral-800"
             : "border border-white/20"
@@ -189,7 +189,7 @@ const AccountBalance = ({
             Available Balance:
           </span>
         </div>
-        <h1 className={`text-3xl font-bold ${accountStyles.textColor}`}>
+        <h1 className={`text-3xl lg:text-4xl xl:text-5xl font-bold ${accountStyles.textColor}`}>
           {formatBalance(balance)}
         </h1>
       </div>

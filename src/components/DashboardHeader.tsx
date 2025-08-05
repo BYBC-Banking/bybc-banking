@@ -7,24 +7,24 @@ const DashboardHeader = () => {
   const isInvestmentAccount = selectedAccount.type === "Investments";
   
   return (
-    <header className="flex items-center justify-between mb-6 animate-fade-in">
+    <header className="flex items-center justify-between mb-6 animate-fade-in px-4 lg:px-0">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground text-sm lg:text-base">
           {accountSection === 'personal' ? 'Personal Account' : 'Business Account'}
         </p>
         {isInvestmentAccount && (
-          <Link to="/investments" className="text-finance-blue text-sm">
+          <Link to="/investments" className="text-finance-blue text-sm lg:text-base">
             View Investments
           </Link>
         )}
       </div>
       
       {/* Pill-shaped account switcher */}
-      <div className="flex bg-gray-100 rounded-full p-1">
+      <div className="flex bg-gray-100 rounded-full p-1 lg:p-1.5">
         <button 
           onClick={() => setAccountSection('personal')}
-          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
+          className={`px-3 py-1 lg:px-4 lg:py-2 rounded-full text-sm lg:text-base font-medium transition-colors hover:bg-white hover:shadow-sm ${
             accountSection === 'personal' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
         >
@@ -33,7 +33,7 @@ const DashboardHeader = () => {
         <div className="w-px bg-gray-300 my-1"></div>
         <button 
           onClick={() => setAccountSection('business')}
-          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors hover:bg-white hover:shadow-sm ${
+          className={`px-3 py-1 lg:px-4 lg:py-2 rounded-full text-sm lg:text-base font-medium transition-colors hover:bg-white hover:shadow-sm ${
             accountSection === 'business' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
         >
