@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff, AlertTriangle, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,16 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { registerUser } from "@/services/supabase/authService";
 import { isValidEmail, isValidPhone, isStrongPassword } from "@/utils/security";
+import { parseWebsiteParams, isWebsiteRedirect } from "@/utils/websiteIntegration";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  
+  // Check for website integration parameters
+  const websiteParams = parseWebsiteParams();
+  const isFromWebsite = isWebsiteRedirect();
   
   const [formData, setFormData] = useState({
     fullName: "",
@@ -107,9 +113,16 @@ const Register = () => {
       if (result.success) {
         toast({
           title: "Registration Successful!",
-          description: "Please check your email to confirm your account, then you can log in.",
+          description: isFromWebsite 
+            ? "Please check your email to confirm your account. You'll then be redirected to login."
+            : "Please check your email to confirm your account, then you can log in.",
         });
-        navigate("/login");
+        
+        // Navigate to login with preserved website params
+        const loginUrl = isFromWebsite 
+          ? `/login?source=website${websiteParams.returnUrl ? `&return_url=${encodeURIComponent(websiteParams.returnUrl)}` : ''}`
+          : "/login";
+        navigate(loginUrl);
       } else {
         setError(result.error || "Registration failed. Please try again.");
       }

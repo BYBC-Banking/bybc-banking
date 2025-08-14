@@ -50,6 +50,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import CryptoTradePage from "@/pages/CryptoTradePage";
 import CryptoReceive from "@/pages/CryptoReceive";
 import CryptoSend from "@/pages/CryptoSend";
+import WebsiteIntegrationHelper from "@/components/WebsiteIntegrationHelper";
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -306,6 +307,11 @@ function AppRoutes() {
         <Route path="/crypto-send" element={
           <ProtectedRoute>
             <CryptoSend />
+          </ProtectedRoute>
+        } />
+        <Route path="/website-integration" element={
+          <ProtectedRoute>
+            <WebsiteIntegrationHelper />
           </ProtectedRoute>
         } />
         <Route path="*" element={<NotFound />} />

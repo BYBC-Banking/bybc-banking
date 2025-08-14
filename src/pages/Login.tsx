@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { loginUser } from "@/services/supabase/authService";
 import { useAuth } from "@/contexts/AuthContext";
 import { isValidEmail, sanitizeInput } from "@/utils/security";
+import { parseWebsiteParams, generateWebsiteRedirectUrl, isWebsiteRedirect } from "@/utils/websiteIntegration";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,7 +33,9 @@ const Login = () => {
   
   // Get the redirect URL from query params
   const params = new URLSearchParams(location.search);
+  const websiteParams = parseWebsiteParams();
   const redirectTo = params.get('redirect') || "/dashboard";
+  const isFromWebsite = isWebsiteRedirect();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -90,11 +93,25 @@ const Login = () => {
         if (result.success) {
           toast({
             title: "Login successful",
-            description: "Welcome to BYBC Banking",
+            description: isFromWebsite ? "Redirecting back to main website..." : "Welcome to BYBC Banking",
           });
           
-          // Redirect to intended destination
-          navigate(redirectTo);
+           if (isFromWebsite && websiteParams.returnUrl) {
+            // Handle website redirect
+            const redirectUrl = generateWebsiteRedirectUrl({
+              success: true,
+              returnUrl: websiteParams.returnUrl,
+              userId: "user-id-placeholder",
+              token: "auth-token-placeholder"
+            });
+            
+            setTimeout(() => {
+              window.location.href = redirectUrl;
+            }, 2000);
+          } else {
+            // Normal app navigation
+            navigate(redirectTo);
+          }
         } else {
           setError(result.error || "Invalid email or password");
         }
