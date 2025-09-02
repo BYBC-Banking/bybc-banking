@@ -24,7 +24,7 @@ export interface MockUser {
 }
 
 // Constants
-export const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+export const SESSION_TIMEOUT = 10 * 60 * 1000; // 10 minutes in milliseconds
 export const MAX_REGISTRATION_USERS = 100;
 
 // Mock user database - in a real app, this would be on the backend
