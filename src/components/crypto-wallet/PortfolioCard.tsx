@@ -28,7 +28,7 @@ const PortfolioCard = ({
 }: PortfolioCardProps) => {
   return (
     <Card className={`mb-4 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-      <CardContent className="p-4">
+      <CardContent>
         <div className="text-center mb-3">
           <div className={`text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Total Portfolio Value
