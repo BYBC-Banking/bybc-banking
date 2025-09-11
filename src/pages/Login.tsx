@@ -9,7 +9,8 @@ import LoginLinks from "@/components/auth/LoginLinks";
 import { useToast } from "@/hooks/use-toast";
 import { loginUser } from "@/services/supabase/authService";
 import { useAuth } from "@/contexts/AuthContext";
-import { isValidEmail, sanitizeInput } from "@/utils/security";
+import { isValidEmail, sanitizeInput, initializeCSRFToken } from "@/utils/security";
+import { authRateLimiter } from "@/utils/rateLimiter";
 import { parseWebsiteParams, generateWebsiteRedirectUrl, isWebsiteRedirect } from "@/utils/websiteIntegration";
 
 const Login = () => {
@@ -37,8 +38,9 @@ const Login = () => {
   const redirectTo = params.get('redirect') || "/dashboard";
   const isFromWebsite = isWebsiteRedirect();
 
-  // Redirect if already logged in
+  // Initialize CSRF protection and redirect if already logged in
   useEffect(() => {
+    initializeCSRFToken();
     if (!loading && user) {
       navigate(redirectTo);
     }
@@ -62,7 +64,7 @@ const Login = () => {
     } else if (name === "password") {
       setValidation((prev) => ({
         ...prev,
-        password: value.length >= 8,
+        password: value.length >= 6, // More lenient for login
       }));
     }
   };
@@ -83,6 +85,13 @@ const Login = () => {
       // Sanitize inputs to prevent XSS
       const sanitizedIdentifier = sanitizeInput(formData.identifier.trim());
       
+      // Check rate limiting
+      if (authRateLimiter.isRateLimited(sanitizedIdentifier)) {
+        const remainingTime = authRateLimiter.getRemainingLockoutTime(sanitizedIdentifier);
+        setError(`Too many failed attempts. Please try again in ${remainingTime} minutes.`);
+        return;
+      }
+      
       // Determine if input is email or phone
       const isEmail = isValidEmail(sanitizedIdentifier);
       
@@ -91,6 +100,9 @@ const Login = () => {
         const result = await loginUser(sanitizedIdentifier, formData.password);
         
         if (result.success) {
+          // Reset rate limiter on successful login
+          authRateLimiter.reset(sanitizedIdentifier);
+          
           toast({
             title: "Login successful",
             description: isFromWebsite ? "Redirecting back to main website..." : "Welcome to BYBC Banking",
@@ -113,6 +125,8 @@ const Login = () => {
             navigate(redirectTo);
           }
         } else {
+          // Record failed attempt
+          authRateLimiter.recordAttempt(sanitizedIdentifier);
           setError(result.error || "Invalid email or password");
         }
       } else {

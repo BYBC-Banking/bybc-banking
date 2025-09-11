@@ -1,17 +1,31 @@
 
-// Main auth service - orchestrates all auth functionality
-import { authenticateUser } from "./auth/userValidation";
-import { logout, initializeAuthState, _getAuthState } from "./auth/sessionManager";
-import { isLoggedIn, getCurrentUser, getAuthToken } from "./auth/userManager";
+// Secure auth service - Supabase only
+import { supabase } from "@/integrations/supabase/client";
+import { 
+  loginUser as supabaseLogin, 
+  logoutUser as supabaseLogout, 
+  getCurrentUserProfile, 
+  isAuthenticated 
+} from "./supabase/authService";
 
-// Export main auth functions
-export { isLoggedIn, getCurrentUser, getAuthToken, logout, _getAuthState };
+// Export secure auth functions
+export const login = supabaseLogin;
+export const logout = supabaseLogout;
+export const getCurrentUser = getCurrentUserProfile;
+export const isLoggedIn = isAuthenticated;
 
-// Export types for external use
-export type { User } from "./auth/types";
+// Legacy compatibility exports (deprecated - use Supabase directly)
+export const getAuthToken = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token || null;
+};
 
-// Login function (wrapper around authenticateUser)
-export const login = authenticateUser;
-
-// Initialize auth on load
-initializeAuthState();
+export const _getAuthState = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = await getCurrentUserProfile();
+  return {
+    user,
+    session,
+    token: session?.access_token || null
+  };
+};

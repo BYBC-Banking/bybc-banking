@@ -26,7 +26,28 @@ export const isValidPhone = (phone: string): boolean => {
 
 // Validate password strength
 export const isStrongPassword = (password: string): boolean => {
-  return password.length >= 8;
+  // Strong password requirements: 8+ chars, uppercase, lowercase, number, special char
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+};
+
+// Get password strength score (0-5)
+export const getPasswordStrength = (password: string): { score: number; feedback: string[] } => {
+  const feedback: string[] = [];
+  let score = 0;
+  
+  if (password.length >= 8) score++; else feedback.push("At least 8 characters");
+  if (/[A-Z]/.test(password)) score++; else feedback.push("Include uppercase letters");
+  if (/[a-z]/.test(password)) score++; else feedback.push("Include lowercase letters");
+  if (/\d/.test(password)) score++; else feedback.push("Include numbers");
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++; else feedback.push("Include special characters");
+  
+  return { score, feedback };
 };
 
 // Sanitize text input to prevent XSS
@@ -52,9 +73,11 @@ export const isValidCurrencyAmount = (amount: string): boolean => {
   return currencyRegex.test(amount);
 };
 
-// Generate a CSRF token (this would be more robust in a real application)
+// Generate a secure CSRF token
 export const generateCSRFToken = (): string => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };
 
 // Store CSRF token in sessionStorage
@@ -65,6 +88,13 @@ export const storeCSRFToken = (token: string): void => {
 // Get stored CSRF token
 export const getCSRFToken = (): string | null => {
   return sessionStorage.getItem('csrf_token');
+};
+
+// Generate and store a new CSRF token
+export const initializeCSRFToken = (): string => {
+  const token = generateCSRFToken();
+  storeCSRFToken(token);
+  return token;
 };
 
 // Validate a transaction to prevent tampering

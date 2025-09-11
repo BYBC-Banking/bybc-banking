@@ -8,18 +8,28 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import { registerUser } from "@/services/supabase/authService";
-import { isValidEmail, isValidPhone, isStrongPassword } from "@/utils/security";
+import { isValidEmail, isValidPhone, isStrongPassword, sanitizeInput } from "@/utils/security";
 import { parseWebsiteParams, isWebsiteRedirect } from "@/utils/websiteIntegration";
+import PasswordStrengthIndicator from "@/components/auth/PasswordStrengthIndicator";
 
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { user, loading } = useAuth();
   
   // Check for website integration parameters
   const websiteParams = parseWebsiteParams();
   const isFromWebsite = isWebsiteRedirect();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
   
   const [formData, setFormData] = useState({
     fullName: "",
@@ -103,12 +113,15 @@ const Register = () => {
     setError(null);
     
     try {
-      const result = await registerUser({
-        fullName: formData.fullName,
-        email: formData.email,
-        mobile: formData.mobile,
-        password: formData.password
-      });
+      // Sanitize inputs for security
+      const sanitizedData = {
+        fullName: sanitizeInput(formData.fullName.trim()),
+        email: sanitizeInput(formData.email.trim().toLowerCase()),
+        mobile: sanitizeInput(formData.mobile.trim()),
+        password: formData.password // Don't sanitize password
+      };
+      
+      const result = await registerUser(sanitizedData);
       
       if (result.success) {
         toast({
@@ -213,7 +226,7 @@ const Register = () => {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Create password (min. 8 characters)"
+                placeholder="Create strong password"
                 className={cn(
                   "pr-10 transition-all duration-200",
                   validation.password && "border-finance-green"
@@ -228,6 +241,7 @@ const Register = () => {
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+            <PasswordStrengthIndicator password={formData.password} />
           </div>
           
           <div className="space-y-2">
