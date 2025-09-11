@@ -73,11 +73,15 @@ export const isValidCurrencyAmount = (amount: string): boolean => {
   return currencyRegex.test(amount);
 };
 
-// Generate a secure CSRF token
+// CSRF Token Management - Enhanced cryptographically secure generation
 export const generateCSRFToken = (): string => {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  // Add timestamp and random salt for additional entropy
+  const timestamp = Date.now().toString(36);
+  const salt = Math.random().toString(36).substring(2);
+  const baseToken = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  return `${baseToken}-${timestamp}-${salt}`;
 };
 
 // Store CSRF token in sessionStorage

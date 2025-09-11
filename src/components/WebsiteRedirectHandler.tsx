@@ -41,7 +41,7 @@ const WebsiteRedirectHandler = ({ children }: WebsiteRedirectHandlerProps) => {
         success: true,
         returnUrl: params.returnUrl,
         userId: user?.id,
-        token: localStorage.getItem('auth_token') || undefined
+        token: undefined // Use Supabase session management instead
       });
 
       toast({

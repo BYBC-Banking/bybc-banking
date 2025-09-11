@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { logoutUser } from "@/services/supabase/authService";
 
 const menuItems = [
   {
@@ -49,25 +51,32 @@ export default function TopNav() {
   const [open, setOpen] = React.useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Close the menu after navigation
   const handleMenuItemClick = () => {
     setOpen(false);
   };
   
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setOpen(false);
-    // Clear authentication data
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('authToken');
     
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out"
-    });
-    
-    // Redirect to login page
-    navigate('/login');
+    try {
+      await logoutUser();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out"
+      });
+      
+      // Redirect to login page
+      navigate('/login');
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "There was an error logging you out. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
   
   return (

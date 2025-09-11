@@ -23,13 +23,7 @@ export const useAppInitialization = () => {
   }, [navigate]);
   
   useEffect(() => {
-    // If this is the first visit and no login status exists, set default
-    if (localStorage.getItem('isLoggedIn') === null) {
-      // Default to not logged in for first visit
-      localStorage.setItem('isLoggedIn', 'false');
-    }
-    
-    // Set initial check done
+    // Set initial check done (removed manual localStorage auth handling)
     setInitialCheckDone(true);
     
     // Simulate loading screen with a timeout

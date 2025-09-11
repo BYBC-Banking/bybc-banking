@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import MobileNavigation from "./navigation/MobileNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSessionTimeout } from "@/hooks/useSessionTimeout";
+import SessionTimeoutWarning from "./auth/SessionTimeoutWarning";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -11,6 +13,7 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
   const isMobile = useIsMobile();
   const location = useLocation();
+  const { showWarning, timeLeft, extendSession, logout } = useSessionTimeout();
   
   // Determine if we should show navigation based on the current route
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
@@ -28,6 +31,18 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           <MobileNavigation />
         </>
       )}
+      
+      {/* Session timeout warning */}
+      {showWarning && !isAuthPage && (
+        <div className="fixed top-4 left-4 right-4 z-50">
+          <SessionTimeoutWarning
+            timeLeft={timeLeft}
+            onExtend={extendSession}
+            onLogout={logout}
+          />
+        </div>
+      )}
+      
       <div className={`${isMobile && !isAuthPage && !isFullscreenPage ? "pb-16" : ""} ${!isMobile && !isAuthPage && !isFullscreenPage ? "pt-0" : ""}`}>
         {children}
       </div>
