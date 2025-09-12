@@ -48,12 +48,10 @@ export const useSessionTimeout = (config: SessionTimeoutConfig = DEFAULT_CONFIG)
       return;
     }
 
-    const sessionStart = new Date(session.expires_at || 0).getTime();
+    // Use the session's actual expiry time from Supabase
+    const expiryTime = new Date(session.expires_at * 1000).getTime();
     const now = Date.now();
-    const sessionAge = (now - sessionStart) / (1000 * 60); // Age in minutes
-
-    // Calculate time until session expires
-    const timeUntilExpire = config.sessionTimeout - sessionAge;
+    const timeUntilExpire = (expiryTime - now) / (1000 * 60); // Time left in minutes
     
     if (timeUntilExpire <= 0) {
       // Session already expired
@@ -70,8 +68,8 @@ export const useSessionTimeout = (config: SessionTimeoutConfig = DEFAULT_CONFIG)
     // Set up timer to check session status
     const interval = setInterval(() => {
       const currentTime = Date.now();
-      const currentAge = (currentTime - sessionStart) / (1000 * 60);
-      const currentTimeLeft = config.sessionTimeout - currentAge;
+      const currentExpiryTime = new Date(session.expires_at * 1000).getTime();
+      const currentTimeLeft = (currentExpiryTime - currentTime) / (1000 * 60);
 
       if (currentTimeLeft <= 0) {
         logout();
