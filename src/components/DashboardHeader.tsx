@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
+import bybcLogo from "@/assets/bybc-logo.png";
 
 const DashboardHeader = () => {
   const { selectedAccount, selectedAccountId, accountSection, setAccountSection } = useHomePage();
@@ -8,16 +9,31 @@ const DashboardHeader = () => {
   
   return (
     <header className="flex items-center justify-between mb-6 animate-fade-in px-4 lg:px-0">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground text-sm lg:text-base">
-          {accountSection === 'personal' ? 'Personal Account' : 'Business Account'}
-        </p>
-        {isInvestmentAccount && (
-          <Link to="/investments" className="text-finance-blue text-sm lg:text-base">
-            View Investments
-          </Link>
+      <div className="flex items-center gap-4">
+        {accountSection === 'business' && (
+          <div className="flex items-center gap-3">
+            <img 
+              src={bybcLogo} 
+              alt="BYBC Logo" 
+              className="w-12 h-12 rounded-lg shadow-md"
+            />
+            <div>
+              <div className="text-lg font-bold text-finance-blue">BYBC</div>
+              <div className="text-sm text-muted-foreground">Business</div>
+            </div>
+          </div>
         )}
+        <div>
+          <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground text-sm lg:text-base">
+            {accountSection === 'personal' ? 'Personal Account' : 'Business Account'}
+          </p>
+          {isInvestmentAccount && (
+            <Link to="/investments" className="text-finance-blue text-sm lg:text-base">
+              View Investments
+            </Link>
+          )}
+        </div>
       </div>
       
       {/* Pill-shaped account switcher */}
