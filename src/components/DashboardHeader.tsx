@@ -1,13 +1,29 @@
 
 import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
+import { useState } from "react";
+import BusinessLoadingScreen from "./BusinessLoadingScreen";
 
 const DashboardHeader = () => {
   const { selectedAccount, selectedAccountId, accountSection, setAccountSection } = useHomePage();
   const isInvestmentAccount = selectedAccount.type === "Investments";
+  const [showBusinessLoading, setShowBusinessLoading] = useState(false);
+
+  const handleBusinessClick = () => {
+    setShowBusinessLoading(true);
+  };
+
+  const handleLoadingComplete = () => {
+    setShowBusinessLoading(false);
+    setAccountSection('business');
+  };
   
   return (
-    <header className="flex items-center justify-between mb-6 animate-fade-in px-4 lg:px-0">
+    <>
+      {showBusinessLoading && (
+        <BusinessLoadingScreen onLoadingComplete={handleLoadingComplete} />
+      )}
+      <header className="flex items-center justify-between mb-6 animate-fade-in px-4 lg:px-0">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground text-sm lg:text-base">
@@ -32,7 +48,7 @@ const DashboardHeader = () => {
         </button>
         <div className="w-px bg-gray-300 my-1"></div>
         <button 
-          onClick={() => setAccountSection('business')}
+          onClick={handleBusinessClick}
           className={`px-3 py-1 lg:px-4 lg:py-2 rounded-full text-sm lg:text-base font-medium transition-colors hover:bg-white hover:shadow-sm ${
             accountSection === 'business' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
@@ -40,7 +56,8 @@ const DashboardHeader = () => {
           B
         </button>
       </div>
-    </header>
+      </header>
+    </>
   );
 };
 
