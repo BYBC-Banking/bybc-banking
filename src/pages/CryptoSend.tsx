@@ -132,8 +132,8 @@ const CryptoSend = () => {
         </div>
       </div>
 
-      {/* Number Pad */}
-      <div className="px-4 mb-6">
+      {/* Number Pad - Hidden on large screens */}
+      <div className="px-4 mb-6 lg:hidden">
         <div className="grid grid-cols-3 gap-4 justify-items-center max-w-xs mx-auto">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
             <NumberButton key={num} onClick={() => handleNumberPress(num)}>
