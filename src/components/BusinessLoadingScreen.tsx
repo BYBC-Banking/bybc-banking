@@ -32,18 +32,18 @@ const BusinessLoadingScreen: React.FC<BusinessLoadingScreenProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 bg-gradient-to-br from-yellow-400 to-amber-500 flex flex-col items-center justify-center z-50 transition-opacity duration-500"
+      className="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 transition-opacity duration-500"
       style={{ opacity }}
     >
       <div className="flex flex-col items-center space-y-4">
-        <div className="w-24 h-24 mb-4">
-          <img 
-            src={bybcLogo} 
-            alt="BYBC Logo" 
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <div className="flex items-center space-x-3 mb-2">
+        <div className="flex items-center space-x-4 mb-2">
+          <div className="w-24 h-24">
+            <img 
+              src={bybcLogo} 
+              alt="BYBC Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
           <h1 className="text-3xl font-bold text-black">BYBC</h1>
         </div>
         <p className="text-xl font-medium text-black">Business</p>
