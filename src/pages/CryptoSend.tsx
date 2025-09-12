@@ -73,7 +73,11 @@ const CryptoSend = () => {
     <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-6 pt-12">
-        <button onClick={() => navigate(-1)}>
+        <button 
+          onClick={() => navigate(-1)}
+          className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
+          aria-label="Go back"
+        >
           <ArrowLeft className="w-6 h-6" />
         </button>
         <span className="text-gray-400 text-sm">1/3</span>
