@@ -3,25 +3,39 @@ import { Link } from "react-router-dom";
 import { useHomePage } from "@/context/HomePageContext";
 import { useState } from "react";
 import BusinessLoadingScreen from "./BusinessLoadingScreen";
+import PersonalLoadingScreen from "./PersonalLoadingScreen";
 
 const DashboardHeader = () => {
   const { selectedAccount, selectedAccountId, accountSection, setAccountSection } = useHomePage();
   const isInvestmentAccount = selectedAccount.type === "Investments";
   const [showBusinessLoading, setShowBusinessLoading] = useState(false);
+  const [showPersonalLoading, setShowPersonalLoading] = useState(false);
+
+  const handlePersonalClick = () => {
+    setShowPersonalLoading(true);
+  };
 
   const handleBusinessClick = () => {
     setShowBusinessLoading(true);
   };
 
-  const handleLoadingComplete = () => {
+  const handlePersonalLoadingComplete = () => {
+    setShowPersonalLoading(false);
+    setAccountSection('personal');
+  };
+
+  const handleBusinessLoadingComplete = () => {
     setShowBusinessLoading(false);
     setAccountSection('business');
   };
   
   return (
     <>
+      {showPersonalLoading && (
+        <PersonalLoadingScreen onLoadingComplete={handlePersonalLoadingComplete} />
+      )}
       {showBusinessLoading && (
-        <BusinessLoadingScreen onLoadingComplete={handleLoadingComplete} />
+        <BusinessLoadingScreen onLoadingComplete={handleBusinessLoadingComplete} />
       )}
       <header className="flex items-center justify-between mb-6 animate-fade-in px-4 lg:px-0">
       <div>
@@ -39,7 +53,7 @@ const DashboardHeader = () => {
       {/* Pill-shaped account switcher */}
       <div className="flex bg-gray-100 rounded-full p-1 lg:p-1.5">
         <button 
-          onClick={() => setAccountSection('personal')}
+          onClick={handlePersonalClick}
           className={`px-3 py-1 lg:px-4 lg:py-2 rounded-full text-sm lg:text-base font-medium transition-colors hover:bg-white hover:shadow-sm ${
             accountSection === 'personal' ? "bg-white shadow-sm text-finance-blue" : ""
           }`}
