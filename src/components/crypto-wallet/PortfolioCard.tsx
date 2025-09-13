@@ -1,7 +1,7 @@
 
 import React from "react";
 import { TrendingUp } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
@@ -28,7 +28,7 @@ const PortfolioCard = ({
 }: PortfolioCardProps) => {
   return (
     <Card className={`mb-4 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300`}>
-      <CardContent>
+      <div className="p-6 pt-0">
         <div className="text-center mb-3">
           <div className={`text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             Total Portfolio Value
@@ -87,7 +87,7 @@ const PortfolioCard = ({
             </Button>
           ))}
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
