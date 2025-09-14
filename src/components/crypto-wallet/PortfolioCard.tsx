@@ -27,7 +27,7 @@ const PortfolioCard = ({
   onTimeframeChange
 }: PortfolioCardProps) => {
   return (
-    <div className={`mb-4 p-6 rounded-lg border shadow-sm hover:scale-[1.01] transition-transform duration-300 ${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'}`}>
+    <>
       <div className="text-center mb-3">
         <div className={`text-xs font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
           Total Portfolio Value
@@ -86,7 +86,7 @@ const PortfolioCard = ({
           </Button>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
