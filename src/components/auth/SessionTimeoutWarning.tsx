@@ -19,13 +19,13 @@ const SessionTimeoutWarning = ({
   const seconds = Math.floor((timeLeft - minutes) * 60);
 
   return (
-    <Alert className={`border-destructive bg-destructive/10 ${className}`}>
-      <Clock className="h-4 w-4" />
-      <AlertTitle className="text-destructive">Session Expiring Soon</AlertTitle>
-      <AlertDescription className="text-destructive/80">
-        Your session will expire in {minutes > 0 ? `${minutes}m ` : ''}{seconds}s. 
-        Would you like to extend your session?
-      </AlertDescription>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+      <Alert className={`border-destructive bg-destructive/10 max-w-md ${className}`}>
+        <Clock className="h-4 w-4" />
+        <AlertTitle className="text-destructive">Time Out</AlertTitle>
+        <AlertDescription className="text-destructive/80">
+          Would you like to continue?
+        </AlertDescription>
       <div className="flex gap-2 mt-3">
         <Button
           size="sm"
@@ -45,7 +45,8 @@ const SessionTimeoutWarning = ({
           Logout Now
         </Button>
       </div>
-    </Alert>
+      </Alert>
+    </div>
   );
 };
 
