@@ -32,16 +32,7 @@ const PortfolioCard = ({
       <div className="h-32 mb-3">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={portfolioData}>
-            <XAxis dataKey="time" axisLine={false} tickLine={false} className={isDarkMode ? 'text-gray-400' : 'text-gray-600'} tick={{
-            fontSize: 9
-          }} />
             <YAxis hide />
-            <Line type="monotone" dataKey="value" stroke="#FFD700" strokeWidth={2} dot={false} activeDot={{
-            r: 3,
-            stroke: '#FFD700',
-            strokeWidth: 2,
-            fill: '#FFD700'
-          }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
