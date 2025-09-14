@@ -24,7 +24,7 @@ const SessionTimeoutWarning = ({
         <Clock className="h-4 w-4" />
         <AlertTitle className="text-gray-900">Time Out</AlertTitle>
         <AlertDescription className="text-gray-700">
-          Would you like to continue?
+          Would you like to continue using the app?
         </AlertDescription>
         <div className="flex gap-2 mt-3">
           <Button
