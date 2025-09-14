@@ -20,7 +20,7 @@ const SessionTimeoutWarning = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-      <Alert className={`bg-white border-gray-200 max-w-sm ${className}`}>
+      <Alert className={`bg-white border-gray-200 max-w-md ${className}`}>
         <Clock className="h-4 w-4" />
         <AlertTitle className="text-gray-900">Time Out</AlertTitle>
         <AlertDescription className="text-gray-700">
