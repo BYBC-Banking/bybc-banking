@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 interface Transaction {
   id: string;
@@ -15,9 +16,10 @@ interface Transaction {
 interface Props {
   transactions: Transaction[];
   redirectToTransactionsPage?: boolean;
+  loading?: boolean;
 }
 
-const TransactionsList = ({ transactions, redirectToTransactionsPage = true }: Props) => {
+const TransactionsList = ({ transactions, redirectToTransactionsPage = true, loading = false }: Props) => {
   const navigate = useNavigate();
   
   const handleTransactionClick = () => {
@@ -26,6 +28,15 @@ const TransactionsList = ({ transactions, redirectToTransactionsPage = true }: P
     }
   };
   
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span className="ml-2">Loading transactions...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="divide-y divide-gray-100">
       {transactions.map((transaction) => (

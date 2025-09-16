@@ -1,26 +1,34 @@
 import { useState } from "react";
-import { ArrowLeft, User, Check, Share } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { ArrowLeft, User, Check, Share, Loader2 } from "lucide-react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAccounts } from "@/hooks/useAccounts";
+import { sendMoney } from "@/services/transferService";
+
 const SendMoney = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [amount, setAmount] = useState("");
   const [reference, setReference] = useState("");
+  const [selectedAccountId, setSelectedAccountId] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const { accounts, loading: accountsLoading } = useAccounts();
 
   // Get beneficiary info from URL params
   const beneficiaryName = searchParams.get("name") || "Unknown";
   const beneficiaryBank = searchParams.get("bank") || "Unknown Bank";
   const beneficiaryAccount = searchParams.get("account") || "Unknown";
-  const handleSendMoney = () => {
+
+  const handleSendMoney = async () => {
     if (!amount || parseFloat(amount) <= 0) {
       toast({
         title: "Invalid Amount",
@@ -29,8 +37,64 @@ const SendMoney = () => {
       });
       return;
     }
-    setShowConfirmation(true);
+
+    if (!selectedAccountId) {
+      toast({
+        title: "Select Account",
+        description: "Please select an account to send from",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const selectedAccount = accounts.find(acc => acc.id === selectedAccountId);
+    if (!selectedAccount) {
+      toast({
+        title: "Invalid Account",
+        description: "Selected account not found",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (selectedAccount.balance < parseFloat(amount)) {
+      toast({
+        title: "Insufficient Funds",
+        description: "Your account balance is insufficient for this transfer",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    try {
+      await sendMoney({
+        amount: parseFloat(amount),
+        reference: reference || "Money transfer",
+        beneficiaryName,
+        beneficiaryAccount,
+        beneficiaryBank,
+        fromAccountId: selectedAccountId
+      });
+
+      setShowConfirmation(true);
+      toast({
+        title: "Transfer Successful",
+        description: `R${parseFloat(amount).toFixed(2)} sent to ${beneficiaryName}`,
+      });
+    } catch (error) {
+      console.error("Transfer error:", error);
+      toast({
+        title: "Transfer Failed",
+        description: error instanceof Error ? error.message : "Failed to process transfer",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
   const getCurrentDate = () => {
     const now = new Date();
     return now.toLocaleDateString('en-ZA', {
@@ -39,7 +103,14 @@ const SendMoney = () => {
       year: 'numeric'
     });
   };
-  return <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
+
+  const handleDone = () => {
+    setShowConfirmation(false);
+    navigate("/");
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-white to-slate-100 min-h-screen">
       <div className="container mx-auto max-w-md px-4 py-6">
         {/* Header */}
         <header className="flex items-center gap-4 mb-6">
@@ -70,11 +141,33 @@ const SendMoney = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              
               Transfer Details
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fromAccount">From Account</Label>
+              {accountsLoading ? (
+                <div className="flex items-center py-2">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Loading accounts...
+                </div>
+              ) : (
+                <Select value={selectedAccountId} onValueChange={setSelectedAccountId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select account to send from" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {accounts.map((account) => (
+                      <SelectItem key={account.id} value={account.id}>
+                        {account.name} - R{account.balance.toFixed(2)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <div className="relative">
@@ -94,11 +187,27 @@ const SendMoney = () => {
 
             <div className="space-y-2">
               <Label htmlFor="reference">Reference (Optional)</Label>
-              <Input id="reference" placeholder="Payment reference" value={reference} onChange={e => setReference(e.target.value)} />
+              <Input 
+                id="reference" 
+                placeholder="Payment reference" 
+                value={reference} 
+                onChange={e => setReference(e.target.value)} 
+              />
             </div>
 
-            <Button onClick={handleSendMoney} className="w-full mt-6" disabled={!amount || parseFloat(amount) <= 0}>
-              Send Money
+            <Button 
+              onClick={handleSendMoney} 
+              className="w-full mt-6" 
+              disabled={!amount || parseFloat(amount) <= 0 || !selectedAccountId || isProcessing}
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : (
+                "Send Money"
+              )}
             </Button>
           </CardContent>
         </Card>
@@ -131,17 +240,16 @@ const SendMoney = () => {
               </div>
 
               <div className="space-y-3 pt-4">
-                <Button onClick={() => setShowConfirmation(false)} className="w-full">
+                <Button onClick={handleDone} className="w-full">
                   Done
                 </Button>
                 
                 <Button variant="ghost" className="w-full flex items-center gap-2" onClick={() => {
-                // Share functionality would go here
-                toast({
-                  title: "Share functionality coming soon",
-                  description: "This feature will be available in the next update"
-                });
-              }}>
+                  toast({
+                    title: "Share functionality coming soon",
+                    description: "This feature will be available in the next update"
+                  });
+                }}>
                   <Share className="h-4 w-4" />
                   Share Payment Notification
                 </Button>
@@ -150,6 +258,8 @@ const SendMoney = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default SendMoney;

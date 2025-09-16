@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Plus, User, X } from "lucide-react";
+import { ArrowLeft, Plus, User, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -13,14 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-type Beneficiary = {
-  id: string;
-  name: string;
-  accountNumber: string;
-  bankName: string;
-  recentAmount?: number;
-};
+import { useBeneficiaries } from "@/hooks/useBeneficiaries";
 
 const Send = () => {
   const { toast } = useToast();
@@ -29,43 +22,22 @@ const Send = () => {
   const [newBeneficiary, setNewBeneficiary] = useState({
     name: "",
     accountNumber: "",
-    bankName: ""
+    bankName: "",
+    phoneNumber: ""
   });
   
-  // Mock beneficiaries data
-  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([
-    {
-      id: "1",
-      name: "Thabo Mbeki",
-      accountNumber: "1234567890",
-      bankName: "Standard Bank",
-      recentAmount: 500
-    },
-    {
-      id: "2",
-      name: "Lerato Khumalo",
-      accountNumber: "0987654321",
-      bankName: "FNB",
-      recentAmount: 1500
-    },
-    {
-      id: "3",
-      name: "Nomsa Dlamini",
-      accountNumber: "5678901234",
-      bankName: "Nedbank"
-    }
-  ]);
+  const { beneficiaries, loading, addBeneficiary } = useBeneficiaries();
   
   const handleAddBeneficiary = () => {
     setIsAddBeneficiaryOpen(true);
   };
   
-  const handleBeneficiarySelect = (beneficiary: Beneficiary) => {
+  const handleBeneficiarySelect = (beneficiary: any) => {
     // Navigate to SendMoney page with beneficiary details
     const params = new URLSearchParams({
       name: beneficiary.name,
-      bank: beneficiary.bankName,
-      account: beneficiary.accountNumber
+      bank: beneficiary.bank_name,
+      account: beneficiary.account_number
     });
     navigate(`/send-money?${params.toString()}`);
   };
@@ -78,7 +50,7 @@ const Send = () => {
     }));
   };
   
-  const handleSubmitBeneficiary = () => {
+  const handleSubmitBeneficiary = async () => {
     if (!newBeneficiary.name || !newBeneficiary.accountNumber || !newBeneficiary.bankName) {
       toast({
         title: "Missing information",
@@ -88,20 +60,19 @@ const Send = () => {
       return;
     }
     
-    const newId = (beneficiaries.length + 1).toString();
-    const beneficiaryToAdd = {
-      id: newId,
-      ...newBeneficiary
-    };
-    
-    setBeneficiaries([...beneficiaries, beneficiaryToAdd]);
-    setIsAddBeneficiaryOpen(false);
-    setNewBeneficiary({ name: "", accountNumber: "", bankName: "" });
-    
-    toast({
-      title: "Beneficiary Added",
-      description: `${newBeneficiary.name} has been added to your beneficiaries`
-    });
+    try {
+      await addBeneficiary({
+        name: newBeneficiary.name,
+        accountNumber: newBeneficiary.accountNumber,
+        bankName: newBeneficiary.bankName,
+        phoneNumber: newBeneficiary.phoneNumber || undefined
+      });
+      
+      setIsAddBeneficiaryOpen(false);
+      setNewBeneficiary({ name: "", accountNumber: "", bankName: "", phoneNumber: "" });
+    } catch (error) {
+      // Error handling is done in the hook
+    }
   };
 
   return (
@@ -128,7 +99,12 @@ const Send = () => {
         <div className="space-y-4">
           <h2 className="font-medium text-lg">Your Beneficiaries</h2>
           
-          {beneficiaries.length > 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span className="ml-2">Loading beneficiaries...</span>
+            </div>
+          ) : beneficiaries.length > 0 ? (
             beneficiaries.map((beneficiary) => (
               <div
                 key={beneficiary.id}
@@ -143,7 +119,7 @@ const Send = () => {
                     <div>
                       <div className="font-medium">{beneficiary.name}</div>
                       <div className="text-xs text-muted-foreground">
-                        {beneficiary.bankName} •••• {beneficiary.accountNumber.slice(-4)}
+                        {beneficiary.bank_name} •••• {beneficiary.account_number.slice(-4)}
                       </div>
                     </div>
                   </div>
@@ -153,6 +129,7 @@ const Send = () => {
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <p>No beneficiaries added yet</p>
+              <p className="text-sm">Add your first beneficiary to get started.</p>
             </div>
           )}
         </div>
@@ -197,6 +174,17 @@ const Send = () => {
                   name="bankName" 
                   placeholder="Enter bank name" 
                   value={newBeneficiary.bankName}
+                  onChange={handleInputChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number (Optional)</Label>
+                <Input 
+                  id="phoneNumber" 
+                  name="phoneNumber" 
+                  placeholder="Enter phone number" 
+                  value={newBeneficiary.phoneNumber}
                   onChange={handleInputChange}
                 />
               </div>

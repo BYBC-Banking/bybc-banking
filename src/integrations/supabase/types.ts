@@ -7,13 +7,88 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
   }
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          account_number: string
+          balance: number
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          name: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      beneficiaries: {
+        Row: {
+          account_number: string
+          bank_name: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          phone_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          bank_name: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          phone_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          bank_name?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -43,6 +118,119 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          category: string | null
+          created_at: string
+          description: string
+          id: string
+          merchant: string | null
+          reference_number: string | null
+          status: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          category?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          merchant?: string | null
+          reference_number?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          category?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          merchant?: string | null
+          reference_number?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transfers: {
+        Row: {
+          amount: number
+          beneficiary_account: string | null
+          beneficiary_bank: string | null
+          beneficiary_name: string | null
+          created_at: string
+          from_account_id: string
+          from_user_id: string
+          id: string
+          reference: string | null
+          status: string
+          to_account_id: string | null
+          to_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          beneficiary_account?: string | null
+          beneficiary_bank?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          from_account_id: string
+          from_user_id: string
+          id?: string
+          reference?: string | null
+          status?: string
+          to_account_id?: string | null
+          to_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          beneficiary_account?: string | null
+          beneficiary_bank?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          from_account_id?: string
+          from_user_id?: string
+          id?: string
+          reference?: string | null
+          status?: string
+          to_account_id?: string | null
+          to_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transfers_from_account_id_fkey"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transfers_to_account_id_fkey"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

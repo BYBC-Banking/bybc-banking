@@ -1,1 +1,16 @@
 project_id = "tctderzpbrbtatprpmna"
+
+[functions.send-money]
+verify_jwt = false
+
+[functions.get-accounts]
+verify_jwt = false
+
+[functions.get-beneficiaries]
+verify_jwt = false
+
+[functions.add-beneficiary]
+verify_jwt = false
+
+[functions.get-transactions]
+verify_jwt = false
