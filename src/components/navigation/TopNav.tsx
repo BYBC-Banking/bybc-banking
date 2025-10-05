@@ -3,7 +3,7 @@ import React from "react";
 import { Bell, Menu, LogOut, User, Inbox, Settings, HelpCircle, FileText, Globe, Gift } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -79,6 +79,9 @@ export default function TopNav() {
     }
   };
   
+  const location = useLocation();
+  const isHomePage = location.pathname === '/dashboard' || location.pathname === '/';
+  
   return (
     <div className="sticky top-0 left-0 right-0 z-40 bg-[#1A1F2C] border-b border-white/10">
       <div className="flex justify-between items-center h-14 px-4">
@@ -121,10 +124,14 @@ export default function TopNav() {
           </SheetContent>
         </Sheet>
         
-        <Link to="/dashboard" className="flex items-center space-x-1">
-          <img src="/lovable-uploads/9b582461-f327-43f4-991f-e50e68817084.png" alt="BYBC Banking" className="h-16 w-16" />
-          <span className="text-white font-bold text-lg">BYBC</span>
-        </Link>
+        {isHomePage ? (
+          <Link to="/dashboard" className="flex items-center space-x-1">
+            <img src="/lovable-uploads/9b582461-f327-43f4-991f-e50e68817084.png" alt="BYBC Banking" className="h-16 w-16" />
+            <span className="text-white font-bold text-lg">BYBC</span>
+          </Link>
+        ) : (
+          <h1 className="text-white font-bold text-lg">BYBC</h1>
+        )}
         
         <Link to="/notifications" className="p-2 rounded-md hover:bg-white/10 transition-colors">
           <Bell className="h-6 w-6 text-white" />
