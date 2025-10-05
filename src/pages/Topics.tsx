@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import TopicCurriculum from "@/components/TopicCurriculum";
 import TopicCard from "@/components/TopicCard";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -12,6 +12,7 @@ const Topics = () => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,8 +36,10 @@ const Topics = () => {
   const handleBack = () => {
     if (selectedLesson) {
       setSelectedLesson(null);
-    } else {
+    } else if (selectedTopic) {
       setSelectedTopic(null);
+    } else {
+      navigate(-1);
     }
     window.scrollTo(0, 0);
   };
