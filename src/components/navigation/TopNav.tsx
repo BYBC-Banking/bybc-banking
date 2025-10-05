@@ -82,6 +82,51 @@ export default function TopNav() {
   const location = useLocation();
   const isHomePage = location.pathname === '/dashboard' || location.pathname === '/';
   
+  const getPageTitle = (pathname: string): string => {
+    const routeTitles: Record<string, string> = {
+      '/accounts-personal': 'Personal Accounts',
+      '/accounts-business': 'Business Accounts',
+      '/profile': 'Profile',
+      '/inbox': 'Inbox',
+      '/settings': 'Settings',
+      '/referral': 'Referral and Earn',
+      '/help': 'Help',
+      '/legal': 'Legal',
+      '/language': 'Language',
+      '/notifications': 'Notifications',
+      '/crypto': 'Cryptocurrency',
+      '/crypto-wallet': 'Crypto Wallet',
+      '/crypto-trade': 'Trade Crypto',
+      '/crypto-swap': 'Swap Crypto',
+      '/crypto-send': 'Send Crypto',
+      '/crypto-receive': 'Receive Crypto',
+      '/stocks': 'Stocks',
+      '/investments': 'Investments',
+      '/transactions': 'Transactions',
+      '/send': 'Send Money',
+      '/send-money': 'Send Money',
+      '/receive': 'Receive Money',
+      '/transfer': 'Transfer',
+      '/buy': 'Buy',
+      '/cards': 'Cards',
+      '/card-controls': 'Card Controls',
+      '/pay-bills': 'Pay Bills',
+      '/education': 'Education',
+      '/topics': 'Topics',
+      '/advisor': 'Advisor',
+      '/watchlist': 'Watchlist',
+      '/financial-news': 'Financial News',
+      '/multisig-wallet': 'Multi-Signature Wallet',
+      '/nonprofit-ledger': 'Nonprofit Ledger',
+      '/compliance-center': 'Compliance Center',
+      '/privacy-dashboard': 'Privacy Dashboard',
+      '/account-recovery': 'Account Recovery',
+      '/recovery': 'Recovery',
+    };
+    
+    return routeTitles[pathname] || 'BYBC';
+  };
+  
   return (
     <div className="sticky top-0 left-0 right-0 z-40 bg-[#1A1F2C] border-b border-white/10">
       <div className="flex justify-between items-center h-14 px-4">
@@ -130,7 +175,7 @@ export default function TopNav() {
             <span className="text-white font-bold text-lg">BYBC</span>
           </Link>
         ) : (
-          <h1 className="text-white font-bold text-lg">BYBC</h1>
+          <h1 className="text-white font-bold text-lg">{getPageTitle(location.pathname)}</h1>
         )}
         
         <Link to="/notifications" className="p-2 rounded-md hover:bg-white/10 transition-colors">
