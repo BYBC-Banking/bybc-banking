@@ -102,6 +102,8 @@ export default function TopNav() {
       '/crypto-receive': 'Receive Crypto',
       '/stocks': 'Stocks',
       '/investments': 'Investments',
+      '/investments-personal': 'Investments',
+      '/investments-business': 'Investments',
       '/transactions': 'Transactions',
       '/send': 'Send Money',
       '/send-money': 'Send Money',
