@@ -7,6 +7,7 @@ interface DonutChartProps {
     name: string;
     value: number;
     color: string;
+    amount?: number;
   }>;
   onSegmentClick?: (assetName: string) => void;
   onSegmentHover?: (assetName: string | null) => void;
@@ -16,6 +17,19 @@ interface DonutChartProps {
 const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, onSegmentHover, selectedAsset }: DonutChartProps) => {
   // Calculate the total value for percentage calculations
   const total = portfolioComposition.reduce((sum, item) => sum + item.value, 0);
+  
+  // Calculate total monetary value
+  const totalAmount = portfolioComposition.reduce((sum, item) => sum + (item.amount || 0), 0);
+  
+  // Format amount with K or M suffix
+  const formatAmount = (amount: number): string => {
+    if (amount >= 1000000) {
+      return `R${(amount / 1000000).toFixed(1)}M`;
+    } else if (amount >= 1000) {
+      return `R${(amount / 1000).toFixed(1)}K`;
+    }
+    return `R${amount.toFixed(0)}`;
+  };
   
   // Create path data for each segment
   const createPath = (startAngle: number, endAngle: number, innerRadius: number, outerRadius: number) => {
@@ -78,6 +92,22 @@ const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, onSegmen
               }}
             />
           ))}
+          <text
+            x="50"
+            y="50"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="transform rotate-90"
+            style={{ transformOrigin: '50px 50px' }}
+          >
+            <tspan
+              x="50"
+              y="50"
+              className={`text-xl font-bold ${isDarkMode ? 'fill-yellow-400' : 'fill-yellow-600'}`}
+            >
+              {formatAmount(totalAmount)}
+            </tspan>
+          </text>
         </svg>
       </div>
     </div>
