@@ -103,7 +103,7 @@ const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, onSegmen
             <tspan
               x="50"
               y="50"
-              className={`text-xl font-bold ${isDarkMode ? 'fill-yellow-400' : 'fill-yellow-600'}`}
+              className={`text-sm font-light ${isDarkMode ? 'fill-yellow-400' : 'fill-yellow-600'}`}
             >
               {formatAmount(totalAmount)}
             </tspan>
