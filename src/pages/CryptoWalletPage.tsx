@@ -148,7 +148,7 @@ const CryptoWalletPage = () => {
           onTimeframeChange={setActiveTimeframe}
         />
 
-        <div className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300 rounded-lg border p-4 mb-4`}>
+        <div className={`${isDarkMode ? 'bg-gray-800/50 border-yellow-400/30 backdrop-blur-md' : 'bg-white/60 border-yellow-600/50'} hover:scale-[1.01] transition-transform duration-300 rounded-lg border p-4 mb-4 -mt-2`}>
           <h2 className={`text-lg font-bold mb-4 text-center ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
             Portfolio Composition
           </h2>
