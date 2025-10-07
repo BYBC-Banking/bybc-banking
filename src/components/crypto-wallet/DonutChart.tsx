@@ -61,7 +61,7 @@ const DonutChart = ({ isDarkMode, portfolioComposition, onSegmentClick, onSegmen
   const segments = portfolioComposition.map((item) => {
     const angle = (item.value / total) * 360;
     const isSelected = selectedAsset === item.name;
-    const path = createPath(currentAngle, currentAngle + angle, 15, isSelected ? 37 : 35);
+    const path = createPath(currentAngle, currentAngle + angle, 28.5, isSelected ? 36 : 35);
     currentAngle += angle;
     
     return {
